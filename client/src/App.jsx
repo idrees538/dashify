@@ -2,6 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import DashboardLayout from './components/layout/DashboardLayout';
 import Dashboard from './pages/Dashboard';
 import Analytics from './pages/Analytics';
+import Video from './pages/Video';
+import SocialMedia from './pages/SocialMedia';
 import Schedule from './pages/Schedule';
 import News from './pages/News';
 import Recruitment from './pages/Recruitment';
@@ -20,6 +22,8 @@ function App() {
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/analytics" element={<Analytics />} />
+                <Route path="/video" element={<Video />} />
+                <Route path="/social" element={<SocialMedia />} />
                 <Route path="/schedule" element={<Schedule />} />
                 <Route path="/news" element={<News />} />
                 <Route path="/recruitment" element={<Recruitment />} />

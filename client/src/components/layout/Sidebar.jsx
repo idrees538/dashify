@@ -21,6 +21,8 @@ import {
     IoAddOutline,
     IoMenuOutline,
     IoCloseOutline,
+    IoVideocamOutline,
+    IoShareSocialOutline,
 } from 'react-icons/io5';
 import webLogo from '../../assets/web_logo.svg';
 import lightWebLogo from '../../assets/light_web_logo.svg';
@@ -33,6 +35,8 @@ const NAV_SECTIONS = [
         items: [
             { name: 'Dashboard', icon: IoHomeOutline, path: '/dashboard' },
             { name: 'Analytics', icon: IoMailOutline, path: '/analytics', badge: 2, hasAdd: true },
+            { name: 'Video', icon: IoVideocamOutline, path: '/video' },
+            { name: 'Social Media', icon: IoShareSocialOutline, path: '/social' },
             { name: 'Schedule', icon: IoCalendarOutline, path: '/schedule', badge: 3, hasAdd: true },
             { name: 'News', icon: IoNewspaperOutline, path: '/news' },
             { name: 'Recruitment', icon: IoBriefcaseOutline, path: '/recruitment' },
