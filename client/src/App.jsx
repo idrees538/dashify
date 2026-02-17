@@ -14,6 +14,9 @@ import Privacy from './pages/Privacy';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
 import Chat from './pages/Chat';
+import Credits from './pages/Credits';
+import Review from './pages/Review';
+import Deliverables from './pages/Deliverables';
 
 function App() {
     return (
@@ -28,6 +31,9 @@ function App() {
                 <Route path="/news" element={<News />} />
                 <Route path="/recruitment" element={<Recruitment />} />
                 <Route path="/project" element={<Project />} />
+                <Route path="/credits" element={<Credits />} />
+                <Route path="/review" element={<Review />} />
+                <Route path="/deliverables" element={<Deliverables />} />
                 <Route path="/activity" element={<Activity />} />
                 <Route path="/shared" element={<Shared />} />
                 <Route path="/privacy" element={<Privacy />} />

@@ -3,66 +3,42 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
 import {
     IoHomeOutline,
-    IoMailOutline,
     IoCalendarOutline,
-    IoNewspaperOutline,
-    IoBriefcaseOutline,
+    IoBarChartOutline,
+    IoCardOutline,
+    IoCheckboxOutline,
+    IoDocumentTextOutline,
+    IoDownloadOutline,
+    IoChevronDownOutline,
+    IoChevronUpOutline,
     IoFolderOutline,
-    IoFlagOutline,
-    IoPeopleOutline,
-    IoShieldCheckmarkOutline,
     IoSettingsOutline,
     IoHelpCircleOutline,
     IoChatbubbleOutline,
-    IoNotificationsOutline,
-    IoLogOutOutline,
     IoSunnyOutline,
     IoMoonOutline,
     IoAddOutline,
     IoMenuOutline,
     IoCloseOutline,
-    IoVideocamOutline,
-    IoShareSocialOutline,
+    IoLogOutOutline,
 } from 'react-icons/io5';
 import webLogo from '../../assets/web_logo.svg';
 import lightWebLogo from '../../assets/light_web_logo.svg';
 import dvAvatar from '../../assets/Dv.svg';
 import './Sidebar.css';
 
-const NAV_SECTIONS = [
-    {
-        label: 'General',
-        items: [
-            { name: 'Dashboard', icon: IoHomeOutline, path: '/dashboard' },
-            { name: 'Analytics', icon: IoMailOutline, path: '/analytics', badge: 2, hasAdd: true },
-            { name: 'Video', icon: IoVideocamOutline, path: '/video' },
-            { name: 'Social Media', icon: IoShareSocialOutline, path: '/social' },
-            { name: 'Schedule', icon: IoCalendarOutline, path: '/schedule', badge: 3, hasAdd: true },
-            { name: 'News', icon: IoNewspaperOutline, path: '/news' },
-            { name: 'Recruitment', icon: IoBriefcaseOutline, path: '/recruitment' },
-            { name: 'Project', icon: IoFolderOutline, path: '/project', hasAdd: true },
-        ],
-    },
-    {
-        label: 'Myspace',
-        items: [
-            { name: 'Activity', icon: IoFlagOutline, path: '/activity' },
-            { name: 'Shared', icon: IoPeopleOutline, path: '/shared' },
-            { name: 'Privacy', icon: IoShieldCheckmarkOutline, path: '/privacy' },
-        ],
-    },
-    {
-        label: 'Support',
-        items: [
-            { name: 'Setting', icon: IoSettingsOutline, path: '/settings' },
-            { name: 'Help!', icon: IoHelpCircleOutline, path: '/help' },
-            { name: 'Chat', icon: IoChatbubbleOutline, path: '/chat', badge: 5, hasAdd: true },
-        ],
-    },
+const CAP_ITEMS = [
+    { name: 'Dashboard', icon: IoHomeOutline, path: '/dashboard' },
+    { name: 'Calendar', icon: IoCalendarOutline, path: '/schedule' },
+    { name: 'Analytics', icon: IoBarChartOutline, path: '/analytics' },
+    { name: 'Credits', icon: IoCardOutline, path: '/credits' },
+    { name: 'Review', icon: IoCheckboxOutline, path: '/review' },
+    { name: 'Deliverables', icon: IoDocumentTextOutline, path: '/deliverables' },
 ];
 
 function Sidebar() {
     const [collapsed, setCollapsed] = useState(false);
+    const [showCap, setShowCap] = useState(true);
     const [mobileOpen, setMobileOpen] = useState(false);
     const { theme, toggleTheme } = useTheme();
     const location = useLocation();
@@ -92,6 +68,8 @@ function Sidebar() {
     }, [location.pathname]);
 
     const currentLogo = theme === 'light' ? lightWebLogo : webLogo;
+    const hasProject = false; // TODO: replace with real project presence
+    const projectName = 'Acme Studio';
 
     return (
         <>
@@ -115,7 +93,7 @@ function Sidebar() {
                     <IoCloseOutline />
                 </button>
 
-                {/* Top section: Logo + User */}
+                {/* Top section: Logo + User (DashView) */}
                 <div className="sidebar__section">
                     {/* Logo */}
                     <div className="sidebar__logo">
@@ -124,35 +102,49 @@ function Sidebar() {
                         </div>
                         <span className="sidebar__logo-text">Dashify</span>
                     </div>
-
-                    {/* User Profile */}
+                    {/* DashView user at top */}
                     <div className="sidebar__user">
                         <div className="sidebar__user-info">
                             <img src={dvAvatar} alt="DashView" className="sidebar__user-avatar-img" />
                             <span className="sidebar__user-name">DashView</span>
                         </div>
-                        <div className="sidebar__user-actions">
-                            <button className="sidebar__action-btn" title="Notifications">
-                                <IoNotificationsOutline />
-                                <span className="sidebar__notification-dot" />
-                            </button>
-                            <button
-                                className="sidebar__action-btn"
-                                title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-                                onClick={() => setCollapsed(!collapsed)}
-                            >
-                                <IoLogOutOutline className={!collapsed ? 'sidebar__icon-flipped' : ''} />
-                            </button>
-                        </div>
                     </div>
                 </div>
 
-                {/* Navigation Sections */}
-                {NAV_SECTIONS.map((section) => (
-                    <div className="sidebar__section" key={section.label}>
-                        <span className="sidebar__label">{section.label}</span>
+                {/* General Section (placeholder for future items) */}
+                {/* <div className="sidebar__section">
+                    <span className="sidebar__label">General</span>
+                    <nav className="sidebar__nav" />
+                </div> */}
+
+                {/* Projects Section */}
+                <div className="sidebar__section">
+                    <span className="sidebar__label">General</span>
+                    <nav className="sidebar__nav">
+                        {!hasProject ? (
+                            <NavLink className="sidebar__start-project">
+                                <span>Project</span>
+                                <IoAddOutline />
+                            </NavLink>
+                        ) : (
+                            <NavLink to="/project" className={`sidebar__nav-item ${location.pathname === '/project' ? 'sidebar__nav-item--active' : ''}`}>
+                                <div className="sidebar__nav-link sidebar__nav-link--project">
+                                    <span className="sidebar__nav-text">{projectName}</span>
+                                    <span className="sidebar__nav-icon">
+                                        <IoFolderOutline />
+                                    </span>
+                                </div>
+                            </NavLink>
+                        )}
+                    </nav>
+                </div>
+
+                {/* Content Accelerator Program */}
+                <div className="sidebar__section">
+                    <span className="sidebar__label">Content Accelerator Program</span>
+                    {showCap && (
                         <nav className="sidebar__nav">
-                            {section.items.map((item) => {
+                            {CAP_ITEMS.map((item) => {
                                 const isActive = location.pathname === item.path;
                                 const Icon = item.icon;
                                 return (
@@ -167,28 +159,31 @@ function Sidebar() {
                                             </span>
                                             <span className="sidebar__nav-text">{item.name}</span>
                                         </div>
-                                        {(item.badge || item.hasAdd) && (
-                                            <div className="sidebar__nav-actions">
-                                                {item.badge && (
-                                                    <span className="sidebar__badge">{item.badge}</span>
-                                                )}
-                                                {item.hasAdd && (
-                                                    <button className="sidebar__add-btn" title={`Add ${item.name}`}>
-                                                        <IoAddOutline />
-                                                    </button>
-                                                )}
-                                            </div>
-                                        )}
                                         <span className="sidebar__tooltip">{item.name}</span>
                                     </NavLink>
                                 );
                             })}
                         </nav>
-                    </div>
-                ))}
+                    )}
+                </div>
 
-                {/* Bottom: Theme Toggle */}
+                {/* Bottom: Collapse Toggle + Theme Toggle */}
                 <div className="sidebar__bottom">
+                    <button className="sidebar__pdf-btn" title="Download PDF Report (coming soon)">
+                        <IoDownloadOutline />
+                        <span>PDF Report</span>
+                    </button>
+
+                    {/* Collapse toggle moved to bottom */}
+                    <button
+                        className="sidebar__collapse-toggle"
+                        onClick={() => setCollapsed(!collapsed)}
+                        title={collapsed ? 'Expand menu' : 'Collapse menu'}
+                    >
+                        <IoLogOutOutline className={!collapsed ? 'sidebar__icon-flipped' : ''} />
+                        <span className="sidebar__collapse-text">{collapsed ? 'Expand' : 'Collapse'} Menu</span>
+                    </button>
+
                     <div className="sidebar__theme-row">
                         <div
                             className={`sidebar__theme-toggle ${theme === 'light' ? 'sidebar__theme-toggle--light' : ''

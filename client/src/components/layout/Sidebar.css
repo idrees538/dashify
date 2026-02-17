@@ -6,9 +6,9 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 20px 0;
-    width: 300px;
-    min-width: 300px;
+    padding: 16px 0;
+    width: 240px;
+    min-width: 240px;
     height: 100vh;
     background: var(--bg-sidebar);
     border-right: 1px solid var(--border-color);
@@ -99,15 +99,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 20px 30px;
-    gap: 30px;
+    padding: 0 16px 16px;
+    gap: 16px;
     width: 100%;
     border-bottom: 1px solid var(--border-color);
 }
 
 .sidebar--collapsed .sidebar__section {
-    padding: 0 20px 20px;
-    gap: 20px;
+    /* even, compact spacing in collapsed mode */
+    padding: 12px 20px 12px;
+    gap: 12px;
 }
 
 /* --- Logo --- */
@@ -142,9 +143,8 @@
 }
 
 .sidebar__logo-text {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-    font-size: 18px;
+    font-weight: 600;
+    font-size: 16px;
     color: var(--text-primary);
     white-space: nowrap;
     transition: opacity 0.2s ease;
@@ -196,9 +196,8 @@
 }
 
 .sidebar__user-name {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 400;
-    font-size: 16px;
+    font-weight: 500;
+    font-size: 14px;
     color: var(--text-sidebar-secondary);
     white-space: nowrap;
     transition: opacity 0.2s ease;
@@ -281,9 +280,8 @@
 
 /* --- Section Label --- */
 .sidebar__label {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
+    font-weight: 500;
+    font-size: 10px;
     color: var(--text-section-label);
     width: 100%;
     text-align: left;
@@ -301,7 +299,7 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 0;
-    gap: 4px;
+    gap: 0;
     width: 100%;
 }
 
@@ -311,8 +309,8 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 8px;
-    gap: 11px;
+    padding: 5px 8px;
+    gap: 10px;
     width: 100%;
     border-radius: 5px;
     cursor: pointer;
@@ -335,15 +333,24 @@
     flex: 1;
 }
 
+.sidebar__nav-link--project {
+    justify-content: space-between;
+}
+
+.sidebar--collapsed .sidebar__nav-link {
+    justify-content: center;
+    gap: 0;
+}
+
 .sidebar__nav-icon {
-    width: 24px;
-    height: 24px;
-    min-width: 24px;
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--icon-color);
-    font-size: 18px;
+    font-size: 16px;
     transition: color 0.2s ease;
 }
 
@@ -352,10 +359,9 @@
 }
 
 .sidebar__nav-text {
-    font-family: 'Roboto', sans-serif;
     font-weight: 400;
-    font-size: 16px;
-    line-height: 19px;
+    font-size: 13px;
+    line-height: 16px;
     color: var(--text-sidebar-secondary);
     white-space: nowrap;
     transition: opacity 0.2s ease;
@@ -391,7 +397,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Roboto', sans-serif;
     font-weight: 500;
     font-size: 10px;
     color: var(--badge-text);
@@ -424,15 +429,21 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 0 20px;
-    gap: 12px;
+    gap: 8px; /* tighter spacing between bottom icons */
     width: 100%;
     margin-top: auto;
-    padding-top: 20px;
+    padding-top: 8px; /* less space from the top */
 }
 
 .sidebar--collapsed .sidebar__bottom {
     align-items: center;
-    padding: 0 10px;
+    padding: 8px 10px; /* less top space in collapsed */
+    gap: 8px; /* tighter spacing between icons */
+    margin-top: 0; /* pull bottom group up in collapsed view */
+}
+
+.sidebar--collapsed .sidebar__theme-row {
+    gap: 0;
 }
 
 .sidebar__theme-row {
@@ -461,7 +472,8 @@
     min-width: 34px;
     width: 34px;
     height: 34px;
-    border-radius: 50%;
+    border-radius: 10px;
+    margin: 0 auto;
 }
 
 .sidebar__theme-knob {
@@ -490,18 +502,22 @@
 
 .sidebar--collapsed .sidebar__theme-icon--inactive {
     display: flex;
-    width: 24px;
-    height: 24px;
-    font-size: 20px;
+    width: 22px;
+    height: 22px;
+    font-size: 18px;
 }
 
 .sidebar--collapsed .sidebar__theme-toggle {
     min-width: 34px;
     width: 34px;
     height: 34px;
-    border-radius: 50%;
+    border-radius: 10px;
     background: transparent;
     box-shadow: none;
+}
+
+.sidebar--collapsed .sidebar__theme-toggle:hover {
+    background: var(--bg-hover);
 }
 
 
@@ -517,9 +533,8 @@
 }
 
 .sidebar__theme-label {
-    font-family: 'Roboto', sans-serif;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 14px;
     color: var(--text-sidebar-secondary);
     white-space: nowrap;
     transition: opacity 0.2s ease;
@@ -534,7 +549,7 @@
 /* --- Collapsed icon-only nav item --- */
 .sidebar--collapsed .sidebar__nav-item {
     justify-content: center;
-    padding: 8px;
+    padding: 6px;
     width: 34px;
     height: 34px;
     margin: 0 auto;
@@ -600,8 +615,8 @@
     }
 
     .sidebar--collapsed {
-        width: 300px;
-        min-width: 300px;
+        width: 280px;
+        min-width: 280px;
         align-items: flex-start;
     }
 
@@ -632,7 +647,7 @@
     .sidebar--collapsed .sidebar__nav-item {
         width: 100%;
         justify-content: space-between;
-        padding: 8px;
+        padding: 6px;
     }
 
     .sidebar--collapsed .sidebar__theme-toggle {
@@ -647,4 +662,97 @@
         left: 2px;
         top: 2px;
     }
+}
+
+/* Collapsed clean-up: hide labels and large CTAs */
+.sidebar--collapsed .sidebar__label,
+.sidebar--collapsed .sidebar__collapse-text,
+.sidebar--collapsed .sidebar__start-project span {
+    display: none;
+}
+
+.sidebar--collapsed .sidebar__pdf-btn {
+    width: 34px;
+    height: 34px;
+    padding: 6px;
+    border-radius: 10px;
+    justify-content: center;
+}
+
+.sidebar--collapsed .sidebar__pdf-btn span {
+    display: none;
+}
+
+/* Collapse Toggle under logo */
+.sidebar__collapse-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 6px;
+    /* color: var(--text-sidebar-secondary); */
+}
+
+.sidebar__collapse-toggle:hover {
+    background: var(--bg-hover);
+}
+
+.sidebar__collapse-text {
+    font-size: 12px;
+}
+
+/* Collapsed: make collapse toggle icon-only and centered */
+.sidebar--collapsed .sidebar__collapse-toggle {
+    width: 34px;
+    height: 34px;
+    padding: 6px;
+    border-radius: 10px;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+/* Start Project button */
+.sidebar__start-project {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px dashed var(--border-color);
+    color: var(--text-secondary);
+    justify-content: space-between;
+}
+
+.sidebar__start-project:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* Collapsed: keep + icon visible for Start Project */
+.sidebar--collapsed .sidebar__start-project {
+    width: 34px;
+    height: 34px;
+    padding: 6px;
+    border-radius: 10px;
+    justify-content: center;
+    margin: 0 auto; /* center horizontally like other icons */
+}
+
+/* PDF button */
+.sidebar__pdf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.sidebar__pdf-btn:hover {
+    border-color: var(--accent);
 }
