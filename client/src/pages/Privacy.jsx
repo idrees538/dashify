@@ -2,47 +2,49 @@ import { IoShieldCheckmarkOutline, IoLockClosedOutline, IoEyeOffOutline } from '
 
 function Privacy() {
     return (
-        <div className="max-w-[1200px] mx-auto animate-page-in">
-            <div className="mb-8">
-                <h1 className="text-[28px] font-bold text-primary-text mb-2 max-md:text-2xl">Privacy</h1>
-                <p className="text-[15px] text-secondary-text font-normal">Manage your privacy settings and data controls.</p>
+        <div className="page">
+            <div className="page__header">
+                <h1 className="page__title">Privacy</h1>
+                <p className="page__subtitle">Manage your privacy settings and data controls.</p>
             </div>
 
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6 mb-8 max-md:grid-cols-1 max-md:gap-4">
-                <div className="card-base">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-[22px] bg-[#10b9811f] text-[#10b981]"><IoShieldCheckmarkOutline /></div>
-                    <p className="text-[13px] font-medium text-secondary-text uppercase tracking-[0.5px] mb-2">Security Score</p>
-                    <h2 className="text-[32px] font-bold text-primary-text mb-1">92%</h2>
-                    <span className="text-[13px] font-medium text-[#10b981]">Strong</span>
+            <div className="page__cards">
+                <div className="card">
+                    <div className="card__icon card__icon--green"><IoShieldCheckmarkOutline /></div>
+                    <p className="card__label">Security Score</p>
+                    <h2 className="card__value">92%</h2>
+                    <span className="card__change card__change--up">Strong</span>
                 </div>
-                <div className="card-base">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-[22px] bg-[#3b82f61f] text-[#3b82f6]"><IoLockClosedOutline /></div>
-                    <p className="text-[13px] font-medium text-secondary-text uppercase tracking-[0.5px] mb-2">2FA Status</p>
-                    <h2 className="text-[32px] font-bold text-primary-text mb-1">Active</h2>
-                    <span className="text-[13px] font-medium text-[#10b981]">Enabled</span>
+                <div className="card">
+                    <div className="card__icon card__icon--blue"><IoLockClosedOutline /></div>
+                    <p className="card__label">2FA Status</p>
+                    <h2 className="card__value">Active</h2>
+                    <span className="card__change card__change--up">Enabled</span>
                 </div>
-                <div className="card-base">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-[22px] bg-[#8204ff1f] text-accent"><IoEyeOffOutline /></div>
-                    <p className="text-[13px] font-medium text-secondary-text uppercase tracking-[0.5px] mb-2">Data Sharing</p>
-                    <h2 className="text-[32px] font-bold text-primary-text mb-1">Limited</h2>
-                    <span className="text-[13px] text-secondary-text">Minimal data shared</span>
+                <div className="card">
+                    <div className="card__icon card__icon--purple"><IoEyeOffOutline /></div>
+                    <p className="card__label">Data Sharing</p>
+                    <h2 className="card__value">Limited</h2>
+                    <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Minimal data shared</span>
                 </div>
             </div>
 
-            <div className="bg-card-bg rounded-2xl p-6 shadow-main border border-border-main transition-colors duration-300 max-md:p-4 max-md:overflow-x-auto">
-                <div className="flex justify-between items-center mb-5">
-                    <h3 className="text-lg font-semibold text-primary-text">Privacy Controls</h3>
+            <div className="table-placeholder">
+                <div className="table-placeholder__header">
+                    <h3 className="table-placeholder__title">Privacy Controls</h3>
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="table-placeholder__rows">
                     {['Profile Visibility', 'Activity Status', 'Read Receipts', 'Data Analytics', 'Third-party Access'].map((item, i) => (
-                        <div className="flex items-center justify-between gap-4 py-3.5 border-b border-border-main last:border-0 max-md:min-w-[500px]" key={item}>
-                            <span className="font-medium text-primary-text">{item}</span>
-                            <div
-                                className={`w-11 h-6 rounded-xl relative cursor-pointer transition-colors ${i < 3 ? 'bg-[#10b981]' : 'bg-[#1a1a2e14] dark:bg-white/10'}`}
-                            >
-                                <div
-                                    className={`w-5 h-5 rounded-full bg-white absolute top-0.5 transition-all shadow-sm ${i < 3 ? 'left-[22px]' : 'left-0.5'}`}
-                                />
+                        <div className="table-placeholder__row" key={i} style={{ justifyContent: 'space-between' }}>
+                            <span style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{item}</span>
+                            <div style={{
+                                width: 44, height: 24, borderRadius: 12, background: i < 3 ? '#10b981' : 'var(--bg-hover)',
+                                position: 'relative', cursor: 'pointer'
+                            }}>
+                                <div style={{
+                                    width: 20, height: 20, borderRadius: '50%', background: '#fff', position: 'absolute',
+                                    top: 2, left: i < 3 ? 22 : 2, transition: 'left 0.2s ease', boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
+                                }} />
                             </div>
                         </div>
                     ))}

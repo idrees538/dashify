@@ -9,39 +9,39 @@ function Help() {
     ];
 
     return (
-        <div className="max-w-[1200px] mx-auto animate-page-in">
-            <div className="mb-8">
-                <h1 className="text-[28px] font-bold text-primary-text mb-2 max-md:text-2xl">Help Center</h1>
-                <p className="text-[15px] text-secondary-text font-normal">Find answers and get support.</p>
+        <div className="page">
+            <div className="page__header">
+                <h1 className="page__title">Help Center</h1>
+                <p className="page__subtitle">Find answers and get support.</p>
             </div>
 
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6 mb-8 max-md:grid-cols-1 max-md:gap-4">
-                <div className="card-base cursor-pointer group">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-[22px] bg-[#8204ff1f] text-accent transition-transform duration-200 group-hover:scale-110"><IoBookOutline /></div>
-                    <p className="text-base font-semibold text-primary-text mb-1">Documentation</p>
-                    <p className="text-[13px] text-secondary-text">Browse guides and tutorials</p>
+            <div className="page__cards">
+                <div className="card" style={{ cursor: 'pointer' }}>
+                    <div className="card__icon card__icon--purple"><IoBookOutline /></div>
+                    <p className="card__label" style={{ textTransform: 'none', letterSpacing: 0, fontSize: 16, fontWeight: 500 }}>Documentation</p>
+                    <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Browse guides and tutorials</p>
                 </div>
-                <div className="card-base cursor-pointer group">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-[22px] bg-[#3b82f61f] text-[#3b82f6] transition-transform duration-200 group-hover:scale-110"><IoChatbubbleEllipsesOutline /></div>
-                    <p className="text-base font-semibold text-primary-text mb-1">Contact Support</p>
-                    <p className="text-[13px] text-secondary-text">Get help from our team</p>
+                <div className="card" style={{ cursor: 'pointer' }}>
+                    <div className="card__icon card__icon--blue"><IoChatbubbleEllipsesOutline /></div>
+                    <p className="card__label" style={{ textTransform: 'none', letterSpacing: 0, fontSize: 16, fontWeight: 500 }}>Contact Support</p>
+                    <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Get help from our team</p>
                 </div>
-                <div className="card-base cursor-pointer group">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-[22px] bg-[#10b9811f] text-[#10b981] transition-transform duration-200 group-hover:scale-110"><IoHelpCircleOutline /></div>
-                    <p className="text-base font-semibold text-primary-text mb-1">FAQs</p>
-                    <p className="text-[13px] text-secondary-text">Frequently asked questions</p>
+                <div className="card" style={{ cursor: 'pointer' }}>
+                    <div className="card__icon card__icon--green"><IoHelpCircleOutline /></div>
+                    <p className="card__label" style={{ textTransform: 'none', letterSpacing: 0, fontSize: 16, fontWeight: 500 }}>FAQs</p>
+                    <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Frequently asked questions</p>
                 </div>
             </div>
 
-            <div className="bg-card-bg rounded-2xl p-6 shadow-main border border-border-main transition-colors duration-300">
-                <div className="flex justify-between items-center mb-5">
-                    <h3 className="text-lg font-semibold text-primary-text">Frequently Asked Questions</h3>
+            <div className="table-placeholder">
+                <div className="table-placeholder__header">
+                    <h3 className="table-placeholder__title">Frequently Asked Questions</h3>
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="table-placeholder__rows">
                     {faqs.map((faq, i) => (
-                        <div className="flex flex-col items-start gap-1.5 py-4 border-b border-border-main last:border-0" key={i}>
-                            <span className="font-medium text-primary-text">{faq.q}</span>
-                            <span className="text-sm text-secondary-text leading-relaxed">{faq.a}</span>
+                        <div className="table-placeholder__row" key={i} style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 6 }}>
+                            <span style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{faq.q}</span>
+                            <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>{faq.a}</span>
                         </div>
                     ))}
                 </div>
