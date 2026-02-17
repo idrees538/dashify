@@ -15,82 +15,54 @@ function Chat() {
     ];
 
     return (
-        <div className="page">
-            <div className="page__header">
-                <h1 className="page__title">Chat</h1>
-                <p className="page__subtitle">Stay connected with your team.</p>
+        <div className="max-w-[1200px] mx-auto animate-page-in">
+            <div className="mb-8">
+                <h1 className="text-[28px] font-bold text-primary-text mb-2 max-md:text-2xl">Chat</h1>
+                <p className="text-[15px] text-secondary-text font-normal">Stay connected with your team.</p>
             </div>
 
-            <div style={{
-                display: 'grid', gridTemplateColumns: '280px 1fr', gap: 24,
-                background: 'var(--bg-card)', borderRadius: 16, overflow: 'hidden',
-                border: '1px solid var(--border-color)', boxShadow: 'var(--shadow)', minHeight: 500
-            }}>
+            <div className="grid grid-cols-[280px_1fr] gap-0 bg-card-bg rounded-2xl overflow-hidden border border-border-main shadow-main min-h-[500px] max-md:grid-cols-1">
                 {/* Conversation List */}
-                <div style={{ borderRight: '1px solid var(--border-color)', padding: 16 }}>
-                    <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16, color: 'var(--text-primary)' }}>Messages</h3>
+                <div className="border-r border-border-main p-4 max-md:border-r-0 max-md:border-b">
+                    <h3 className="text-base font-semibold mb-4 text-primary-text">Messages</h3>
                     {conversations.map((conv) => (
-                        <div key={conv.id} style={{
-                            display: 'flex', alignItems: 'center', gap: 12, padding: '12px 8px',
-                            borderRadius: 10, background: 'var(--sidebar-active-bg)', cursor: 'pointer', marginBottom: 4
-                        }}>
-                            <div style={{
-                                width: 40, height: 40, minWidth: 40, borderRadius: '50%',
-                                background: 'linear-gradient(135deg, #8204ff, #a855f7)',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 500, fontSize: 14
-                            }}>DT</div>
-                            <div style={{ flex: 1, overflow: 'hidden' }}>
-                                <div style={{ fontWeight: 500, color: 'var(--text-primary)', fontSize: 14 }}>{conv.name}</div>
-                                <div style={{ fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{conv.lastMsg}</div>
+                        <div key={conv.id} className="flex items-center gap-3 p-2 rounded-xl bg-accent-light/50 cursor-pointer mb-1 transition-colors hover:bg-accent-light">
+                            <div className="w-10 h-10 min-w-[40px] rounded-full bg-linear-[135deg,#8204ff,#a855f7] flex items-center justify-center text-white font-medium text-sm">DT</div>
+                            <div className="flex-1 overflow-hidden">
+                                <div className="font-medium text-primary-text text-sm">{conv.name}</div>
+                                <div className="text-[13px] text-secondary-text whitespace-nowrap overflow-hidden text-ellipsis">{conv.lastMsg}</div>
                             </div>
                             {conv.unread > 0 && (
-                                <span style={{
-                                    minWidth: 20, height: 20, borderRadius: 10, background: '#8204ff',
-                                    color: '#fff', fontSize: 11, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center'
-                                }}>{conv.unread}</span>
+                                <span className="min-w-[20px] h-5 rounded-full bg-accent text-white text-[11px] font-bold flex items-center justify-center">{conv.unread}</span>
                             )}
                         </div>
                     ))}
                 </div>
 
                 {/* Chat Area */}
-                <div style={{ display: 'flex', flexDirection: 'column', padding: 16 }}>
-                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12, paddingBottom: 16 }}>
+                <div className="flex flex-col p-4">
+                    <div className="flex-1 flex flex-col gap-3 pb-4">
                         {conversations[0].messages.map((msg, i) => (
-                            <div key={i} style={{
-                                display: 'flex', justifyContent: msg.self ? 'flex-end' : 'flex-start'
-                            }}>
-                                <div style={{
-                                    maxWidth: '70%', padding: '10px 14px', borderRadius: 12,
-                                    background: msg.self ? '#8204ff' : 'var(--bg-hover)',
-                                    color: msg.self ? '#fff' : 'var(--text-primary)',
-                                }}>
-                                    {!msg.self && <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4, color: '#8204ff' }}>{msg.from}</div>}
-                                    <p style={{ fontSize: 14, lineHeight: 1.5 }}>{msg.text}</p>
-                                    <div style={{ fontSize: 11, marginTop: 4, opacity: 0.7, textAlign: 'right' }}>{msg.time}</div>
+                            <div key={i} className={`flex ${msg.self ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`max-w-[70%] p-[10px_14px] rounded-xl text-sm leading-relaxed ${msg.self ? 'bg-accent text-white' : 'bg-[#1a1a2e14] dark:bg-white/10 text-primary-text'
+                                    }`}>
+                                    {!msg.self && <div className="text-[12px] font-bold mb-1 text-accent">{msg.from}</div>}
+                                    <p>{msg.text}</p>
+                                    <div className="text-[11px] mt-1 opacity-70 text-right">{msg.time}</div>
                                 </div>
                             </div>
                         ))}
                     </div>
 
-                    <div style={{
-                        display: 'flex', alignItems: 'center', gap: 12, padding: 8,
-                        background: 'var(--bg-hover)', borderRadius: 12
-                    }}>
+                    <div className="flex items-center gap-3 p-2 bg-[#1a1a2e14] dark:bg-white/10 rounded-xl">
                         <input
                             type="text"
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             placeholder="Type a message..."
-                            style={{
-                                flex: 1, padding: '10px 14px', border: 'none', background: 'transparent',
-                                outline: 'none', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'Roboto, sans-serif'
-                            }}
+                            className="flex-1 py-2.5 px-3.5 bg-transparent border-none outline-none text-sm text-primary-text"
                         />
-                        <button style={{
-                            width: 36, height: 36, borderRadius: '50%', background: '#8204ff',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 16
-                        }}>
+                        <button className="w-9 h-9 rounded-full bg-accent flex items-center justify-center text-white text-base shadow-sm hover:scale-105 transition-transform">
                             <IoSendOutline />
                         </button>
                     </div>

@@ -60,80 +60,81 @@ function Dashboard() {
     const tokensPercent = (tokensUsed / tokensTotal) * 100;
 
     return (
-        <div className="page">
+        <div className="max-w-[1200px] mx-auto animate-page-in">
             {/* Section 1: Welcome + Overview */}
-            <div className="dash-welcome">
-                <div className="dash-welcome__text">
-                    <h1 className="dash-welcome__greeting">Welcome back, John 👋</h1>
-                    <p className="dash-welcome__sub">Here's your account overview</p>
+            <div className="flex justify-between items-center flex-wrap gap-4 mb-7 p-7 bg-linear-[135deg,var(--accent)_0%,#a855f7_50%,#c084fc_100%] rounded-[20px] shadow-large">
+                <div className="flex-1 min-w-[200px]">
+                    <h1 className="text-[26px] font-bold text-white">Welcome back, John 👋</h1>
+                    <p className="text-sm text-white/80 mt-1">Here's your account overview</p>
                 </div>
-                <div className="dash-welcome__badges">
-                    <span className="dash-badge dash-badge--active">
+                <div className="flex gap-2.5 flex-wrap">
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[20px] text-[13px] font-semibold bg-[#10b98126] text-[#10b981] border border-[#10b9814d]">
                         <IoCheckmarkCircleOutline /> Active
                     </span>
-                    <span className="dash-badge dash-badge--plans">
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[20px] text-[13px] font-semibold bg-white/20 text-white border border-white/30">
                         <IoRocketOutline /> 2 Active Plans
                     </span>
                 </div>
             </div>
 
             {/* Section 2: Token Summary */}
-            <div className="dash-tokens card">
-                <div className="dash-tokens__header">
-                    <div className="dash-tokens__icon">
+            <div className="card-base mb-8">
+                <div className="flex items-center gap-3.5 mb-6">
+                    <div className="w-11 h-11 rounded-xl bg-[#f59e0b1f] text-[#f59e0b] flex items-center justify-center text-[22px]">
                         <IoFlashOutline />
                     </div>
                     <div>
-                        <h3 className="dash-tokens__title">Token Usage</h3>
-                        <p className="dash-tokens__sub">Track your token consumption</p>
+                        <h3 className="text-[17px] font-semibold text-primary-text">Token Usage</h3>
+                        <p className="text-[13px] text-secondary-text">Track your token consumption</p>
                     </div>
                 </div>
-                <div className="dash-tokens__stats">
-                    <div className="dash-tokens__stat">
-                        <span className="dash-tokens__stat-label">Total Available</span>
-                        <span className="dash-tokens__stat-value">{tokensTotal.toLocaleString()}</span>
+                <div className="flex gap-8 mb-4.5 flex-wrap">
+                    <div className="flex flex-col gap-1">
+                        <span className="text-[12px] text-secondary-text uppercase tracking-[0.5px] font-medium">Total Available</span>
+                        <span className="text-2xl font-bold text-primary-text">{tokensTotal.toLocaleString()}</span>
                     </div>
-                    <div className="dash-tokens__stat">
-                        <span className="dash-tokens__stat-label">Used</span>
-                        <span className="dash-tokens__stat-value dash-tokens__stat-value--used">{tokensUsed.toLocaleString()}</span>
+                    <div className="flex flex-col gap-1">
+                        <span className="text-[12px] text-secondary-text uppercase tracking-[0.5px] font-medium">Used</span>
+                        <span className="text-2xl font-bold text-[#f59e0b]">{tokensUsed.toLocaleString()}</span>
                     </div>
-                    <div className="dash-tokens__stat">
-                        <span className="dash-tokens__stat-label">Remaining</span>
-                        <span className="dash-tokens__stat-value dash-tokens__stat-value--remaining">{(tokensTotal - tokensUsed).toLocaleString()}</span>
+                    <div className="flex flex-col gap-1">
+                        <span className="text-[12px] text-secondary-text uppercase tracking-[0.5px] font-medium">Remaining</span>
+                        <span className="text-2xl font-bold text-[#10b981]">{(tokensTotal - tokensUsed).toLocaleString()}</span>
                     </div>
                 </div>
-                <div className="dash-tokens__bar-wrap">
-                    <div className="dash-tokens__bar">
+                <div className="flex flex-col gap-2 mt-4">
+                    <div className="w-full h-2.5 bg-[#1a1a2e14] dark:bg-white/10 rounded-[5px] overflow-hidden">
                         <div
-                            className="dash-tokens__bar-fill"
+                            className="h-full bg-linear-to-r from-accent to-[#c084fc] rounded-[5px] transition-[width] duration-1000 ease-[cubic-bezier(0.4,0,0.2,1)]"
                             style={{ width: `${tokensPercent}%` }}
                         />
                     </div>
-                    <span className="dash-tokens__bar-label">
+                    <span className="text-[12px] text-secondary-text font-medium text-right">
                         {tokensUsed.toLocaleString()} / {tokensTotal.toLocaleString()} used
                     </span>
                 </div>
             </div>
 
             {/* Section 3: Active Plans */}
-            <div className="dash-section">
-                <h2 className="dash-section__title">Active Plans</h2>
-                <div className="dash-plans">
+            <div className="mb-8">
+                <h2 className="text-lg font-semibold text-primary-text mb-4">Active Plans</h2>
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5">
                     {PLANS.map((plan, i) => (
-                        <div className="card dash-plan" key={i}>
-                            <div className="dash-plan__top">
-                                <h3 className="dash-plan__name">{plan.name}</h3>
-                                <span className={`dash-plan__status dash-plan__status--${plan.status.toLowerCase()}`}>
+                        <div className="card-base" key={i}>
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-base font-semibold text-primary-text">{plan.name}</h3>
+                                <span className={`px-3 py-1 rounded-xl text-[12px] font-semibold ${plan.status.toLowerCase() === 'active' ? 'bg-[#10b9811f] text-[#10b981]' : 'bg-[#ef44441f] text-[#ef4444]'
+                                    }`}>
                                     {plan.status}
                                 </span>
                             </div>
-                            <div className="dash-plan__details">
-                                <div className="dash-plan__detail">
-                                    <IoTimeOutline />
+                            <div className="flex flex-col gap-2.5">
+                                <div className="flex items-center gap-2 text-[13px] text-secondary-text">
+                                    <IoTimeOutline className="text-base text-secondary-text/60" />
                                     <span>Expires: {plan.expiry}</span>
                                 </div>
-                                <div className="dash-plan__detail">
-                                    <IoFlashOutline />
+                                <div className="flex items-center gap-2 text-[13px] text-secondary-text">
+                                    <IoFlashOutline className="text-base text-secondary-text/60" />
                                     <span>{plan.tokens} tokens allocated</span>
                                 </div>
                             </div>
@@ -143,18 +144,23 @@ function Dashboard() {
             </div>
 
             {/* Section 4: Quick Access Widgets */}
-            <div className="dash-section">
-                <h2 className="dash-section__title">Quick Access</h2>
-                <div className="dash-widgets">
+            <div className="mb-8">
+                <h2 className="text-lg font-semibold text-primary-text mb-4">Quick Access</h2>
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
                     {QUICK_WIDGETS.map((w, i) => {
                         const Icon = w.icon;
+                        const iconColors = {
+                            '--purple': 'bg-[#8204ff1f] text-accent',
+                            '--blue': 'bg-[#3b82f61f] text-[#3b82f6]',
+                            '--green': 'bg-[#10b9811f] text-[#10b981]'
+                        };
                         return (
-                            <NavLink to={w.path} className="card dash-widget" key={i}>
-                                <div className={`card__icon card__icon${w.color}`}>
+                            <NavLink to={w.path} className="card-base flex flex-col items-start group" key={i}>
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-[22px] transition-transform duration-200 group-hover:scale-110 ${iconColors[w.color]}`}>
                                     <Icon />
                                 </div>
-                                <p className="dash-widget__label">{w.label}</p>
-                                <p className="dash-widget__value">{w.value}</p>
+                                <p className="text-sm font-medium text-secondary-text mb-1">{w.label}</p>
+                                <p className="text-xl font-bold text-primary-text">{w.value}</p>
                             </NavLink>
                         );
                     })}

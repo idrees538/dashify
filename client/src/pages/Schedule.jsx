@@ -10,32 +10,32 @@ function Schedule() {
     ];
 
     return (
-        <div className="page">
-            <div className="page__header">
-                <h1 className="page__title">Schedule</h1>
-                <p className="page__subtitle">Manage your calendar and upcoming events.</p>
+        <div className="max-w-[1200px] mx-auto animate-page-in">
+            <div className="mb-8">
+                <h1 className="text-[28px] font-bold text-primary-text mb-2 max-md:text-2xl">Schedule</h1>
+                <p className="text-[15px] text-secondary-text font-normal">Manage your calendar and upcoming events.</p>
             </div>
 
-            <div className="page__cards">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-4 mb-8">
                 {days.map((day) => (
-                    <div className="card" key={day} style={{ textAlign: 'center', padding: 16 }}>
-                        <p className="card__label">{day}</p>
-                        <h2 className="card__value" style={{ fontSize: 20 }}>{Math.floor(Math.random() * 5)}</h2>
-                        <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>events</span>
+                    <div className="card-base text-center !p-4" key={day}>
+                        <p className="text-[13px] font-medium text-secondary-text uppercase tracking-[0.5px] mb-1">{day}</p>
+                        <h2 className="text-xl font-bold text-primary-text">{Math.floor(Math.random() * 5)}</h2>
+                        <span className="text-[12px] text-secondary-text">events</span>
                     </div>
                 ))}
             </div>
 
-            <div className="table-placeholder">
-                <div className="table-placeholder__header">
-                    <h3 className="table-placeholder__title">Today's Schedule</h3>
+            <div className="bg-card-bg rounded-2xl p-6 shadow-main border border-border-main transition-colors duration-300">
+                <div className="flex justify-between items-center mb-5">
+                    <h3 className="text-lg font-semibold text-primary-text">Today's Schedule</h3>
                 </div>
-                <div className="table-placeholder__rows">
+                <div className="flex flex-col gap-3">
                     {events.map((ev, i) => (
-                        <div className="table-placeholder__row" key={i} style={{ alignItems: 'center' }}>
-                            <div style={{ minWidth: 60, fontWeight: 500, color: 'var(--text-secondary)', fontSize: 14 }}>{ev.time}</div>
-                            <div style={{ width: 4, height: 32, borderRadius: 2, background: ev.color, minWidth: 4 }} />
-                            <div style={{ flex: 1, fontWeight: 500, color: 'var(--text-primary)' }}>{ev.title}</div>
+                        <div className="flex items-center gap-4 py-3.5 border-b border-border-main last:border-0" key={i}>
+                            <div className="min-w-[60px] font-medium text-secondary-text text-sm">{ev.time}</div>
+                            <div className="w-1 h-8 rounded-sm shrink-0" style={{ background: ev.color }} />
+                            <div className="flex-1 font-medium text-primary-text">{ev.title}</div>
                         </div>
                     ))}
                 </div>

@@ -11,25 +11,25 @@ function Activity() {
     ];
 
     return (
-        <div className="page">
-            <div className="page__header">
-                <h1 className="page__title">Activity</h1>
-                <p className="page__subtitle">Track recent activity across your workspace.</p>
+        <div className="max-w-[1200px] mx-auto animate-page-in">
+            <div className="mb-8">
+                <h1 className="text-[28px] font-bold text-primary-text mb-2 max-md:text-2xl">Activity</h1>
+                <p className="text-[15px] text-secondary-text font-normal">Track recent activity across your workspace.</p>
             </div>
 
-            <div className="table-placeholder">
-                <div className="table-placeholder__header">
-                    <h3 className="table-placeholder__title">Recent Activity</h3>
+            <div className="bg-card-bg rounded-2xl p-6 shadow-main border border-border-main transition-colors duration-300">
+                <div className="flex justify-between items-center mb-5">
+                    <h3 className="text-lg font-semibold text-primary-text">Recent Activity</h3>
                 </div>
-                <div className="table-placeholder__rows">
+                <div className="flex flex-col gap-3">
                     {activities.map((act, i) => (
-                        <div className="table-placeholder__row" key={i}>
-                            <div style={{ fontSize: 24, minWidth: 40, textAlign: 'center' }}>{act.icon}</div>
-                            <div style={{ flex: 1 }}>
-                                <span style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{act.user} </span>
-                                <span style={{ color: 'var(--text-secondary)' }}>{act.action}</span>
+                        <div className="flex items-center gap-4 py-3.5 border-b border-border-main last:border-0" key={i}>
+                            <div className="text-2xl min-w-[40px] text-center">{act.icon}</div>
+                            <div className="flex-1">
+                                <span className="font-medium text-primary-text">{act.user} </span>
+                                <span className="text-secondary-text">{act.action}</span>
                             </div>
-                            <div style={{ fontSize: 13, color: 'var(--text-secondary)', minWidth: 80, textAlign: 'right' }}>{act.time}</div>
+                            <div className="text-[13px] text-secondary-text min-w-[80px] text-right">{act.time}</div>
                         </div>
                     ))}
                 </div>

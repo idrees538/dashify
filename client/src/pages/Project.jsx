@@ -9,33 +9,27 @@ function Project() {
     ];
 
     return (
-        <div className="page">
-            <div className="page__header">
-                <h1 className="page__title">Projects</h1>
-                <p className="page__subtitle">Overview of all ongoing and upcoming projects.</p>
+        <div className="max-w-[1200px] mx-auto animate-page-in">
+            <div className="mb-8">
+                <h1 className="text-[28px] font-bold text-primary-text mb-2 max-md:text-2xl">Projects</h1>
+                <p className="text-[15px] text-secondary-text font-normal">Overview of all ongoing and upcoming projects.</p>
             </div>
 
-            <div className="page__cards">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6 mb-8 max-md:grid-cols-1 max-md:gap-4">
                 {projects.map((proj, i) => (
-                    <div className="card" key={i}>
-                        <div className="card__icon" style={{ background: `${proj.color}18`, color: proj.color }}>
+                    <div className="card-base" key={i}>
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-[22px]" style={{ background: `${proj.color}18`, color: proj.color }}>
                             <IoFolderOutline />
                         </div>
-                        <p className="card__label">{proj.name}</p>
-                        <div style={{ marginTop: 12 }}>
-                            <div style={{
-                                display: 'flex', justifyContent: 'space-between', marginBottom: 6,
-                                fontSize: 13, color: 'var(--text-secondary)'
-                            }}>
+                        <p className="text-[13px] font-medium text-secondary-text uppercase tracking-[0.5px] mb-2">{proj.name}</p>
+                        <div className="mt-3">
+                            <div className="flex justify-between mb-1.5 text-[13px] text-secondary-text">
                                 <span>{proj.status}</span>
                                 <span>{proj.progress}%</span>
                             </div>
-                            <div style={{
-                                height: 6, borderRadius: 3, background: 'var(--bg-hover)', overflow: 'hidden'
-                            }}>
-                                <div style={{
-                                    width: `${proj.progress}%`, height: '100%', borderRadius: 3, background: proj.color,
-                                    transition: 'width 0.5s ease'
+                            <div className="h-1.5 rounded-[3px] bg-[#1a1a2e14] dark:bg-white/10 overflow-hidden">
+                                <div className="h-full rounded-[3px] transition-[width] duration-500 ease" style={{
+                                    width: `${proj.progress}%`, background: proj.color
                                 }} />
                             </div>
                         </div>
