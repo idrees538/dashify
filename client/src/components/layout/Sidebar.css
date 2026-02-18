@@ -31,7 +31,9 @@
 .mobile-header {
     display: none;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    /* place items next to each other on left */
+    gap: 10px;
     padding: 16px 20px;
     background: var(--bg-sidebar);
     border-bottom: 1px solid var(--border-color);
@@ -51,7 +53,8 @@
 }
 
 .mobile-logo img {
-    height: 24px;
+    height: 32px;
+    /* slightly larger mobile logo */
     width: auto;
 }
 
@@ -123,11 +126,12 @@
 }
 
 .sidebar__logo-icon {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
+    width: 56px;
+    /* make logo container a bit bigger */
+    height: 56px;
+    min-width: 56px;
     background: var(--accent-light);
-    border-radius: 30px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -137,8 +141,9 @@
 
 .sidebar__logo-icon svg,
 .sidebar__logo-img {
-    width: 28px;
-    height: 28px;
+    width: 40px;
+    /* scale inner logo to match container */
+    height: 40px;
     object-fit: contain;
 }
 
@@ -429,17 +434,22 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 0 20px;
-    gap: 8px; /* tighter spacing between bottom icons */
+    gap: 8px;
+    /* tighter spacing between bottom icons */
     width: 100%;
     margin-top: auto;
-    padding-top: 8px; /* less space from the top */
+    padding-top: 8px;
+    /* less space from the top */
 }
 
 .sidebar--collapsed .sidebar__bottom {
     align-items: center;
-    padding: 8px 10px; /* less top space in collapsed */
-    gap: 8px; /* tighter spacing between icons */
-    margin-top: 0; /* pull bottom group up in collapsed view */
+    padding: 8px 10px;
+    /* less top space in collapsed */
+    gap: 8px;
+    /* tighter spacing between icons */
+    margin-top: 0;
+    /* pull bottom group up in collapsed view */
 }
 
 .sidebar--collapsed .sidebar__theme-row {
@@ -450,6 +460,10 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    width: 100%;
+    padding: 8px 10px;
+    /* align with other buttons */
+    border-radius: 8px;
 }
 
 .sidebar__theme-toggle {
@@ -485,7 +499,10 @@
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.07);
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     left: 2px;
-    top: 2px;
+    /* horizontal start */
+    top: 50%;
+    /* perfectly center vertically */
+    transform: translateY(-50%);
 }
 
 .sidebar__theme-toggle--light .sidebar__theme-knob {
@@ -528,8 +545,23 @@
     align-items: center;
     justify-content: center;
     color: var(--icon-color);
-    font-size: 14px;
+    font-size: 16px;
+    line-height: 0;
+    /* remove glyph baseline shift */
+    position: absolute;
+    /* precise centering inside track */
+    top: 50%;
+    transform: translateY(-50%);
     z-index: 1;
+}
+
+/* place sun to the left and moon to the right inside the track */
+.sidebar__theme-icon:first-of-type {
+    left: 5px;
+}
+
+.sidebar__theme-icon:last-of-type {
+    right: 5px;
 }
 
 .sidebar__theme-label {
@@ -689,7 +721,8 @@
     align-items: center;
     gap: 8px;
     width: 100%;
-    padding: 6px 8px;
+    padding: 8px 10px;
+    /* match pdf button */
     border-radius: 6px;
     /* color: var(--text-sidebar-secondary); */
 }
@@ -737,7 +770,8 @@
     padding: 6px;
     border-radius: 10px;
     justify-content: center;
-    margin: 0 auto; /* center horizontally like other icons */
+    margin: 0 auto;
+    /* center horizontally like other icons */
 }
 
 /* PDF button */
@@ -755,4 +789,25 @@
 
 .sidebar__pdf-btn:hover {
     border-color: var(--accent);
+}
+
+/* Bottom attribution */
+.sidebar__bottom-separator {
+    width: 100%;
+    height: 1px;
+    background: var(--border-color);
+    margin: 6px 0 2px;
+}
+
+.sidebar__powered {
+    width: 100%;
+    padding: 4px 10px;
+    /* align text with buttons */
+    font-size: 12px;
+    color: var(--text-sidebar-secondary);
+}
+
+.sidebar--collapsed .sidebar__powered,
+.sidebar--collapsed .sidebar__bottom-separator {
+    display: none;
 }

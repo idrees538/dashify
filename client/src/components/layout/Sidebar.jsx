@@ -22,8 +22,8 @@ import {
     IoCloseOutline,
     IoLogOutOutline,
 } from 'react-icons/io5';
-import webLogo from '../../assets/web_logo.svg';
-import lightWebLogo from '../../assets/light_web_logo.svg';
+import webLogo from '../../assets/TriptychLogoPNG(White).png';
+import lightWebLogo from '../../assets/TriptychLogoPNG(Black).png';
 import dvAvatar from '../../assets/Dv.svg';
 import './Sidebar.css';
 
@@ -78,10 +78,10 @@ function Sidebar() {
                 <button className="mobile-toggle" onClick={() => setMobileOpen(true)}>
                     <IoMenuOutline />
                 </button>
-                <div className="mobile-logo">
-                    <img src={currentLogo} alt="Dashify Logo" />
-                    <span>Dashify</span>
-                </div>
+                {/* <div className="mobile-logo">
+                    <img src={currentLogo} alt="Client Portal Logo" />
+                    <span>Client Portal</span>
+                </div> */}
             </header>
 
             {/* Mobile Overlay */}
@@ -96,19 +96,30 @@ function Sidebar() {
                 {/* Top section: Logo + User (DashView) */}
                 <div className="sidebar__section">
                     {/* Logo */}
-                    <div className="sidebar__logo">
-                        <div className="sidebar__logo-icon">
-                            <img src={currentLogo} alt="Dashify Logo" className="sidebar__logo-img" />
+                    <div className="flex items-center gap-4 w-full cursor-pointer">
+
+                        {/* Logo Circle */}
+                        <div className=" 
+                  rounded-full 
+                  bg-[var(--accent-light)] 
+                  flex items-center justify-center 
+                  relative overflow-hidden">
+
+                            <img
+                                src={currentLogo}
+                                alt="Client Portal Logo"
+                                className="w-[40px] h-[40px]"
+                            />
                         </div>
-                        <span className="sidebar__logo-text">Dashify</span>
+
+                        {/* Logo Text */}
+                        <span className="font-semibold text-[16px] text-[var(--text-primary)] whitespace-nowrap transition-opacity duration-200">
+                            Client Portal
+                        </span>
+
                     </div>
-                    {/* DashView user at top */}
-                    <div className="sidebar__user">
-                        <div className="sidebar__user-info">
-                            <img src={dvAvatar} alt="DashView" className="sidebar__user-avatar-img" />
-                            <span className="sidebar__user-name">DashView</span>
-                        </div>
-                    </div>
+
+
                 </div>
 
                 {/* General Section (placeholder for future items) */}
@@ -186,25 +197,91 @@ function Sidebar() {
 
                     <div className="sidebar__theme-row">
                         <div
-                            className={`sidebar__theme-toggle ${theme === 'light' ? 'sidebar__theme-toggle--light' : ''
-                                }`}
                             onClick={toggleTheme}
                             role="button"
                             tabIndex={0}
                             title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                            className={`
+    relative flex items-center justify-center
+    cursor-pointer
+    transition-all duration-300
+
+    ${collapsed
+                                    ? "w-[34px] h-[34px] min-w-[34px] rounded-[10px] bg-transparent shadow-none hover:bg-[var(--bg-hover)]"
+                                    : "min-w-[63px] h-[29px] px-[5px] rounded-[20px] bg-[var(--toggle-bg)] shadow-[0_0_40px_rgba(0,0,0,0.07)]"
+                                }
+  `}
                         >
-                            <span className="sidebar__theme-knob" />
-                            <span className={`sidebar__theme-icon ${theme === 'light' ? 'sidebar__theme-icon--active' : 'sidebar__theme-icon--inactive'}`}>
+                            {/* KNOB */}
+                            {!collapsed && (
+                                <span
+                                    className={`
+        absolute
+        w-[25px] h-[25px]
+        rounded-full
+        bg-[var(--toggle-knob)]
+        shadow-[0_0_40px_rgba(0,0,0,0.07)]
+        top-1/2 -translate-y-1/2
+        transition-all duration-300
+        ${theme === "light"
+                                            ? "left-[calc(100%-27px)]"
+                                            : "left-[2px]"
+                                        }
+      `}
+                                />
+                            )}
+
+                            {/* SUN */}
+                            <span
+                                className={`
+      absolute top-1/2 -translate-y-1/2 left-[5px]
+      w-[18px] h-[18px]
+      flex items-center justify-center
+      text-[16px] leading-none
+      text-[var(--icon-color)]
+      z-10
+
+      ${collapsed
+                                        ? theme === "dark"
+                                            ? "w-[22px] h-[22px] text-[18px]"
+                                            : "hidden"
+                                        : ""
+                                    }
+    `}
+                            >
                                 <IoSunnyOutline />
                             </span>
-                            <span className={`sidebar__theme-icon ${theme === 'dark' ? 'sidebar__theme-icon--active' : 'sidebar__theme-icon--inactive'}`}>
+
+                            {/* MOON */}
+                            <span
+                                className={`
+      absolute top-1/2 -translate-y-1/2 right-[5px]
+      w-[18px] h-[18px]
+      flex items-center justify-center
+      text-[16px] leading-none
+      text-[var(--icon-color)]
+      z-10
+
+      ${collapsed
+                                        ? theme === "light"
+                                            ? "w-[22px] h-[22px] text-[18px]"
+                                            : "hidden"
+                                        : ""
+                                    }
+    `}
+                            >
                                 <IoMoonOutline />
                             </span>
                         </div>
+
                         <span className="sidebar__theme-label">
                             {theme === 'dark' ? 'Darkmode' : 'Lightmode'}
                         </span>
                     </div>
+
+                    {/* Separator and attribution */}
+                    <div className="sidebar__bottom-separator" />
+                    <div className="sidebar__powered">Powered by Projex ©</div>
                 </div>
             </aside>
         </>

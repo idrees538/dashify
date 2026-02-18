@@ -138,9 +138,10 @@ button {
   justify-content: space-between;
   height: 56px;
   padding: 0 8px 0 0;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  /* Make toolbar transparent/same as page background */
+  background: transparent;
+  border: none;
+  border-radius: 0;
   margin-bottom: 16px;
 }
 
@@ -166,10 +167,15 @@ button {
   justify-content: center;
   color: var(--icon-color);
   border-radius: 8px;
+  /* Provide individual background behind each icon */
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
 }
 
 .top-navbar__btn:hover {
-  background: var(--bg-hover);
+  /* Keep chip, add subtle hover emphasis */
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow);
 }
 
 .top-navbar__dot {
@@ -180,6 +186,7 @@ button {
   border-radius: 50%;
   top: 4px;
   right: 4px;
+  /* Ring should match the chip behind the icon */
   border: 2px solid var(--bg-secondary);
 }
 
@@ -269,6 +276,11 @@ button {
   .dashboard-layout__content {
     padding: 16px;
     padding-top: 20px;
+  }
+
+  /* Hide desktop toolbar on mobile */
+  .top-navbar {
+    display: none;
   }
 
   .page__title {

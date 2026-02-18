@@ -38,11 +38,13 @@ function Navbar() {
                         <p className="top-navbar__user-name">DashView</p>
                         <p className="top-navbar__user-role">Admin</p>
                     </div> */}
-                    <img
-                        src={dvAvatar}
-                        alt="Profile"
-                        className="top-navbar__avatar"
-                    />
+                    <div className="top-navbar__btn" title="Profile" style={{ padding: 0 }}>
+                        <img
+                            src={dvAvatar}
+                            alt="Profile"
+                            className="top-navbar__avatar"
+                        />
+                    </div>
                 </div>
             </div>
         </nav>
