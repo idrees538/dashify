@@ -6,7 +6,7 @@ import {
     IoSunnyOutline,
     IoMoonOutline,
 } from 'react-icons/io5';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../../contexts/ThemeContext';
 
 function Settings() {
     const { theme, toggleTheme } = useTheme();

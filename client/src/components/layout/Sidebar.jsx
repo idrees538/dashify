@@ -28,7 +28,7 @@ import './Sidebar.css';
 
 const CAP_ITEMS = [
     { name: 'Dashboard', icon: IoGridOutline, path: '/dashboard' },
-    { name: 'Calendar', icon: IoCalendarOutline, path: '/schedule' },
+    { name: 'Calendar', icon: IoCalendarOutline, path: '/calendar' },
     { name: 'Analytics', icon: IoBarChartOutline, path: '/analytics' },
     { name: 'Credits', icon: IoCashOutline, path: '/credits' },
     // Show an alert dot on Review
