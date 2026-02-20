@@ -1,4 +1,5 @@
 import { IoVideocamOutline, IoFlashOutline, IoTimeOutline, IoPlayOutline } from 'react-icons/io5';
+import './Video.css';
 
 const VIDEOS = [
     { title: 'Product Demo Walkthrough', duration: '3:45', tokens: 10, color: '--purple' },

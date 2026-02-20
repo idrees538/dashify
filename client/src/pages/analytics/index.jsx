@@ -5,6 +5,7 @@ import {
     IoTrendingUpOutline,
     IoFunnelOutline,
 } from 'react-icons/io5';
+import './Analytics.css';
 
 const ANALYTICS_CARDS = [
     { label: 'Total Views', value: '24.5K', change: '+12.3%', up: true, icon: IoEyeOutline, color: '--purple' },

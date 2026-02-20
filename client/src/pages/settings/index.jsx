@@ -7,6 +7,7 @@ import {
     IoMoonOutline,
 } from 'react-icons/io5';
 import { useTheme } from '../../contexts/ThemeContext';
+import './Settings.css';
 
 function Settings() {
     const { theme, toggleTheme } = useTheme();

@@ -8,6 +8,7 @@ import {
     IoShareOutline,
     IoLinkOutline,
 } from 'react-icons/io5';
+import './SocialMedia.css';
 
 const PLATFORMS = [
     { name: 'Instagram', icon: IoLogoInstagram, followers: '12.4K', posts: 156, color: '#E1306C' },

@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import './Dashboard.css';
 import {
     IoCheckmarkCircleOutline,
     IoFlashOutline,

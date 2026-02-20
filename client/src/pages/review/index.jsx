@@ -2,6 +2,7 @@ import { useState } from 'react';
 import DraftSelector from './components/DraftSelector';
 import VideoPlayer from './components/VideoPlayer';
 import NotesPanel from './components/NotesPanel';
+import './Review.css';
 
 const DRAFTS = [
     {

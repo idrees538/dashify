@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { IoSearchOutline } from 'react-icons/io5';
 import ProjectFolder from './components/ProjectFolder';
 import FileList from './components/FileList';
+import './Deliverables.css';
 
 const PROJECTS = [
     {
