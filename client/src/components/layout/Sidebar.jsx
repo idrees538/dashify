@@ -95,7 +95,7 @@ function Sidebar() {
             )}
 
             <aside className={`
-                flex flex-col items-start py-4 h-full bg-bg-sidebar border-r border-border-color transition-all duration-300 z-[120] overflow-y-auto overflow-x-hidden
+                flex flex-col items-start py-4 h-full bg-bg-sidebar border-r border-border-color transition-all duration-300 z-[120] overflow-y-auto ${collapsed ? 'overflow-visible' : 'overflow-x-hidden'}
                 ${collapsed ? 'w-[74px] min-w-[74px] items-center' : 'w-60 min-w-60'}
                 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
                 fixed md:relative top-0 left-0 bottom-0
@@ -134,18 +134,20 @@ function Sidebar() {
                     <span className={`font-medium text-[10px] text-text-secondary/60 w-full text-left uppercase tracking-wider ${collapsed ? 'md:hidden' : ''}`}>General</span>
                     <nav className="flex flex-col items-start p-0 gap-0 w-full">
                         {!hasProject ? (
-                            <NavLink className="flex items-center gap-2 w-full p-2 text-text-secondary hover:bg-bg-hover rounded transition-colors duration-200">
+                            <NavLink className="flex items-center gap-2 w-full p-2 text-text-secondary hover:bg-bg-hover rounded transition-colors duration-200 relative group">
                                 <span className={collapsed ? 'md:hidden' : ''}>Project</span>
                                 <IoAddOutline className="text-xl" />
+                                {collapsed && <span className="hidden group-hover:block absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-bg-card text-text-primary px-3 py-1.5 rounded-md text-[13px] font-medium whitespace-nowrap shadow-lg border border-border-color z-[200] pointer-events-none">Start Project</span>}
                             </NavLink>
                         ) : (
-                            <NavLink to="/project" className={({ isActive }) => `flex flex-row justify-between items-center p-1.5 px-2 gap-2.5 w-full rounded transition-colors duration-200 cursor-pointer relative ${isActive ? 'bg-black/10 dark:bg-white/10' : 'hover:bg-bg-hover'}`}>
+                            <NavLink to="/project" className={({ isActive }) => `flex flex-row justify-between items-center p-1.5 px-2 gap-2.5 w-full rounded transition-colors duration-200 cursor-pointer relative group ${isActive ? 'bg-black/10 dark:bg-white/10' : 'hover:bg-bg-hover'}`}>
                                 <div className="flex items-center gap-[11px] flex-1 justify-between">
                                     <span className={`font-normal text-[13px] leading-4 text-text-secondary whitespace-nowrap transition-opacity duration-200 ${collapsed ? 'md:opacity-0 md:w-0 overflow-hidden' : 'opacity-100'}`}>{projectName}</span>
                                     <span className="w-5.5 h-5.5 min-w-[22px] flex items-center justify-center text-text-secondary text-base transition-colors duration-200">
                                         <IoFolderOutline />
                                     </span>
                                 </div>
+                                {collapsed && <span className="hidden group-hover:block absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-bg-card text-text-primary px-3 py-1.5 rounded-md text-[13px] font-medium whitespace-nowrap shadow-lg border border-border-color z-[200] pointer-events-none">{projectName}</span>}
                             </NavLink>
                         )}
                     </nav>
@@ -171,7 +173,7 @@ function Sidebar() {
                                             <span className={`font-normal text-[13px] leading-4 text-text-secondary whitespace-nowrap transition-opacity duration-200 group-[.active]:text-text-primary group-[.active]:font-medium ${collapsed ? 'md:opacity-0 md:w-0 overflow-hidden' : 'opacity-100'}`}>{item.name}</span>
                                         </div>
                                         {item.alert && <span className="absolute w-1.5 h-1.5 right-2.5 top-1/2 -translate-y-1/2 bg-accent rounded-full pointer-events-none" />}
-                                        {collapsed && <span className="hidden group-hover:md:block absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-bg-card text-text-primary px-3 py-1.5 rounded-md text-[13px] font-medium whitespace-nowrap shadow-lg border border-border-color z-[200] pointer-events-none">{item.name}</span>}
+                                        {collapsed && <span className="hidden group-hover:block absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-bg-card text-text-primary px-3 py-1.5 rounded-md text-[13px] font-medium whitespace-nowrap shadow-lg border border-border-color z-[200] pointer-events-none">{item.name}</span>}
                                     </NavLink>
                                 );
                             })}
