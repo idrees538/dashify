@@ -1,5 +1,4 @@
 import { NavLink } from 'react-router-dom';
-import './Dashboard.css';
 import {
     IoCheckmarkCircleOutline,
     IoFlashOutline,
@@ -61,66 +60,66 @@ function Dashboard() {
     const tokensPercent = (tokensUsed / tokensTotal) * 100;
 
     return (
-        <div className="page">
+        <div className="max-w-[1200px] mx-auto animate-fade-in">
             {/* Welcome banner removed as requested */}
 
             {/* Section 2: Token Summary */}
-            <div className="dash-tokens card">
-                <div className="dash-tokens__header">
-                    <div className="dash-tokens__icon">
+            <div className="mb-8 bg-bg-secondary rounded-xl p-[18px] shadow-sm border border-border-color hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200">
+                <div className="flex items-center gap-3.5 mb-6">
+                    <div className="w-11 h-11 rounded-xl bg-[#F59E0B]/10 text-[#F59E0B] flex items-center justify-center text-[22px]">
                         <IoFlashOutline />
                     </div>
                     <div>
-                        <h3 className="dash-tokens__title">Token Usage</h3>
-                        <p className="dash-tokens__sub">Track your token consumption</p>
+                        <h3 className="text-[17px] font-semibold text-text-primary">Token Usage</h3>
+                        <p className="text-[13px] text-text-secondary">Track your token consumption</p>
                     </div>
                 </div>
-                <div className="dash-tokens__stats">
-                    <div className="dash-tokens__stat">
-                        <span className="dash-tokens__stat-label">Total Available</span>
-                        <span className="dash-tokens__stat-value">{tokensTotal.toLocaleString()}</span>
+                <div className="flex gap-8 mb-[18px] flex-wrap">
+                    <div className="flex flex-col gap-1">
+                        <span className="text-[12px] text-text-secondary uppercase tracking-wider font-medium">Total Available</span>
+                        <span className="text-2xl font-bold text-text-primary">{tokensTotal.toLocaleString()}</span>
                     </div>
-                    <div className="dash-tokens__stat">
-                        <span className="dash-tokens__stat-label">Used</span>
-                        <span className="dash-tokens__stat-value dash-tokens__stat-value--used">{tokensUsed.toLocaleString()}</span>
+                    <div className="flex flex-col gap-1">
+                        <span className="text-[12px] text-text-secondary uppercase tracking-wider font-medium">Used</span>
+                        <span className="text-2xl font-bold text-[#F59E0B]">{tokensUsed.toLocaleString()}</span>
                     </div>
-                    <div className="dash-tokens__stat">
-                        <span className="dash-tokens__stat-label">Remaining</span>
-                        <span className="dash-tokens__stat-value dash-tokens__stat-value--remaining">{(tokensTotal - tokensUsed).toLocaleString()}</span>
+                    <div className="flex flex-col gap-1">
+                        <span className="text-[12px] text-text-secondary uppercase tracking-wider font-medium">Remaining</span>
+                        <span className="text-2xl font-bold text-[#10B981]">{(tokensTotal - tokensUsed).toLocaleString()}</span>
                     </div>
                 </div>
-                <div className="dash-tokens__bar-wrap">
-                    <div className="dash-tokens__bar">
+                <div className="flex flex-col gap-2">
+                    <div className="w-full h-2.5 bg-black/5 dark:bg-white/5 rounded-full overflow-hidden">
                         <div
-                            className="dash-tokens__bar-fill"
+                            className="h-full bg-accent rounded-full transition-all duration-1000"
                             style={{ width: `${tokensPercent}%` }}
                         />
                     </div>
-                    <span className="dash-tokens__bar-label">
+                    <span className="text-[12px] text-text-secondary font-medium">
                         {tokensUsed.toLocaleString()} / {tokensTotal.toLocaleString()} used
                     </span>
                 </div>
             </div>
 
             {/* Section 3: Active Plans */}
-            <div className="dash-section">
-                <h2 className="dash-section__title">Active Plans</h2>
-                <div className="dash-plans">
+            <div className="mb-8">
+                <h2 className="text-lg font-semibold text-text-primary mb-4">Active Plans</h2>
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5">
                     {PLANS.map((plan, i) => (
-                        <div className="card dash-plan" key={i}>
-                            <div className="dash-plan__top">
-                                <h3 className="dash-plan__name">{plan.name}</h3>
-                                <span className={`dash-plan__status dash-plan__status--${plan.status.toLowerCase()}`}>
+                        <div className="bg-bg-secondary rounded-xl p-[18px] shadow-sm border border-border-color hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" key={i}>
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-base font-semibold text-text-primary">{plan.name}</h3>
+                                <span className={`px-3 py-1 rounded-xl text-[12px] font-semibold ${plan.status.toLowerCase() === 'active' ? 'bg-[#10B981]/10 text-[#10B981]' : 'bg-[#EF4444]/10 text-[#EF4444]'}`}>
                                     {plan.status}
                                 </span>
                             </div>
-                            <div className="dash-plan__details">
-                                <div className="dash-plan__detail">
-                                    <IoTimeOutline />
+                            <div className="flex flex-col gap-2.5">
+                                <div className="flex items-center gap-2 text-[13px] text-text-secondary">
+                                    <IoTimeOutline className="text-base text-text-secondary/60" />
                                     <span>Expires: {plan.expiry}</span>
                                 </div>
-                                <div className="dash-plan__detail">
-                                    <IoFlashOutline />
+                                <div className="flex items-center gap-2 text-[13px] text-text-secondary">
+                                    <IoFlashOutline className="text-base text-text-secondary/60" />
                                     <span>{plan.tokens} tokens allocated</span>
                                 </div>
                             </div>
@@ -130,18 +129,21 @@ function Dashboard() {
             </div>
 
             {/* Section 4: Quick Access Widgets */}
-            <div className="dash-section">
-                <h2 className="dash-section__title">Quick Access</h2>
-                <div className="dash-widgets">
+            <div className="mb-8">
+                <h2 className="text-lg font-semibold text-text-primary mb-4">Quick Access</h2>
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
                     {QUICK_WIDGETS.map((w, i) => {
                         const Icon = w.icon;
+                        const iconColorClass = w.color === '--purple' ? 'bg-accent-light text-accent' :
+                            w.color === '--blue' ? 'bg-blue-500/10 text-blue-500' :
+                                w.color === '--green' ? 'bg-[#10B981]/10 text-[#10B981]' : 'bg-gray-500/10 text-gray-500';
                         return (
-                            <NavLink to={w.path} className="card dash-widget" key={i}>
-                                <div className={`card__icon card__icon${w.color}`}>
+                            <NavLink to={w.path} className="bg-bg-secondary rounded-xl p-[18px] shadow-sm border border-border-color hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 flex flex-col items-start" key={i}>
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-[22px] ${iconColorClass}`}>
                                     <Icon />
                                 </div>
-                                <p className="dash-widget__label">{w.label}</p>
-                                <p className="dash-widget__value">{w.value}</p>
+                                <p className="text-sm font-medium text-text-secondary mb-1">{w.label}</p>
+                                <p className="text-xl font-bold text-text-primary">{w.value}</p>
                             </NavLink>
                         );
                     })}

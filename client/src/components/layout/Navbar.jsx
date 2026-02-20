@@ -3,46 +3,40 @@ import dvAvatar from '../../assets/Dv.svg';
 
 function Navbar() {
     return (
-        <nav className="top-navbar">
-
-
-            <div className="top-navbar__right">
-                <div style={{ position: 'relative' }}>
-                    <button className="top-navbar__btn" title="Menu">
+        <nav className="flex items-center justify-between h-14 p-0 pr-2 bg-transparent border-none sm:mb-4">
+            <div className="ml-auto inline-flex items-center gap-2">
+                <div className="relative">
+                    <button className="w-[34px] h-[34px] inline-flex items-center justify-center text-text-secondary rounded-lg bg-bg-secondary border border-border-color hover:shadow-sm transition-shadow" title="Menu">
                         <IoMenuOutline />
                     </button>
                 </div>
-                <div style={{ position: 'relative' }}>
-                    <button className="top-navbar__btn" title="Notifications">
+                <div className="relative">
+                    <button className="w-[34px] h-[34px] inline-flex items-center justify-center text-text-secondary rounded-lg bg-bg-secondary border border-border-color hover:shadow-sm transition-shadow" title="Notifications">
                         <IoNotificationsOutline />
                     </button>
-                    <span className="top-navbar__dot" />
+                    <span className="absolute w-2 h-2 bg-accent rounded-full top-1 right-1 border-2 border-bg-secondary" />
                 </div>
-                <div style={{ position: 'relative' }}>
-                    <button className="top-navbar__btn" title="Settings">
+                <div className="relative">
+                    <button className="w-[34px] h-[34px] inline-flex items-center justify-center text-text-secondary rounded-lg bg-bg-secondary border border-border-color hover:shadow-sm transition-shadow" title="Settings">
                         <IoSettingsOutline />
                     </button>
-                    <span className="top-navbar__dot" />
+                    <span className="absolute w-2 h-2 bg-accent rounded-full top-1 right-1 border-2 border-bg-secondary" />
                 </div>
-                <div style={{ position: 'relative' }}>
-                    <button className="top-navbar__btn" title="Announcements">
+                <div className="relative">
+                    <button className="w-[34px] h-[34px] inline-flex items-center justify-center text-text-secondary rounded-lg bg-bg-secondary border border-border-color hover:shadow-sm transition-shadow" title="Announcements">
                         <IoMegaphoneOutline />
                     </button>
-                    <span className="top-navbar__dot" />
+                    <span className="absolute w-2 h-2 bg-accent rounded-full top-1 right-1 border-2 border-bg-secondary" />
                 </div>
 
-                <div className="top-navbar__divider" />
+                <div className="w-[1px] h-[22px] bg-border-color mx-1.5 mr-0.5" />
 
-                <div className="top-navbar__user">
-                    {/* <div className="top-navbar__user-info">
-                        <p className="top-navbar__user-name">DashView</p>
-                        <p className="top-navbar__user-role">Admin</p>
-                    </div> */}
-                    <div className="top-navbar__btn" title="Profile" style={{ padding: 0 }}>
+                <div className="flex items-center">
+                    <div className="w-[34px] h-[34px] inline-flex items-center justify-center text-text-secondary rounded-lg bg-bg-secondary border border-border-color hover:shadow-sm transition-shadow overflow-hidden" title="Profile">
                         <img
                             src={dvAvatar}
                             alt="Profile"
-                            className="top-navbar__avatar"
+                            className="w-full h-full object-cover"
                         />
                     </div>
                 </div>

@@ -20,8 +20,8 @@ export default function CalendarHeader({ currentDate, goToPrev, goToNext, goToTo
                 <button
                     onClick={goToToday}
                     className="px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider
-                     rounded-lg border border-[var(--border-color)] bg-[var(--bg-secondary)]
-                     text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors"
+                     rounded-lg border border-border-color bg-bg-secondary
+                     text-text-primary hover:bg-bg-hover transition-colors shadow-sm"
                 >
                     Today
                 </button>
@@ -29,8 +29,8 @@ export default function CalendarHeader({ currentDate, goToPrev, goToNext, goToTo
                 <button
                     onClick={goToPrev}
                     className="w-8 h-8 flex items-center justify-center rounded-lg
-                     border border-[var(--border-color)] bg-[var(--bg-secondary)]
-                     text-[var(--icon-color)] hover:bg-[var(--bg-hover)] transition-colors"
+                     border border-border-color bg-bg-secondary
+                     text-text-secondary hover:bg-bg-hover transition-colors shadow-sm"
                 >
                     <IoChevronBackOutline />
                 </button>
@@ -38,13 +38,13 @@ export default function CalendarHeader({ currentDate, goToPrev, goToNext, goToTo
                 <button
                     onClick={goToNext}
                     className="w-8 h-8 flex items-center justify-center rounded-lg
-                     border border-[var(--border-color)] bg-[var(--bg-secondary)]
-                     text-[var(--icon-color)] hover:bg-[var(--bg-hover)] transition-colors"
+                     border border-border-color bg-bg-secondary
+                     text-text-secondary hover:bg-bg-hover transition-colors shadow-sm"
                 >
                     <IoChevronForwardOutline />
                 </button>
 
-                <h2 className="text-lg font-bold text-[var(--text-primary)] ml-1 whitespace-nowrap">
+                <h2 className="text-lg font-bold text-text-primary ml-1 whitespace-nowrap">
                     {month} {year}
                 </h2>
             </div>

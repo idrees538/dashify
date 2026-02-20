@@ -8,9 +8,9 @@ const STATUS_CONFIG = {
 
 function DraftSelector({ drafts, selectedId, onSelect }) {
     return (
-        <div className="review-drafts">
-            <h3 className="review-drafts__label">Select Draft</h3>
-            <div className="review-drafts__list">
+        <div className="mb-6">
+            <h3 className="text-[13px] font-semibold text-text-secondary uppercase tracking-wider mb-3">Select Draft</h3>
+            <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-border-color">
                 {drafts.map((draft) => {
                     const isActive = draft.id === selectedId;
                     const cfg = STATUS_CONFIG[draft.status];
@@ -18,19 +18,19 @@ function DraftSelector({ drafts, selectedId, onSelect }) {
                     return (
                         <button
                             key={draft.id}
-                            className={`review-draft ${isActive ? 'review-draft--active' : ''}`}
+                            className={`flex items-center gap-3 min-w-[260px] p-[14px] px-[18px] bg-bg-secondary border rounded-xl cursor-pointer transition-all duration-200 text-left hover:border-accent hover:shadow-sm ${isActive ? 'border-accent bg-accent-light shadow-[0_0_0_2px_var(--accent-light)]' : 'border-border-color'}`}
                             onClick={() => onSelect(draft.id)}
                         >
-                            <div className="review-draft__icon">
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-xl flex-shrink-0 ${isActive ? 'bg-accent text-white' : 'bg-bg-hover text-accent'}`}>
                                 <IoDocumentTextOutline />
                             </div>
-                            <div className="review-draft__info">
-                                <span className="review-draft__title">{draft.title}</span>
-                                <span className="review-draft__meta">
+                            <div className="flex-1 flex flex-col gap-0.5 min-w-0">
+                                <span className="text-sm font-semibold text-text-primary truncate">{draft.title}</span>
+                                <span className="text-[12px] text-text-secondary">
                                     v{draft.version} · {draft.date}
                                 </span>
                             </div>
-                            <span className={`review-draft__status ${cfg.className}`}>
+                            <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap flex-shrink-0 ${draft.status === 'draft' ? 'bg-[#f59e0b]/10 text-[#f59e0b]' : draft.status === 'in-review' ? 'bg-[#3b82f6]/10 text-[#3b82f6]' : 'bg-[#10b981]/10 text-[#10b981]'}`}>
                                 <StatusIcon /> {cfg.label}
                             </span>
                         </button>

@@ -15,84 +15,64 @@ function Chat() {
     ];
 
     return (
-        <div className="page">
-            <div className="page__header">
-                <h1 className="page__title">Chat</h1>
-                <p className="page__subtitle">Stay connected with your team.</p>
+        <div className="max-w-[1200px] mx-auto h-[calc(100vh-140px)] flex flex-col animate-fade-in">
+            <div className="mb-6 flex-shrink-0">
+                <h1 className="text-[26px] font-bold text-text-primary mb-1">Chat</h1>
+                <p className="text-[15px] text-text-secondary font-normal">Stay connected with your team.</p>
             </div>
 
-            <div style={{
-                display: 'grid', gridTemplateColumns: '280px 1fr', gap: 24,
-                background: 'var(--bg-card)', borderRadius: 16, overflow: 'hidden',
-                border: '1px solid var(--border-color)', boxShadow: 'var(--shadow)', minHeight: 500
-            }}>
+            <div className="flex-1 min-h-0 grid grid-cols-[280px_1fr] bg-bg-secondary rounded-2xl overflow-hidden border border-border-color shadow-sm">
                 {/* Conversation List */}
-                <div style={{ borderRight: '1px solid var(--border-color)', padding: 16 }}>
-                    <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16, color: 'var(--text-primary)' }}>Messages</h3>
-                    {conversations.map((conv) => (
-                        <div key={conv.id} style={{
-                            display: 'flex', alignItems: 'center', gap: 12, padding: '12px 8px',
-                            borderRadius: 10, background: 'var(--sidebar-active-bg)', cursor: 'pointer', marginBottom: 4
-                        }}>
-                            <div style={{
-                                width: 40, height: 40, minWidth: 40, borderRadius: '50%',
-                                background: 'linear-gradient(135deg, rgb(255, 96, 55), rgb(255, 96, 55))',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 500, fontSize: 14
-                            }}>DT</div>
-                            <div style={{ flex: 1, overflow: 'hidden' }}>
-                                <div style={{ fontWeight: 500, color: 'var(--text-primary)', fontSize: 14 }}>{conv.name}</div>
-                                <div style={{ fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{conv.lastMsg}</div>
+                <div className="border-r border-border-color flex flex-col min-w-0">
+                    <div className="p-4 border-b border-border-color bg-bg-hover/30">
+                        <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider">Messages</h3>
+                    </div>
+                    <div className="flex-1 overflow-y-auto p-3 space-y-1">
+                        {conversations.map((conv) => (
+                            <div key={conv.id} className="flex items-center gap-3 p-3 rounded-xl bg-accent/5 border border-accent/10 cursor-pointer hover:bg-accent/10 transition-colors">
+                                <div className="w-10 h-10 min-w-10 rounded-full bg-accent flex items-center justify-center text-white font-bold text-sm shadow-sm ring-2 ring-accent/20">DT</div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="font-semibold text-text-primary text-sm truncate">{conv.name}</div>
+                                    <div className="text-[13px] text-text-secondary truncate">{conv.lastMsg}</div>
+                                </div>
+                                {conv.unread > 0 && (
+                                    <span className="min-w-[20px] h-5 px-1 rounded-full bg-accent text-white text-[10px] font-bold flex items-center justify-center shadow-sm">{conv.unread}</span>
+                                )}
                             </div>
-                            {conv.unread > 0 && (
-                                <span style={{
-                                    minWidth: 20, height: 20, borderRadius: 10, background: 'rgb(255, 96, 55)',
-                                    color: '#fff', fontSize: 11, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center'
-                                }}>{conv.unread}</span>
-                            )}
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
 
                 {/* Chat Area */}
-                <div style={{ display: 'flex', flexDirection: 'column', padding: 16 }}>
-                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12, paddingBottom: 16 }}>
+                <div className="flex flex-col min-h-0 bg-bg-primary/30">
+                    {/* Header could go here, but omitted based on original */}
+                    <div className="flex-1 overflow-y-auto p-6 space-y-4">
                         {conversations[0].messages.map((msg, i) => (
-                            <div key={i} style={{
-                                display: 'flex', justifyContent: msg.self ? 'flex-end' : 'flex-start'
-                            }}>
-                                <div style={{
-                                    maxWidth: '70%', padding: '10px 14px', borderRadius: 12,
-                                    background: msg.self ? 'rgb(255, 96, 55)' : 'var(--bg-hover)',
-                                    color: msg.self ? '#fff' : 'var(--text-primary)',
-                                }}>
-                                    {!msg.self && <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 4, color: 'rgb(255, 96, 55)' }}>{msg.from}</div>}
-                                    <p style={{ fontSize: 14, lineHeight: 1.5 }}>{msg.text}</p>
-                                    <div style={{ fontSize: 11, marginTop: 4, opacity: 0.7, textAlign: 'right' }}>{msg.time}</div>
+                            <div key={i} className={`flex ${msg.self ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`max-w-[70%] group relative ${msg.self ? 'items-end' : 'items-start'} flex flex-col`}>
+                                    <div className={`p-4 rounded-xl shadow-sm text-sm leading-relaxed ${msg.self ? 'bg-accent text-white rounded-tr-none' : 'bg-bg-secondary text-text-primary border border-border-color rounded-tl-none'}`}>
+                                        {!msg.self && <div className="text-[11px] font-bold uppercase tracking-wider mb-1 text-accent">{msg.from}</div>}
+                                        <p>{msg.text}</p>
+                                        <div className={`text-[10px] mt-2 opacity-60 font-medium ${msg.self ? 'text-white' : 'text-text-secondary'}`}>{msg.time}</div>
+                                    </div>
                                 </div>
                             </div>
                         ))}
                     </div>
 
-                    <div style={{
-                        display: 'flex', alignItems: 'center', gap: 12, padding: 8,
-                        background: 'var(--bg-hover)', borderRadius: 12
-                    }}>
-                        <input
-                            type="text"
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
-                            placeholder="Type a message..."
-                            style={{
-                                flex: 1, padding: '10px 14px', border: 'none', background: 'transparent',
-                                outline: 'none', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'Roboto, sans-serif'
-                            }}
-                        />
-                        <button style={{
-                            width: 36, height: 36, borderRadius: '50%', background: 'rgb(255, 96, 55)',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 16
-                        }}>
-                            <IoSendOutline />
-                        </button>
+                    <div className="p-4 bg-bg-secondary border-t border-border-color">
+                        <div className="flex items-center gap-3 p-2 px-4 bg-bg-primary rounded-xl border border-border-color focus-within:border-accent/50 focus-within:ring-2 focus-within:ring-accent/10 transition-all">
+                            <input
+                                type="text"
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                                placeholder="Type a message..."
+                                className="flex-1 bg-transparent border-none outline-none text-sm text-text-primary placeholder:text-text-secondary/50 py-2"
+                            />
+                            <button className="w-9 h-9 min-w-9 rounded-lg bg-accent flex items-center justify-center text-white text-lg hover:scale-105 active:scale-95 transition-all shadow-sm">
+                                <IoSendOutline />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

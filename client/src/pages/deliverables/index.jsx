@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { IoSearchOutline } from 'react-icons/io5';
 import ProjectFolder from './components/ProjectFolder';
 import FileList from './components/FileList';
-import './Deliverables.css';
-
 const PROJECTS = [
     {
         id: 1,
@@ -94,21 +92,21 @@ function Deliverables() {
     );
 
     return (
-        <div className="page">
-            <div className="page__header">
-                <h1 className="page__title">Deliverables</h1>
-                <p className="page__subtitle">
+        <div className="max-w-[1200px] mx-auto animate-fade-in">
+            <div className="mb-8">
+                <h1 className="text-[26px] font-bold text-text-primary mb-2">Deliverables</h1>
+                <p className="text-[15px] text-text-secondary font-normal">
                     Browse project folders and access all your delivered files.
                 </p>
             </div>
 
             {/* Search bar */}
             {!openProject && (
-                <div className="deliverables-search">
-                    <IoSearchOutline className="deliverables-search__icon" />
+                <div className="relative mb-8">
+                    <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-xl" />
                     <input
                         type="text"
-                        className="deliverables-search__input"
+                        className="w-full pl-12 pr-4 py-3.5 bg-bg-secondary border border-border-color rounded-xl text-sm focus:outline-none focus:border-accent transition-all placeholder:text-text-secondary/60 shadow-sm"
                         placeholder="Search projects…"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
@@ -123,7 +121,7 @@ function Deliverables() {
                     onBack={() => setOpenProjectId(null)}
                 />
             ) : (
-                <div className="deliverables-grid">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredProjects.map((project) => (
                         <ProjectFolder
                             key={project.id}
@@ -133,7 +131,7 @@ function Deliverables() {
                         />
                     ))}
                     {filteredProjects.length === 0 && (
-                        <div className="deliverables-empty card">
+                        <div className="col-span-full flex items-center justify-center p-12 bg-bg-secondary rounded-xl shadow-sm border border-border-color text-text-secondary text-[15px]">
                             <p>No projects match your search.</p>
                         </div>
                     )}

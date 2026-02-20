@@ -16,13 +16,13 @@ export default function CalendarDay({
             className={`
         group relative flex flex-col
         min-h-[110px] p-1.5 sm:p-2
-        border-r border-b border-[var(--border-color)]
+        border-r border-b border-border-color
         transition-colors duration-150
         ${isCurrentMonth
-                    ? 'bg-[var(--bg-secondary)]'
-                    : 'bg-[var(--bg-primary)] opacity-50'
+                    ? 'bg-bg-secondary'
+                    : 'bg-bg-primary opacity-50'
                 }
-        hover:bg-[var(--bg-hover)]
+        hover:bg-bg-hover
       `}
         >
             {/* Day number */}
@@ -31,8 +31,8 @@ export default function CalendarDay({
           inline-flex items-center justify-center
           w-7 h-7 rounded-full text-xs font-semibold mb-1 shrink-0
           ${isToday
-                        ? 'bg-[var(--accent)] text-white'
-                        : 'text-[var(--text-primary)]'
+                        ? 'bg-accent text-white shadow-sm'
+                        : 'text-text-primary'
                     }
         `}
             >
@@ -64,10 +64,10 @@ export default function CalendarDay({
                                     onRemoveEvent(ev.id);
                                 }}
                                 className="absolute -top-1 -right-1 w-4 h-4 rounded-full
-                           bg-[var(--bg-secondary)] border border-[var(--border-color)]
+                           bg-bg-secondary border border-border-color
                            flex items-center justify-center
                            opacity-0 group-hover/chip:opacity-100 transition-opacity
-                           text-[var(--text-secondary)] hover:text-red-500 text-[10px]"
+                           text-text-secondary hover:text-red-500 text-[10px] shadow-sm"
                                 title="Remove event"
                             >
                                 <IoCloseOutline />
@@ -84,7 +84,7 @@ export default function CalendarDay({
                     className="absolute bottom-1.5 right-1.5
                      w-6 h-6 rounded-full
                      flex items-center justify-center
-                     bg-[var(--accent)] text-white text-sm
+                     bg-accent text-white text-sm
                      opacity-0 group-hover:opacity-100
                      hover:scale-110
                      transition-all duration-150

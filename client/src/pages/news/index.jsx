@@ -10,31 +10,27 @@ function News() {
     ];
 
     return (
-        <div className="page">
-            <div className="page__header">
-                <h1 className="page__title">News</h1>
-                <p className="page__subtitle">Stay updated with the latest company news and announcements.</p>
+        <div className="max-w-[1200px] mx-auto animate-fade-in">
+            <div className="mb-8">
+                <h1 className="text-[26px] font-bold text-text-primary mb-2">News</h1>
+                <p className="text-[15px] text-text-secondary font-normal">Stay updated with the latest company news and announcements.</p>
             </div>
 
-            <div className="table-placeholder">
-                <div className="table-placeholder__header">
-                    <h3 className="table-placeholder__title">Latest News</h3>
+            <div className="bg-bg-secondary rounded-xl shadow-sm border border-border-color overflow-hidden">
+                <div className="p-4 px-6 border-b border-border-color bg-bg-hover/50">
+                    <h3 className="text-sm font-semibold text-text-primary">Latest News</h3>
                 </div>
-                <div className="table-placeholder__rows">
+                <div className="divide-y divide-border-color">
                     {articles.map((article, i) => (
-                        <div className="table-placeholder__row" key={i} style={{ cursor: 'pointer' }}>
-                            <div style={{
-                                width: 40, height: 40, minWidth: 40, borderRadius: 10,
-                                background: 'var(--accent-light)', display: 'flex', alignItems: 'center',
-                                justifyContent: 'center', color: 'var(--accent)', fontSize: 18
-                            }}>
+                        <div className="flex items-center gap-4 p-4 px-6 hover:bg-bg-hover transition-colors cursor-pointer" key={i}>
+                            <div className="w-10 h-10 min-w-10 rounded-lg bg-accent-light flex items-center justify-center text-accent text-lg">
                                 <IoNewspaperOutline />
                             </div>
-                            <div style={{ flex: 1 }}>
-                                <div style={{ fontWeight: 500, color: 'var(--text-primary)', marginBottom: 2 }}>{article.title}</div>
-                                <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{article.category}</div>
+                            <div className="flex-1 min-w-0">
+                                <div className="font-semibold text-text-primary mb-0.5 truncate">{article.title}</div>
+                                <div className="text-[13px] text-text-secondary">{article.category}</div>
                             </div>
-                            <div style={{ fontSize: 13, color: 'var(--text-secondary)', minWidth: 50, textAlign: 'right' }}>{article.time}</div>
+                            <div className="text-[13px] text-text-secondary min-w-[60px] text-right">{article.time}</div>
                         </div>
                     ))}
                 </div>

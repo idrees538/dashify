@@ -3,7 +3,6 @@ import useCalendar from './hooks/useCalendar';
 import CalendarHeader from './components/CalendarHeader';
 import CalendarGrid from './components/CalendarGrid';
 import EventModal from './components/EventModal';
-import './Calendar.css';
 
 export default function CalendarPage() {
     const {

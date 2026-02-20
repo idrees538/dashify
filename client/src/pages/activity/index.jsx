@@ -11,25 +11,25 @@ function Activity() {
     ];
 
     return (
-        <div className="page">
-            <div className="page__header">
-                <h1 className="page__title">Activity</h1>
-                <p className="page__subtitle">Track recent activity across your workspace.</p>
+        <div className="max-w-[1200px] mx-auto animate-fade-in">
+            <div className="mb-8">
+                <h1 className="text-[26px] font-bold text-text-primary mb-2">Activity</h1>
+                <p className="text-[15px] text-text-secondary font-normal">Track recent activity across your workspace.</p>
             </div>
 
-            <div className="table-placeholder">
-                <div className="table-placeholder__header">
-                    <h3 className="table-placeholder__title">Recent Activity</h3>
+            <div className="bg-bg-secondary rounded-xl shadow-sm border border-border-color overflow-hidden">
+                <div className="p-4 px-6 border-b border-border-color bg-bg-hover/50">
+                    <h3 className="text-sm font-semibold text-text-primary">Recent Activity</h3>
                 </div>
-                <div className="table-placeholder__rows">
+                <div className="divide-y divide-border-color">
                     {activities.map((act, i) => (
-                        <div className="table-placeholder__row" key={i}>
-                            <div style={{ fontSize: 24, minWidth: 40, textAlign: 'center' }}>{act.icon}</div>
-                            <div style={{ flex: 1 }}>
-                                <span style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{act.user} </span>
-                                <span style={{ color: 'var(--text-secondary)' }}>{act.action}</span>
+                        <div className="flex items-center gap-4 p-4 px-6 hover:bg-bg-hover transition-colors" key={i}>
+                            <div className="text-2xl min-w-[40px] text-center">{act.icon}</div>
+                            <div className="flex-1 min-w-0">
+                                <span className="font-semibold text-text-primary">{act.user} </span>
+                                <span className="text-text-secondary">{act.action}</span>
                             </div>
-                            <div style={{ fontSize: 13, color: 'var(--text-secondary)', minWidth: 80, textAlign: 'right' }}>{act.time}</div>
+                            <div className="text-[13px] text-text-secondary min-w-[80px] text-right">{act.time}</div>
                         </div>
                     ))}
                 </div>

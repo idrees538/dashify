@@ -2,8 +2,6 @@ import { useState } from 'react';
 import DraftSelector from './components/DraftSelector';
 import VideoPlayer from './components/VideoPlayer';
 import NotesPanel from './components/NotesPanel';
-import './Review.css';
-
 const DRAFTS = [
     {
         id: 1,
@@ -83,10 +81,10 @@ function Review() {
     };
 
     return (
-        <div className="page">
-            <div className="page__header">
-                <h1 className="page__title">Review</h1>
-                <p className="page__subtitle">
+        <div className="max-w-[1200px] mx-auto animate-fade-in">
+            <div className="mb-8">
+                <h1 className="text-[26px] font-bold text-text-primary mb-2">Review</h1>
+                <p className="text-[15px] text-text-secondary font-normal">
                     Select a draft and add timestamped notes for your team.
                 </p>
             </div>
@@ -97,7 +95,7 @@ function Review() {
                 onSelect={handleSelectDraft}
             />
 
-            <div className="review-workspace">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 items-start">
                 <VideoPlayer
                     draft={selectedDraft}
                     currentTime={currentTime}

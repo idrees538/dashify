@@ -8,8 +8,6 @@ import {
     IoShareOutline,
     IoLinkOutline,
 } from 'react-icons/io5';
-import './SocialMedia.css';
-
 const PLATFORMS = [
     { name: 'Instagram', icon: IoLogoInstagram, followers: '12.4K', posts: 156, color: '#E1306C' },
     { name: 'Twitter / X', icon: IoLogoTwitter, followers: '8.2K', posts: 312, color: '#1DA1F2' },
@@ -46,30 +44,30 @@ const POSTS = [
 
 function SocialMedia() {
     return (
-        <div className="page">
-            <div className="page__header">
-                <h1 className="page__title">Social Media</h1>
-                <p className="page__subtitle">Your central hub for social media activity.</p>
+        <div className="max-w-[1200px] mx-auto animate-fade-in">
+            <div className="mb-8">
+                <h1 className="text-[26px] font-bold text-text-primary mb-2">Social Media</h1>
+                <p className="text-[15px] text-text-secondary font-normal">Your central hub for social media activity.</p>
             </div>
 
             {/* Platform Cards */}
-            <div className="social-platforms">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
                 {PLATFORMS.map((p, i) => {
                     const Icon = p.icon;
                     return (
-                        <div className="card social-platform" key={i}>
-                            <div className="social-platform__icon" style={{ color: p.color }}>
+                        <div className="bg-bg-secondary rounded-xl p-7 flex flex-col items-center text-center shadow-sm border border-border-color hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" key={i}>
+                            <div className="text-4xl mb-3" style={{ color: p.color }}>
                                 <Icon />
                             </div>
-                            <h3 className="social-platform__name">{p.name}</h3>
-                            <div className="social-platform__stats">
-                                <div className="social-platform__stat">
-                                    <span className="social-platform__stat-value">{p.followers}</span>
-                                    <span className="social-platform__stat-label">Followers</span>
+                            <h3 className="text-base font-semibold text-text-primary mb-4">{p.name}</h3>
+                            <div className="flex justify-center gap-7">
+                                <div className="flex flex-col gap-0.5">
+                                    <span className="text-lg font-bold text-text-primary">{p.followers}</span>
+                                    <span className="text-[12px] text-text-secondary">Followers</span>
                                 </div>
-                                <div className="social-platform__stat">
-                                    <span className="social-platform__stat-value">{p.posts}</span>
-                                    <span className="social-platform__stat-label">Posts</span>
+                                <div className="flex flex-col gap-0.5">
+                                    <span className="text-lg font-bold text-text-primary">{p.posts}</span>
+                                    <span className="text-[12px] text-text-secondary">Posts</span>
                                 </div>
                             </div>
                         </div>
@@ -78,24 +76,24 @@ function SocialMedia() {
             </div>
 
             {/* Recent Posts */}
-            <div className="dash-section">
-                <h2 className="dash-section__title">Recent Posts</h2>
-                <div className="social-posts">
+            <div className="mb-8">
+                <h2 className="text-lg font-semibold text-text-primary mb-4">Recent Posts</h2>
+                <div className="flex flex-col gap-4">
                     {POSTS.map((post, i) => (
-                        <div className="card social-post" key={i}>
-                            <div className="social-post__header">
-                                <span className="social-post__platform">{post.platform}</span>
-                                <span className="social-post__time">{post.time}</span>
+                        <div className="bg-bg-secondary rounded-xl p-5 px-6 shadow-sm border border-border-color hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" key={i}>
+                            <div className="flex justify-between items-center mb-3">
+                                <span className="text-[13px] font-semibold text-accent bg-accent-light px-2.5 py-1 rounded-md">{post.platform}</span>
+                                <span className="text-[12px] text-text-secondary">{post.time}</span>
                             </div>
-                            <p className="social-post__content">{post.content}</p>
-                            <div className="social-post__engagement">
-                                <span className="social-post__metric">
+                            <p className="text-sm text-text-primary leading-relaxed mb-3.5">{post.content}</p>
+                            <div className="flex gap-5">
+                                <span className="flex items-center gap-1.5 text-[13px] text-text-secondary font-medium">
                                     <IoHeartOutline /> {post.likes}
                                 </span>
-                                <span className="social-post__metric">
+                                <span className="flex items-center gap-1.5 text-[13px] text-text-secondary font-medium">
                                     <IoChatbubbleOutline /> {post.comments}
                                 </span>
-                                <span className="social-post__metric">
+                                <span className="flex items-center gap-1.5 text-[13px] text-text-secondary font-medium">
                                     <IoShareOutline /> {post.shares}
                                 </span>
                             </div>
@@ -105,11 +103,11 @@ function SocialMedia() {
             </div>
 
             {/* CTA */}
-            <div className="social-cta card">
-                <IoLinkOutline className="social-cta__icon" />
+            <div className="flex items-center gap-5 mt-7 p-6 px-7 bg-black/5 dark:bg-white/5 rounded-xl border-2 border-dashed border-border-color shadow-sm">
+                <IoLinkOutline className="text-[32px] text-accent flex-shrink-0" />
                 <div>
-                    <h3 className="social-cta__title">Connect Social Account</h3>
-                    <p className="social-cta__text">Link your social media accounts for advanced analytics and scheduling. <strong>Coming soon!</strong></p>
+                    <h3 className="text-base font-semibold text-text-primary mb-1">Connect Social Account</h3>
+                    <p className="text-[13px] text-text-secondary leading-normal">Link your social media accounts for advanced analytics and scheduling. <strong>Coming soon!</strong></p>
                 </div>
             </div>
         </div>

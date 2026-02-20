@@ -4,11 +4,11 @@ import Navbar from './Navbar';
 
 function DashboardLayout() {
     return (
-        <div className="dashboard-layout">
+        <div className="flex h-screen overflow-hidden bg-bg-primary text-text-primary">
             <Sidebar />
-            <main className="dashboard-layout__content">
+            <main className="flex flex-col flex-1 min-w-0 overflow-hidden">
                 <Navbar />
-                <div className="dashboard-layout__main">
+                <div className="flex-1 overflow-y-auto p-6">
                     <Outlet />
                 </div>
             </main>

@@ -33,7 +33,7 @@ export default function EventModal({ cell, onSave, onClose }) {
         >
             <div
                 className="relative w-full max-w-md rounded-2xl
-                   bg-[var(--bg-secondary)] border border-[var(--border-color)]
+                   bg-bg-secondary border border-border-color
                    shadow-2xl p-6 animate-slide-up"
                 onClick={(e) => e.stopPropagation()}
             >
@@ -42,22 +42,22 @@ export default function EventModal({ cell, onSave, onClose }) {
                     onClick={onClose}
                     className="absolute top-4 right-4 w-8 h-8 rounded-lg
                      flex items-center justify-center
-                     text-[var(--icon-color)] hover:bg-[var(--bg-hover)]
+                     text-text-secondary hover:bg-bg-hover
                      transition-colors"
                 >
                     <IoCloseOutline size={20} />
                 </button>
 
                 {/* Header */}
-                <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1">
+                <h3 className="text-lg font-bold text-text-primary mb-1">
                     Add Event
                 </h3>
-                <p className="text-sm text-[var(--text-secondary)] mb-5">{dateLabel}</p>
+                <p className="text-sm text-text-secondary mb-5">{dateLabel}</p>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Title */}
                     <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-1.5">
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1.5">
                             Event Title
                         </label>
                         <input
@@ -67,16 +67,16 @@ export default function EventModal({ cell, onSave, onClose }) {
                             onChange={(e) => setForm({ ...form, title: e.target.value })}
                             placeholder="e.g. Brand shoot, IG post…"
                             className="w-full px-3.5 py-2.5 rounded-lg text-sm
-                         bg-[var(--bg-primary)] border border-[var(--border-color)]
-                         text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]
-                         focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40
+                         bg-bg-primary border border-border-color
+                         text-text-primary placeholder:text-text-secondary/60
+                         focus:outline-none focus:ring-2 focus:ring-accent/40
                          transition-shadow"
                         />
                     </div>
 
                     {/* Type */}
                     <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-1.5">
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1.5">
                             Type
                         </label>
                         <div className="flex gap-3">
@@ -90,7 +90,7 @@ export default function EventModal({ cell, onSave, onClose }) {
                     rounded-lg text-sm font-semibold border transition-all
                     ${form.type === key
                                             ? `${t.bg} ${t.text} ${t.border} ring-2 ${t.ring}`
-                                            : 'bg-[var(--bg-primary)] border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]'
+                                            : 'bg-bg-primary border-border-color text-text-secondary hover:bg-bg-hover'
                                         }
                   `}
                                 >
@@ -103,17 +103,17 @@ export default function EventModal({ cell, onSave, onClose }) {
 
                     {/* Time (optional) */}
                     <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)] mb-1.5">
-                            Time <span className="text-[var(--text-secondary)]/60">(optional)</span>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1.5">
+                            Time <span className="text-text-secondary/60">(optional)</span>
                         </label>
                         <input
                             type="time"
                             value={form.time}
                             onChange={(e) => setForm({ ...form, time: e.target.value })}
                             className="w-full px-3.5 py-2.5 rounded-lg text-sm
-                         bg-[var(--bg-primary)] border border-[var(--border-color)]
-                         text-[var(--text-primary)]
-                         focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40
+                         bg-bg-primary border border-border-color
+                         text-text-primary
+                         focus:outline-none focus:ring-2 focus:ring-accent/40
                          transition-shadow"
                         />
                     </div>
@@ -124,15 +124,15 @@ export default function EventModal({ cell, onSave, onClose }) {
                             type="button"
                             onClick={onClose}
                             className="flex-1 py-2.5 rounded-lg text-sm font-semibold
-                         border border-[var(--border-color)] text-[var(--text-secondary)]
-                         hover:bg-[var(--bg-hover)] transition-colors"
+                         border border-border-color text-text-secondary
+                         hover:bg-bg-hover transition-colors"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             className="flex-1 py-2.5 rounded-lg text-sm font-semibold
-                         bg-[var(--accent)] text-white
+                         bg-accent text-white
                          hover:opacity-90 transition-opacity
                          disabled:opacity-40 disabled:cursor-not-allowed"
                             disabled={!form.title.trim()}

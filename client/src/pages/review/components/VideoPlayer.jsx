@@ -21,49 +21,53 @@ function VideoPlayer({ draft, currentTime, onTimeChange }) {
     }
 
     return (
-        <div className="review-player card">
+        <div className="overflow-hidden p-0 bg-bg-secondary rounded-xl shadow-sm border border-border-color">
             {/* Simulated video area */}
-            <div className={`review-player__viewport review-player__viewport--${draft.color}`}>
-                <button className="review-player__play-btn">
+            <div className={`relative w-full aspect-video flex items-center justify-center overflow-hidden
+                ${draft.color === 'purple' ? 'bg-gradient-to-br from-[#FF6037]/25 via-accent/20 to-black/60' :
+                    draft.color === 'blue' ? 'bg-gradient-to-br from-blue-500/30 via-blue-600/15 to-black/60' :
+                        draft.color === 'green' ? 'bg-gradient-to-br from-[#10B981]/25 via-[#34D399]/15 to-black/60' :
+                            'bg-gradient-to-br from-[#F59E0B]/30 via-[#FBBF24]/15 to-black/60'}`}>
+                <button className="w-[72px] h-[72px] rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center text-[32px] text-white transition-all duration-200 border-2 border-white/20 hover:scale-[1.08] hover:bg-white/25">
                     <IoPlayOutline />
                 </button>
-                <div className="review-player__overlay-info">
-                    <span className="review-player__draft-label">{draft.title}</span>
-                    <span className="review-player__version">v{draft.version}</span>
+                <div className="absolute bottom-4 left-4 flex items-center gap-2">
+                    <span className="bg-black/60 text-white px-3 py-1 rounded-md text-[12px] font-semibold">{draft.title}</span>
+                    <span className="bg-accent text-white px-2.5 py-1 rounded-md text-[11px] font-bold">v{draft.version}</span>
                 </div>
             </div>
 
             {/* Controls bar */}
-            <div className="review-player__controls">
-                <button className="review-player__ctrl-btn">
+            <div className="flex items-center gap-3 p-[14px] px-[18px] bg-bg-secondary border-t border-border-color">
+                <button className="w-8 h-8 flex items-center justify-center text-text-secondary rounded-md text-lg transition-colors hover:text-text-primary">
                     <IoPlayOutline />
                 </button>
-                <span className="review-player__time">
+                <span className="text-[12px] font-semibold text-text-secondary font-mono whitespace-nowrap">
                     {formatTime(currentTime)} / {draft.duration}
                 </span>
                 <div
-                    className="review-player__progress"
+                    className="flex-1 cursor-pointer py-1.5"
                     onClick={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
                         const pct = (e.clientX - rect.left) / rect.width;
                         onTimeChange(Math.round(pct * draft.durationSec));
                     }}
                 >
-                    <div className="review-player__progress-track">
+                    <div className="relative w-full h-[5px] bg-bg-hover rounded-full">
                         <div
-                            className="review-player__progress-fill"
+                            className="absolute top-0 left-0 h-full bg-accent rounded-full transition-all duration-150"
                             style={{ width: `${progressPercent}%` }}
                         />
                         <div
-                            className="review-player__progress-thumb"
+                            className="absolute top-1/2 w-3.5 h-3.5 bg-accent border-2 border-white rounded-full -translate-x-1/2 -translate-y-1/2 shadow-sm transition-all duration-150"
                             style={{ left: `${progressPercent}%` }}
                         />
                     </div>
                 </div>
-                <button className="review-player__ctrl-btn">
+                <button className="w-8 h-8 flex items-center justify-center text-text-secondary rounded-md text-lg transition-colors hover:text-text-primary">
                     <IoVolumeHighOutline />
                 </button>
-                <button className="review-player__ctrl-btn">
+                <button className="w-8 h-8 flex items-center justify-center text-text-secondary rounded-md text-lg transition-colors hover:text-text-primary">
                     <IoExpandOutline />
                 </button>
             </div>
