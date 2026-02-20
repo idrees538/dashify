@@ -132,16 +132,16 @@ function Sidebar() {
                 {/* General Section */}
                 <div className={`flex flex-col items-center px-4 md:px-4 pb-4 gap-4 w-full border-b border-border-color ${collapsed ? 'px-5 py-3' : ''}`}>
                     <span className={`font-medium text-[10px] text-text-secondary/60 w-full text-left uppercase tracking-wider ${collapsed ? 'md:hidden' : ''}`}>General</span>
-                    <nav className="flex flex-col items-start p-0 gap-0 w-full">
+                    <nav className={`flex flex-col gap-1 w-full ${collapsed ? 'items-center' : 'items-start'}`}>
                         {!hasProject ? (
-                            <NavLink className="flex items-center gap-2 w-full p-2 text-text-secondary hover:bg-bg-hover rounded transition-colors duration-200 relative group">
+                            <NavLink className={`flex items-center gap-2 w-full p-2 text-text-secondary hover:bg-bg-hover rounded transition-colors duration-200 relative group ${collapsed ? 'justify-center w-10 h-10' : ''}`}>
                                 <span className={collapsed ? 'md:hidden' : ''}>Project</span>
                                 <IoAddOutline className="text-xl" />
                                 {collapsed && <span className="hidden group-hover:block absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-bg-card text-text-primary px-3 py-1.5 rounded-md text-[13px] font-medium whitespace-nowrap shadow-lg border border-border-color z-[200] pointer-events-none">Start Project</span>}
                             </NavLink>
                         ) : (
-                            <NavLink to="/project" className={({ isActive }) => `flex flex-row justify-between items-center p-1.5 px-2 gap-2.5 w-full rounded transition-colors duration-200 cursor-pointer relative group ${isActive ? 'bg-black/10 dark:bg-white/10' : 'hover:bg-bg-hover'}`}>
-                                <div className="flex items-center gap-[11px] flex-1 justify-between">
+                            <NavLink to="/project" className={({ isActive }) => `flex flex-row justify-between items-center p-1.5 gap-2.5 w-full rounded transition-colors duration-200 cursor-pointer relative group ${collapsed ? 'md:w-10 md:h-10 md:px-0 mx-auto justify-center' : 'px-2'} ${isActive ? 'bg-black/[0.08] dark:bg-white/10' : 'hover:bg-bg-hover'}`}>
+                                <div className={`flex items-center gap-[11px] flex-1 ${collapsed ? 'md:justify-center md:gap-0' : 'justify-between'}`}>
                                     <span className={`font-normal text-[13px] leading-4 text-text-secondary whitespace-nowrap transition-opacity duration-200 ${collapsed ? 'md:opacity-0 md:w-0 overflow-hidden' : 'opacity-100'}`}>{projectName}</span>
                                     <span className="w-5.5 h-5.5 min-w-[22px] flex items-center justify-center text-text-secondary text-base transition-colors duration-200">
                                         <IoFolderOutline />
@@ -157,14 +157,14 @@ function Sidebar() {
                 <div className={`flex flex-col items-center px-4 pb-4 gap-4 w-full border-b border-border-color ${collapsed ? 'px-5 py-3' : ''}`}>
                     <span className={`font-medium text-[10px] text-text-secondary/60 w-full text-left uppercase tracking-wider ${collapsed ? 'md:hidden' : ''}`}>Content Accelerator Program</span>
                     {showCap && (
-                        <nav className="flex flex-col items-start p-0 gap-0 w-full">
+                        <nav className={`flex flex-col gap-1 w-full ${collapsed ? 'items-center' : 'items-start'}`}>
                             {CAP_ITEMS.map((item) => {
                                 const Icon = item.icon;
                                 return (
                                     <NavLink
                                         to={item.path}
                                         key={item.name + item.path}
-                                        className={({ isActive }) => `flex flex-row justify-between items-center p-1.5 px-2 gap-2.5 w-full  rounded transition-colors duration-200 cursor-pointer relative group ${collapsed ? ' md:w-8.5 md:h-8.5 mx-auto' : ''} ${isActive ? 'bg-black/10 dark:bg-white/10' : 'hover:bg-bg-hover'}`}
+                                        className={({ isActive }) => `flex flex-row justify-between items-center p-1.5 gap-2.5 w-full rounded transition-colors duration-200 cursor-pointer relative group ${collapsed ? 'md:w-10 md:h-10 md:px-0 mx-auto justify-center' : 'px-2'} ${isActive ? 'bg-black/[0.12] dark:bg-white/10' : 'hover:bg-bg-hover'}`}
                                     >
                                         <div className={`flex items-center gap-[11px] flex-1 ${collapsed ? 'md:justify-center md:gap-0' : ''}`}>
                                             <span className={`w-5.5 h-5.5 min-w-[22px] flex items-center justify-center text-text-secondary text-base transition-colors duration-200 group-[.active]:text-accent`}>
@@ -172,7 +172,7 @@ function Sidebar() {
                                             </span>
                                             <span className={`font-normal text-[13px] leading-4 text-text-secondary whitespace-nowrap transition-opacity duration-200 group-[.active]:text-text-primary group-[.active]:font-medium ${collapsed ? 'md:opacity-0 md:w-0 overflow-hidden' : 'opacity-100'}`}>{item.name}</span>
                                         </div>
-                                        {item.alert && <span className="absolute w-1.5 h-1.5 right-2.5 top-1/2 -translate-y-1/2 bg-accent rounded-full pointer-events-none" />}
+                                        {item.alert && <span className={`absolute w-1.5 h-1.5 bg-accent rounded-full pointer-events-none ${collapsed ? 'top-2 right-2' : 'right-2.5 top-1/2 -translate-y-1/2'}`} />}
                                         {collapsed && (
                                             <span
                                                 className="pointer-events-none absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-bg-card text-text-primary px-3 py-1.5 rounded-md text-[13px] font-medium whitespace-nowrap shadow-lg border border-border-color z-[500] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-150"
