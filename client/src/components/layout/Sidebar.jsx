@@ -95,7 +95,7 @@ function Sidebar() {
             )}
 
             <aside className={`
-                flex flex-col items-start py-4 h-full bg-bg-sidebar border-r border-border-color transition-all duration-300 z-[120] overflow-y-auto ${collapsed ? 'overflow-visible' : 'overflow-x-hidden'}
+                flex flex-col items-start py-4 h-full bg-bg-sidebar border-r border-border-color transition-all duration-300 z-[200] overflow-y-auto ${collapsed ? 'overflow-visible' : 'overflow-x-hidden'} md:overflow-visible
                 ${collapsed ? 'w-[74px] min-w-[74px] items-center' : 'w-60 min-w-60'}
                 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
                 fixed md:relative top-0 left-0 bottom-0
@@ -173,7 +173,13 @@ function Sidebar() {
                                             <span className={`font-normal text-[13px] leading-4 text-text-secondary whitespace-nowrap transition-opacity duration-200 group-[.active]:text-text-primary group-[.active]:font-medium ${collapsed ? 'md:opacity-0 md:w-0 overflow-hidden' : 'opacity-100'}`}>{item.name}</span>
                                         </div>
                                         {item.alert && <span className="absolute w-1.5 h-1.5 right-2.5 top-1/2 -translate-y-1/2 bg-accent rounded-full pointer-events-none" />}
-                                        {collapsed && <span className="hidden group-hover:block absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-bg-card text-text-primary px-3 py-1.5 rounded-md text-[13px] font-medium whitespace-nowrap shadow-lg border border-border-color z-[200] pointer-events-none">{item.name}</span>}
+                                        {collapsed && (
+                                            <span
+                                                className="pointer-events-none absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-bg-card text-text-primary px-3 py-1.5 rounded-md text-[13px] font-medium whitespace-nowrap shadow-lg border border-border-color z-[500] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-150"
+                                            >
+                                                {item.name}
+                                            </span>
+                                        )}
                                     </NavLink>
                                 );
                             })}
