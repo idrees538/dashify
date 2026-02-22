@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { IoPlayOutline, IoExpandOutline, IoVolumeHighOutline } from 'react-icons/io5';
+import {
+    IoPlayOutline,
+    IoExpandOutline,
+    IoVolumeHighOutline,
+    IoVideocamOutline,
+    IoEllipsisHorizontalOutline,
+} from 'react-icons/io5';
 
 function VideoPlayer({ draft, currentTime, onTimeChange, notes = [], onMarkerClick }) {
     const [hoveredMarker, setHoveredMarker] = useState(null);
@@ -35,28 +41,39 @@ function VideoPlayer({ draft, currentTime, onTimeChange, notes = [], onMarkerCli
     }
 
     return (
-        <div className="overflow-hidden p-0 bg-bg-secondary rounded-xl shadow-sm border border-border-color">
+        <div className="overflow-hidden p-0 bg-bg-secondary rounded-xl shadow-sm border border-border-color flex flex-col">
+            {/* Frame.io-style header bar */}
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-border-color bg-bg-secondary">
+                <div className="flex items-center gap-2.5">
+                    <IoVideocamOutline className="text-accent text-base" />
+                    <span className="text-[13px] font-semibold text-text-primary truncate max-w-[260px]">{draft.title}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-accent/10 text-accent text-[10px] font-bold">v{draft.version}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="text-[11px] text-text-secondary font-mono">{draft.duration}</span>
+                    <button className="w-7 h-7 rounded-lg flex items-center justify-center text-text-secondary hover:bg-bg-hover transition-colors">
+                        <IoEllipsisHorizontalOutline />
+                    </button>
+                </div>
+            </div>
+
             {/* Simulated video area */}
             <div className={`relative w-full aspect-video flex items-center justify-center overflow-hidden
                 ${draft.color === 'purple' ? 'bg-gradient-to-br from-[#FF6037]/25 via-accent/20 to-black/60' :
                     draft.color === 'blue' ? 'bg-gradient-to-br from-blue-500/30 via-blue-600/15 to-black/60' :
                         draft.color === 'green' ? 'bg-gradient-to-br from-[#10B981]/25 via-[#34D399]/15 to-black/60' :
                             'bg-gradient-to-br from-[#F59E0B]/30 via-[#FBBF24]/15 to-black/60'}`}>
-                <button className="w-[72px] h-[72px] rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center text-[32px] text-white transition-all duration-200 border-2 border-white/20 hover:scale-[1.08] hover:bg-white/25">
+                <button className="w-[68px] h-[68px] rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center text-[28px] text-white transition-all duration-200 border-2 border-white/20 hover:scale-[1.08] hover:bg-white/25">
                     <IoPlayOutline />
                 </button>
-                <div className="absolute bottom-4 left-4 flex items-center gap-2">
-                    <span className="bg-black/60 text-white px-3 py-1 rounded-md text-[12px] font-semibold">{draft.title}</span>
-                    <span className="bg-accent text-white px-2.5 py-1 rounded-md text-[11px] font-bold">v{draft.version}</span>
-                </div>
             </div>
 
             {/* Controls bar */}
-            <div className="flex items-center gap-3 p-[14px] px-[18px] bg-bg-secondary border-t border-border-color">
-                <button className="w-8 h-8 flex items-center justify-center text-text-secondary rounded-md text-lg transition-colors hover:text-text-primary">
+            <div className="flex items-center gap-3 p-3 px-4 bg-bg-secondary border-t border-border-color">
+                <button className="w-7 h-7 flex items-center justify-center text-text-secondary rounded-md text-base transition-colors hover:text-text-primary">
                     <IoPlayOutline />
                 </button>
-                <span className="text-[12px] font-semibold text-text-secondary font-mono whitespace-nowrap">
+                <span className="text-[11px] font-semibold text-text-secondary font-mono whitespace-nowrap">
                     {formatTime(currentTime)} / {draft.duration}
                 </span>
 
@@ -69,7 +86,7 @@ function VideoPlayer({ draft, currentTime, onTimeChange, notes = [], onMarkerCli
                         onTimeChange(Math.round(pct * draft.durationSec));
                     }}
                 >
-                    <div className="relative w-full h-[5px] bg-bg-hover rounded-full">
+                    <div className="relative w-full h-[4px] bg-bg-hover rounded-full">
                         {/* Progress fill */}
                         <div
                             className="absolute top-0 left-0 h-full bg-accent rounded-full transition-all duration-150"
@@ -77,7 +94,7 @@ function VideoPlayer({ draft, currentTime, onTimeChange, notes = [], onMarkerCli
                         />
                         {/* Playhead */}
                         <div
-                            className="absolute top-1/2 w-3.5 h-3.5 bg-accent border-2 border-white rounded-full -translate-x-1/2 -translate-y-1/2 shadow-sm transition-all duration-150 z-[3]"
+                            className="absolute top-1/2 w-3 h-3 bg-accent border-2 border-white rounded-full -translate-x-1/2 -translate-y-1/2 shadow-sm transition-all duration-150 z-[3]"
                             style={{ left: `${progressPercent}%` }}
                         />
                     </div>
@@ -100,7 +117,7 @@ function VideoPlayer({ draft, currentTime, onTimeChange, notes = [], onMarkerCli
                                 }}
                             >
                                 {/* Marker dot */}
-                                <div className={`w-3 h-3 rounded-full -translate-x-1/2 cursor-pointer transition-all duration-200 border-2 border-white shadow-md
+                                <div className={`w-2.5 h-2.5 rounded-full -translate-x-1/2 cursor-pointer transition-all duration-200 border-2 border-white shadow-md
                                     ${isHovered ? 'bg-[#FF6037] scale-150' : 'bg-[#FF6037]/80 scale-100'}
                                 `} />
 
@@ -118,10 +135,10 @@ function VideoPlayer({ draft, currentTime, onTimeChange, notes = [], onMarkerCli
                     })}
                 </div>
 
-                <button className="w-8 h-8 flex items-center justify-center text-text-secondary rounded-md text-lg transition-colors hover:text-text-primary">
+                <button className="w-7 h-7 flex items-center justify-center text-text-secondary rounded-md text-base transition-colors hover:text-text-primary">
                     <IoVolumeHighOutline />
                 </button>
-                <button className="w-8 h-8 flex items-center justify-center text-text-secondary rounded-md text-lg transition-colors hover:text-text-primary">
+                <button className="w-7 h-7 flex items-center justify-center text-text-secondary rounded-md text-base transition-colors hover:text-text-primary">
                     <IoExpandOutline />
                 </button>
             </div>

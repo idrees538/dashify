@@ -48,15 +48,15 @@ const DRAFTS = [
 
 const INITIAL_NOTES = {
     1: [
-        { id: 101, author: 'Sarah K.', text: 'Logo appears too early — can we push to 0:15?', timestamp: 8, date: 'Feb 17' },
-        { id: 102, author: 'Mike D.', text: 'Audio transition here is perfect 🎵', timestamp: 45, date: 'Feb 17' },
-        { id: 103, author: 'Sarah K.', text: 'Colour grade feels a bit warm — try cooler tones', timestamp: 124, date: 'Feb 18' },
+        { id: 101, author: 'Sarah K.', text: 'Logo appears too early — can we push to 0:15?', timestamp: 8, date: 'Feb 17', resolved: false },
+        { id: 102, author: 'Mike D.', text: 'Audio transition here is perfect 🎵', timestamp: 45, date: 'Feb 17', resolved: true },
+        { id: 103, author: 'Sarah K.', text: 'Colour grade feels a bit warm — try cooler tones', timestamp: 124, date: 'Feb 18', resolved: false },
     ],
     2: [
-        { id: 201, author: 'Alex R.', text: 'Need a stronger hook in the first 3 seconds', timestamp: 2, date: 'Feb 15' },
+        { id: 201, author: 'Alex R.', text: 'Need a stronger hook in the first 3 seconds', timestamp: 2, date: 'Feb 15', resolved: false },
     ],
     3: [
-        { id: 301, author: 'Client', text: 'Approved — ready to publish!', timestamp: 0, date: 'Feb 12' },
+        { id: 301, author: 'Client', text: 'Approved — ready to publish!', timestamp: 0, date: 'Feb 12', resolved: true },
     ],
     4: [],
 };
@@ -83,6 +83,15 @@ function Review() {
         }));
     };
 
+    const handleResolveNote = (noteId) => {
+        setAllNotes((prev) => ({
+            ...prev,
+            [selectedDraftId]: (prev[selectedDraftId] || []).map((n) =>
+                n.id === noteId ? { ...n, resolved: !n.resolved } : n
+            ),
+        }));
+    };
+
     const handleSelectDraft = (id) => {
         setSelectedDraftId(id);
         setCurrentTime(0);
@@ -98,9 +107,9 @@ function Review() {
 
     return (
         <div className="max-w-[1200px] mx-auto animate-fade-in">
-            <div className="mb-8">
-                <h1 className="text-[26px] font-bold text-text-primary mb-2">Review</h1>
-                <p className="text-[15px] text-text-secondary font-normal">
+            <div className="mb-5">
+                <h1 className="text-[24px] font-bold text-text-primary mb-1">Review</h1>
+                <p className="text-[14px] text-text-secondary font-normal">
                     Select a draft and add timestamped notes for your team.
                 </p>
             </div>
@@ -112,7 +121,7 @@ function Review() {
                 noteCounts={noteCounts}
             />
 
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-5 items-start">
                 <VideoPlayer
                     draft={selectedDraft}
                     currentTime={currentTime}
@@ -120,12 +129,15 @@ function Review() {
                     notes={notes}
                     onMarkerClick={handleMarkerClick}
                 />
-                <NotesPanel
-                    notes={notes}
-                    currentTime={currentTime}
-                    onAddNote={handleAddNote}
-                    highlightedTimestamp={highlightedTimestamp}
-                />
+                <div className="lg:h-[calc(56.25vw*0.65+120px)] lg:max-h-[540px] lg:min-h-[420px]">
+                    <NotesPanel
+                        notes={notes}
+                        currentTime={currentTime}
+                        onAddNote={handleAddNote}
+                        highlightedTimestamp={highlightedTimestamp}
+                        onResolveNote={handleResolveNote}
+                    />
+                </div>
             </div>
         </div>
     );
