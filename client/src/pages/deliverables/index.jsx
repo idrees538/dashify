@@ -92,21 +92,21 @@ function Deliverables() {
     );
 
     return (
-        <div className="max-w-[1200px] mx-auto animate-fade-in">
-            <div className="mb-8">
-                <h1 className="text-[26px] font-bold text-text-primary mb-2">Deliverables</h1>
-                <p className="text-[15px] text-text-secondary font-normal">
+        <div className="max-w-[1200px] mx-auto animate-fade-in px-4 py-4">
+            <div className="mb-6">
+                <h1 className="text-base font-semibold text-text-primary">Deliverables</h1>
+                <p className="text-[12px] text-text-secondary">
                     Browse project folders and access all your delivered files.
                 </p>
             </div>
 
             {/* Search bar */}
             {!openProject && (
-                <div className="relative mb-8">
-                    <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-xl" />
+                <div className="relative mb-6">
+                    <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-lg" />
                     <input
                         type="text"
-                        className="w-full pl-12 pr-4 py-3.5 bg-bg-secondary border border-border-color rounded-xl text-sm focus:outline-none focus:border-accent transition-all placeholder:text-text-secondary/60 shadow-sm"
+                        className="w-full pl-12 pr-4 py-2.5 bg-bg-secondary border border-border-color rounded-lg text-sm focus:outline-none focus:border-accent transition-all placeholder:text-text-secondary/60 shadow-sm"
                         placeholder="Search projects…"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}

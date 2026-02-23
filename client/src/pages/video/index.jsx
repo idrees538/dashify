@@ -10,22 +10,22 @@ const VIDEOS = [
 
 function Video() {
     return (
-        <div className="max-w-[1200px] mx-auto animate-fade-in">
-            <div className="mb-8">
-                <h1 className="text-[26px] font-bold text-text-primary mb-2">Video</h1>
-                <p className="text-[15px] text-text-secondary font-normal">Manage your video content and track usage.</p>
+        <div className="max-w-[1200px] mx-auto px-4 py-4 animate-fade-in">
+            <div className="mb-6">
+                <h1 className="text-base font-semibold text-text-primary">Video</h1>
+                <p className="text-[12px] text-text-secondary">Manage your video content and track usage.</p>
             </div>
 
             {VIDEOS.length === 0 ? (
-                <div className="flex flex-col items-center justify-center p-16 px-8 text-center bg-bg-secondary rounded-xl shadow-sm border border-border-color">
-                    <div className="text-5xl text-text-secondary/60 mb-4">
+                <div className="flex flex-col items-center justify-center p-16 px-8 text-center bg-bg-secondary rounded-lg shadow-sm border border-border-color">
+                    <div className="text-4xl text-text-secondary/60 mb-3">
                         <IoVideocamOutline />
                     </div>
-                    <h3 className="text-lg font-semibold text-text-primary mb-2">No videos yet</h3>
-                    <p className="text-sm text-text-secondary">Content will appear here once you start creating videos.</p>
+                    <h3 className="text-base font-semibold text-text-primary mb-1.5">No videos yet</h3>
+                    <p className="text-[12px] text-text-secondary">Content will appear here once you start creating videos.</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-6">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
                     {VIDEOS.map((video, i) => {
                         const gradientMap = {
                             '--purple': 'from-accent/20 to-accent/10',
@@ -38,19 +38,19 @@ function Video() {
                         const gradientClass = gradientMap[video.color] || 'from-gray-500/20 to-gray-500/10';
 
                         return (
-                            <div className="group bg-bg-secondary rounded-xl shadow-sm border border-border-color hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 overflow-hidden" key={i}>
-                                <div className={`relative w-full h-[180px] flex items-center justify-center bg-gradient-to-br ${gradientClass}`}>
-                                    <div className="w-14 h-14 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center text-[26px] text-text-primary transition-all duration-200 group-hover:scale-110 group-hover:bg-white/25">
+                            <div className="group bg-bg-secondary rounded-lg shadow-sm border border-border-color hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 overflow-hidden" key={i}>
+                                <div className={`relative w-full h-[160px] flex items-center justify-center bg-gradient-to-br ${gradientClass}`}>
+                                    <div className="w-12 h-12 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center text-xl text-text-primary transition-all duration-200 group-hover:scale-110 group-hover:bg-white/25">
                                         <IoPlayOutline />
                                     </div>
-                                    <span className="absolute bottom-2.5 right-2.5 flex items-center gap-1 bg-black/60 text-white px-2.5 py-1 rounded-md text-[12px] font-medium">
+                                    <span className="absolute bottom-2.5 right-2.5 flex items-center gap-1 bg-black/60 text-white px-2 py-0.5 rounded-md text-[10px] uppercase font-bold tracking-wider">
                                         <IoTimeOutline /> {video.duration}
                                     </span>
                                 </div>
-                                <div className="p-[18px] px-5">
-                                    <h3 className="text-[15px] font-semibold text-text-primary mb-2">{video.title}</h3>
-                                    <span className="flex items-center gap-1.5 text-[13px] text-[#f59e0b] font-medium">
-                                        <IoFlashOutline /> Consumes {video.tokens} tokens
+                                <div className="p-3.5 px-4">
+                                    <h3 className="text-sm font-semibold text-text-primary mb-1">{video.title}</h3>
+                                    <span className="flex items-center gap-1.5 text-[11px] text-[#f59e0b] font-semibold uppercase tracking-wide">
+                                        <IoFlashOutline /> {video.tokens} tokens
                                     </span>
                                 </div>
                             </div>

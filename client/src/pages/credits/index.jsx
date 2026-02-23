@@ -60,27 +60,27 @@ function Credits() {
     const maxVal = Math.max(...CATEGORY_DATA.map(d => d.value));
 
     return (
-        <div className="max-w-[1200px] mx-auto animate-fade-in mb-8">
-            <div className="mb-8">
-                <h1 className="text-[26px] font-bold text-text-primary mb-2">Credits</h1>
-                <p className="text-[15px] text-text-secondary font-normal">Manage your credits and view transaction history.</p>
+        <div className="max-w-[1200px] mx-auto animate-fade-in px-4 py-4 mb-8">
+            <div className="mb-6">
+                <h1 className="text-base font-semibold text-text-primary">Credits</h1>
+                <p className="text-[12px] text-text-secondary">Manage your credits and view transaction history.</p>
             </div>
 
             <div className="grid grid-cols-12 gap-6">
                 {/* Credit Summary */}
-                <div className="col-span-12 bg-bg-secondary p-6 rounded-2xl border border-border-color shadow-sm">
-                    <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-base font-bold text-text-primary">Credit Summary</h3>
+                <div className="col-span-12 bg-bg-secondary p-4 rounded-lg border border-border-color shadow-sm">
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-base font-semibold text-text-primary">Credit Summary</h3>
                     </div>
-                    <div className="mb-8">
+                    <div className="mb-6">
                         <div className="flex justify-between items-center mb-4">
-                            <span className="text-sm font-semibold text-text-secondary uppercase tracking-wider">Credit Bank</span>
-                            <div className="flex gap-3">
-                                <button className="px-4 py-2 text-sm font-bold bg-bg-hover text-text-primary rounded-xl hover:bg-bg-hover/80 transition-colors">Redeem</button>
-                                <button className="px-4 py-2 text-sm font-bold bg-accent text-white rounded-xl hover:opacity-90 transition-opacity shadow-sm shadow-accent/20">Get Credits</button>
+                            <span className="text-[11px] font-bold text-text-secondary uppercase tracking-wider">Credit Bank</span>
+                            <div className="flex gap-2">
+                                <button className="px-3 py-1.5 text-xs font-bold bg-bg-hover text-text-primary rounded-lg hover:bg-bg-hover/80 transition-colors">Redeem</button>
+                                <button className="px-3 py-1.5 text-xs font-bold bg-accent text-white rounded-lg hover:opacity-90 transition-opacity shadow-sm">Get Credits</button>
                             </div>
                         </div>
-                        <div className="h-8 bg-bg-primary rounded-xl overflow-hidden relative border border-border-color">
+                        <div className="h-6 bg-bg-primary rounded-lg overflow-hidden relative border border-border-color">
                             <div className="h-full bg-accent/20 w-[70%] border-r-2 border-accent" />
                             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-text-secondary uppercase tracking-widest">7 of 10 Credits Redeemable</span>
                         </div>
@@ -106,8 +106,8 @@ function Credits() {
                 </div>
 
                 {/* Left Column: Requests */}
-                <div className="col-span-12 lg:col-span-4 bg-bg-secondary p-6 rounded-2xl border border-border-color shadow-sm self-start">
-                    <h3 className="text-base font-bold text-text-primary mb-8">Requests</h3>
+                <div className="col-span-12 lg:col-span-4 bg-bg-secondary p-4 rounded-lg border border-border-color shadow-sm self-start">
+                    <h3 className="text-base font-semibold text-text-primary mb-6">Requests</h3>
                     <div className="space-y-0">
                         {REQUESTS.map((req, i) => (
                             <div key={i} className="relative flex gap-5 pb-8 group last:pb-0">
@@ -136,9 +136,9 @@ function Credits() {
                 </div>
 
                 {/* Right Column: Credits by Category Chart */}
-                <div className="col-span-12 lg:col-span-8 bg-bg-secondary p-6 rounded-2xl border border-border-color shadow-sm">
-                    <div className="flex justify-between items-center mb-10">
-                        <h3 className="text-base font-bold text-text-primary">Credits by Category</h3>
+                <div className="col-span-12 lg:col-span-8 bg-bg-secondary p-4 rounded-lg border border-border-color shadow-sm">
+                    <div className="flex justify-between items-center mb-8">
+                        <h3 className="text-base font-semibold text-text-primary">Credits by Category</h3>
                         <div className="flex items-center gap-3">
                             <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold text-text-secondary">
                                 <span className="w-2 h-2 rounded-full bg-accent" /> Usage
@@ -166,9 +166,9 @@ function Credits() {
                 </div>
 
                 {/* Stats Grid */}
-                <div className="col-span-12 lg:col-span-8 bg-bg-secondary p-6 rounded-2xl border border-border-color shadow-sm">
-                    <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-base font-bold text-text-primary">Credit Statistics</h3>
+                <div className="col-span-12 lg:col-span-8 bg-bg-secondary p-4 rounded-lg border border-border-color shadow-sm">
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-base font-semibold text-text-primary">Credit Statistics</h3>
                         <button className="text-text-secondary hover:text-text-primary"><IoEllipsisHorizontal /></button>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -182,9 +182,9 @@ function Credits() {
                 </div>
 
                 {/* Recent Transactions */}
-                <div className="col-span-12 lg:col-span-4 bg-bg-secondary p-6 rounded-2xl border border-border-color shadow-sm">
-                    <div className="flex justify-between items-center mb-6 text-text-primary font-bold">
-                        <h3 className="text-base text-text-primary mb-0">Recent Transactions</h3>
+                <div className="col-span-12 lg:col-span-4 bg-bg-secondary p-4 rounded-lg border border-border-color shadow-sm">
+                    <div className="flex justify-between items-center mb-4 text-text-primary">
+                        <h3 className="text-base font-semibold text-text-primary mb-0">Recent Transactions</h3>
                         <IoOpenOutline className="cursor-pointer text-text-secondary hover:text-text-primary" />
                     </div>
                     <div className="space-y-4">

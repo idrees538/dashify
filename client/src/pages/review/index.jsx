@@ -32,24 +32,24 @@ function Review() {
     }
 
     return (
-        <div className="max-w-[1200px] mx-auto animate-fade-in relative">
+        <div className="max-w-[1200px] mx-auto px-4 py-4 animate-fade-in relative">
             {/* Integration Banner (only if not configured) */}
             {isConfigured === false && (
-                <div className="mb-6 p-4 bg-accent-light border border-accent/20 rounded-xl flex items-start gap-3 shadow-sm animate-slide-up">
-                    <IoInformationCircleOutline className="text-accent text-xl flex-shrink-0 mt-0.5" />
+                <div className="mb-6 p-4 bg-accent-light border border-accent/20 rounded-lg flex items-start gap-3 shadow-sm animate-slide-up">
+                    <IoInformationCircleOutline className="text-accent text-lg flex-shrink-0 mt-0.5" />
                     <div>
-                        <h4 className="text-[14px] font-bold text-accent mb-0.5">Demo Mode Active</h4>
-                        <p className="text-[12px] text-accent/80 font-medium">
+                        <h4 className="text-[13px] font-bold text-accent mb-0.5">Demo Mode Active</h4>
+                        <p className="text-[11px] text-accent/80 font-medium">
                             Frame.io is not configured. To enable real-time integration, add your <code>FRAMEIO_TOKEN</code> to the server <code>.env</code> and <code>VITE_FRAMEIO_ROOT_ASSET_ID</code> to the client <code>.env</code>.
                         </p>
                     </div>
                 </div>
             )}
 
-            <div className="mb-5 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="mb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-[24px] font-bold text-text-primary mb-1">Review</h1>
-                    <p className="text-[14px] text-text-secondary font-normal">
+                    <h1 className="text-base font-semibold text-text-primary">Review</h1>
+                    <p className="text-[12px] text-text-secondary">
                         {isConfigured ? 'Real-time Frame.io integration active.' : 'Select a draft and add timestamped notes for your team.'}
                     </p>
                 </div>

@@ -44,30 +44,30 @@ const POSTS = [
 
 function SocialMedia() {
     return (
-        <div className="max-w-[1200px] mx-auto animate-fade-in">
-            <div className="mb-8">
-                <h1 className="text-[26px] font-bold text-text-primary mb-2">Social Media</h1>
-                <p className="text-[15px] text-text-secondary font-normal">Your central hub for social media activity.</p>
+        <div className="max-w-[1200px] mx-auto px-4 py-4 animate-fade-in">
+            <div className="mb-6">
+                <h1 className="text-base font-semibold text-text-primary">Social Media</h1>
+                <p className="text-[12px] text-text-secondary">Your central hub for social media activity.</p>
             </div>
 
             {/* Platform Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 {PLATFORMS.map((p, i) => {
                     const Icon = p.icon;
                     return (
-                        <div className="bg-bg-secondary rounded-xl p-7 flex flex-col items-center text-center shadow-sm border border-border-color hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" key={i}>
-                            <div className="text-4xl mb-3" style={{ color: p.color }}>
+                        <div className="bg-bg-secondary rounded-lg p-5 flex flex-col items-center text-center shadow-sm border border-border-color hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" key={i}>
+                            <div className="text-3xl mb-2" style={{ color: p.color }}>
                                 <Icon />
                             </div>
-                            <h3 className="text-base font-semibold text-text-primary mb-4">{p.name}</h3>
+                            <h3 className="text-sm font-semibold text-text-primary mb-3">{p.name}</h3>
                             <div className="flex justify-center gap-7">
                                 <div className="flex flex-col gap-0.5">
                                     <span className="text-lg font-bold text-text-primary">{p.followers}</span>
-                                    <span className="text-[12px] text-text-secondary">Followers</span>
+                                    <span className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider">Followers</span>
                                 </div>
                                 <div className="flex flex-col gap-0.5">
                                     <span className="text-lg font-bold text-text-primary">{p.posts}</span>
-                                    <span className="text-[12px] text-text-secondary">Posts</span>
+                                    <span className="text-[11px] font-semibold text-text-secondary uppercase tracking-wider">Posts</span>
                                 </div>
                             </div>
                         </div>
@@ -77,13 +77,13 @@ function SocialMedia() {
 
             {/* Recent Posts */}
             <div className="mb-8">
-                <h2 className="text-lg font-semibold text-text-primary mb-4">Recent Posts</h2>
+                <h2 className="text-base font-semibold text-text-primary mb-4">Recent Posts</h2>
                 <div className="flex flex-col gap-4">
                     {POSTS.map((post, i) => (
-                        <div className="bg-bg-secondary rounded-xl p-5 px-6 shadow-sm border border-border-color hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" key={i}>
+                        <div className="bg-bg-secondary rounded-lg p-4 px-5 shadow-sm border border-border-color hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" key={i}>
                             <div className="flex justify-between items-center mb-3">
-                                <span className="text-[13px] font-semibold text-accent bg-accent-light px-2.5 py-1 rounded-md">{post.platform}</span>
-                                <span className="text-[12px] text-text-secondary">{post.time}</span>
+                                <span className="text-[10px] font-bold text-accent bg-accent-light px-2 py-0.5 rounded-md uppercase tracking-wider">{post.platform}</span>
+                                <span className="text-[11px] text-text-secondary">{post.time}</span>
                             </div>
                             <p className="text-sm text-text-primary leading-relaxed mb-3.5">{post.content}</p>
                             <div className="flex gap-5">
@@ -103,11 +103,11 @@ function SocialMedia() {
             </div>
 
             {/* CTA */}
-            <div className="flex items-center gap-5 mt-7 p-6 px-7 bg-black/5 dark:bg-white/5 rounded-xl border-2 border-dashed border-border-color shadow-sm">
-                <IoLinkOutline className="text-[32px] text-accent flex-shrink-0" />
+            <div className="flex items-center gap-4 mt-6 p-4 px-5 bg-black/5 dark:bg-white/5 rounded-lg border-2 border-dashed border-border-color shadow-sm">
+                <IoLinkOutline className="text-2xl text-accent flex-shrink-0" />
                 <div>
-                    <h3 className="text-base font-semibold text-text-primary mb-1">Connect Social Account</h3>
-                    <p className="text-[13px] text-text-secondary leading-normal">Link your social media accounts for advanced analytics and scheduling. <strong>Coming soon!</strong></p>
+                    <h3 className="text-sm font-semibold text-text-primary mb-0.5">Connect Social Account</h3>
+                    <p className="text-[12px] text-text-secondary leading-normal">Link your social media accounts for advanced analytics and scheduling. <strong>Coming soon!</strong></p>
                 </div>
             </div>
         </div>

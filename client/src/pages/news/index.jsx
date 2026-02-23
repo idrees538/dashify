@@ -10,13 +10,13 @@ function News() {
     ];
 
     return (
-        <div className="max-w-[1200px] mx-auto animate-fade-in">
-            <div className="mb-8">
-                <h1 className="text-[26px] font-bold text-text-primary mb-2">News</h1>
-                <p className="text-[15px] text-text-secondary font-normal">Stay updated with the latest company news and announcements.</p>
+        <div className="max-w-[1200px] mx-auto px-4 py-4 animate-fade-in">
+            <div className="mb-6">
+                <h1 className="text-base font-semibold text-text-primary">News</h1>
+                <p className="text-[12px] text-text-secondary">Stay updated with the latest company news and announcements.</p>
             </div>
 
-            <div className="bg-bg-secondary rounded-xl shadow-sm border border-border-color overflow-hidden">
+            <div className="bg-bg-secondary rounded-lg shadow-sm border border-border-color overflow-hidden">
                 <div className="p-4 px-6 border-b border-border-color bg-bg-hover/50">
                     <h3 className="text-sm font-semibold text-text-primary">Latest News</h3>
                 </div>
@@ -27,10 +27,10 @@ function News() {
                                 <IoNewspaperOutline />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <div className="font-semibold text-text-primary mb-0.5 truncate">{article.title}</div>
-                                <div className="text-[13px] text-text-secondary">{article.category}</div>
+                                <div className="text-sm font-semibold text-text-primary mb-0.5 truncate">{article.title}</div>
+                                <div className="text-[12px] text-text-secondary">{article.category}</div>
                             </div>
-                            <div className="text-[13px] text-text-secondary min-w-[60px] text-right">{article.time}</div>
+                            <div className="text-[11px] text-text-secondary min-w-[60px] text-right">{article.time}</div>
                         </div>
                     ))}
                 </div>

@@ -45,7 +45,7 @@ export default function CalendarHeader({ currentDate, goToPrev, goToNext, goToTo
                     <IoChevronForwardOutline />
                 </button>
 
-                <h2 className="text-lg font-bold text-text-primary ml-1 whitespace-nowrap">
+                <h2 className="text-base font-semibold text-text-primary ml-1 whitespace-nowrap">
                     {month} {year}
                 </h2>
 

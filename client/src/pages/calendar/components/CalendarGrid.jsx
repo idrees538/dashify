@@ -9,7 +9,7 @@ export default function CalendarGrid({
     onRemoveEvent,
 }) {
     return (
-        <div className="flex-1 flex flex-col min-h-0 border border-border-color rounded-xl overflow-hidden bg-bg-secondary shadow-sm">
+        <div className="flex-1 flex flex-col min-h-0 border border-border-color rounded-lg overflow-hidden bg-bg-secondary shadow-sm">
             {/* Day-of-week headers */}
             <div className="grid grid-cols-7 bg-bg-primary">
                 {DAY_NAMES.map((d) => (
