@@ -116,4 +116,6 @@ curl -X DELETE "http://localhost:5000/api/frameio/projects/{projectId}/users/{us
 Set these in your server `.env`:
 - `FRAMEIO_CLIENT_ID`: Your Adobe Developer Client ID.
 - `FRAMEIO_CLIENT_SECRET`: Your Adobe Developer Client Secret.
+- `FRAMEIO_REDIRECT_URI`: Your redirect URI (e.g., http://localhost:5000/api/frameio/callback).
+- `FRAMEIO_SCOPES`: openid,email,profile,offline_access,additional_info.roles
 - `FRAMEIO_TOKEN`: Legacy developer token (optional, for V2 fallback).

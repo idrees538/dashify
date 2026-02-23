@@ -8,6 +8,32 @@ const ApiError = require('../../core/ApiError');
  */
 
 const ADOBE_IMS_BASE = 'https://ims-na1.adobelogin.com/ims/token/v3';
+const ADOBE_IMS_AUTH = 'https://ims-na1.adobelogin.com/ims/authorize/v2';
+
+// ✅ Exact correct scopes for Frame.io V4 API
+const FRAMEIO_SCOPES = 'openid,email,profile,offline_access,additional_info.roles';
+
+/**
+ * Generate the Adobe Login URL for the user.
+ * Fix: redirect_uri MUST be encodeURIComponent encoded
+ */
+function getLoginUrl() {
+    const { FRAMEIO_CLIENT_ID, FRAMEIO_REDIRECT_URI } = process.env;
+
+    if (!FRAMEIO_CLIENT_ID) throw new Error('FRAMEIO_CLIENT_ID is missing in .env');
+    if (!FRAMEIO_REDIRECT_URI) throw new Error('FRAMEIO_REDIRECT_URI is missing in .env');
+
+    const params = new URLSearchParams({
+        client_id: FRAMEIO_CLIENT_ID,
+        redirect_uri: FRAMEIO_REDIRECT_URI,   // URLSearchParams handles encoding ✅
+        scope: FRAMEIO_SCOPES,
+        response_type: 'code'
+    });
+
+    const url = `${ADOBE_IMS_AUTH}?${params.toString()}`;
+    console.log('[Frame.io Auth] Login URL:', url); // helpful for debugging
+    return url;
+}
 
 /**
  * Exchange authorization code for access and refresh tokens.
@@ -34,6 +60,8 @@ async function exchangeCode(code) {
 
         const { data } = await axios.post(ADOBE_IMS_BASE, params);
 
+        console.log('[Frame.io Auth] Token exchange successful ✅');
+
         return {
             accessToken: data.access_token,
             refreshToken: data.refresh_token,
@@ -47,9 +75,9 @@ async function exchangeCode(code) {
 
 /**
  * Refresh an expired access token.
- * @param {string} refreshToken 
+ * @param {string} refreshToken
  */
-async function refreshToken(refreshToken) {
+async function refreshAccessToken(refreshToken) {
     const {
         FRAMEIO_CLIENT_ID,
         FRAMEIO_CLIENT_SECRET
@@ -64,6 +92,8 @@ async function refreshToken(refreshToken) {
 
         const { data } = await axios.post(ADOBE_IMS_BASE, params);
 
+        console.log('[Frame.io Auth] Token refreshed successfully ✅');
+
         return {
             accessToken: data.access_token,
             refreshToken: data.refresh_token,
@@ -75,18 +105,8 @@ async function refreshToken(refreshToken) {
     }
 }
 
-/**
- * Generate the Adobe Login URL for the user.
- */
-function getLoginUrl() {
-    const { FRAMEIO_CLIENT_ID, FRAMEIO_REDIRECT_URI } = process.env;
-    const scope = 'openid,AdobeID,frameio_api,offline_access';
-
-    return `https://ims-na1.adobelogin.com/ims/authorize/v2?client_id=${FRAMEIO_CLIENT_ID}&redirect_uri=${FRAMEIO_REDIRECT_URI}&scope=${scope}&response_type=code`;
-}
-
 module.exports = {
     exchangeCode,
-    refreshToken,
+    refreshAccessToken,
     getLoginUrl
 };

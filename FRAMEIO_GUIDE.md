@@ -16,6 +16,8 @@ Legacy Developer Tokens from `developer.frame.io` will **not work** with Next/V4
     ```bash
     FRAMEIO_CLIENT_ID=your-client-id
     FRAMEIO_CLIENT_SECRET=your-client-secret
+    FRAMEIO_REDIRECT_URI=http://localhost:5000/api/frameio/callback
+    FRAMEIO_SCOPES=openid,email,profile,offline_access,additional_info.roles
     ```
 
 ---
