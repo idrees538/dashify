@@ -68,8 +68,14 @@ function Sidebar() {
     }, [location.pathname]);
 
     const currentLogo = theme === 'light' ? lightWebLogo : webLogo;
-    const hasProject = false; // TODO: replace with real project presence
-    const projectName = 'Acme Studio';
+    const projects = [
+        { id: 1, name: 'Acme Studio' },
+        { id: 2, name: 'Brand Campaign' },
+        { id: 3, name: 'Website Redesign' },
+        { id: 4, name: 'Social Media' },
+        { id: 5, name: 'Mobile App' },
+        { id: 6, name: 'Print Ads' },
+    ];
 
     return (
         <>
@@ -129,28 +135,37 @@ function Sidebar() {
                     </button>
                 </div>
 
-                {/* General Section */}
+                {/* Projects Section */}
                 <div className={`flex flex-col items-center px-3 md:px-3 pb-3 gap-3 w-full border-b border-border-color ${collapsed ? 'px-4 py-2' : ''}`}>
-                    <span className={`font-medium text-[9px] text-text-secondary/60 w-full text-left uppercase tracking-wider ${collapsed ? 'md:hidden' : ''}`}>General</span>
-                    <nav className={`flex flex-col gap-1 w-full ${collapsed ? 'items-center' : 'items-start'}`}>
-                        {!hasProject ? (
-                            <NavLink className={`flex items-center gap-2 w-full p-1.5 text-text-secondary hover:bg-bg-hover rounded-md transition-colors duration-200 relative group ${collapsed ? 'justify-center w-9 h-9' : ''}`}>
-                                <span className={collapsed ? 'md:hidden' : ''}>Project</span>
-                                <IoAddOutline className="text-lg" />
-                                {collapsed && <span className="hidden group-hover:block absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-bg-card text-text-primary px-3 py-1.5 rounded-md text-[12px] font-medium whitespace-nowrap shadow-lg border border-border-color z-[200] pointer-events-none">Start Project</span>}
-                            </NavLink>
-                        ) : (
-                            <NavLink to="/project" className={({ isActive }) => `flex flex-row justify-between items-center p-1.5 gap-2 w-full rounded-md transition-colors duration-200 cursor-pointer relative group ${collapsed ? 'md:w-9 md:h-9 md:px-0 mx-auto justify-center' : 'px-2'} ${isActive ? 'bg-black/[0.08] dark:bg-white/10' : 'hover:bg-bg-hover'}`}>
-                                <div className={`flex items-center gap-2.5 flex-1 ${collapsed ? 'md:justify-center md:gap-0' : 'justify-between'}`}>
-                                    <span className={`font-normal text-[12px] leading-4 text-text-secondary whitespace-nowrap transition-opacity duration-200 ${collapsed ? 'md:opacity-0 md:w-0 overflow-hidden' : 'opacity-100'}`}>{projectName}</span>
-                                    <span className="w-5 h-5 min-w-[20px] flex items-center justify-center text-text-secondary text-sm transition-colors duration-200">
-                                        <IoFolderOutline />
-                                    </span>
+                    <span className={`font-medium text-[9px] text-text-secondary/60 w-full text-left uppercase tracking-wider ${collapsed ? 'md:hidden' : ''}`}>Projects</span>
+                    {!collapsed && (
+                        <div className="w-full h-32 bg-black/[0.03] dark:bg-white/[0.03] border border-border-color rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-border-color scrollbar-track-transparent flex flex-col">
+                            {/* Static project list - replace with real data when available */}
+                            {projects.length > 0 ? (
+                                projects.map((proj) => (
+                                    <NavLink
+                                        key={proj.id}
+                                        to={`/project/${proj.id}`}
+                                        className="px-3 py-2 text-[12px] text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-colors border-b last:border-0 border-border-color/40"
+                                    >
+                                        {proj.name}
+                                    </NavLink>
+                                ))
+                            ) : (
+                                <div className="flex-1 flex items-center justify-center p-4">
+                                    <span className="text-[11px] text-text-secondary/50 font-medium italic">No projects found</span>
                                 </div>
-                                {collapsed && <span className="hidden group-hover:block absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-bg-card text-text-primary px-3 py-1.5 rounded-md text-[13px] font-medium whitespace-nowrap shadow-lg border border-border-color z-[200] pointer-events-none">{projectName}</span>}
+                            )}
+                        </div>
+                    )}
+                    {collapsed && (
+                        <nav className="flex flex-col items-center w-full">
+                            <NavLink to="/project" className="flex items-center justify-center w-9 h-9 text-text-secondary hover:bg-bg-hover rounded-md transition-colors duration-200 relative group">
+                                <IoFolderOutline className="text-lg" />
+                                <span className="hidden group-hover:block absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-bg-card text-text-primary px-3 py-1.5 rounded-md text-[12px] font-medium whitespace-nowrap shadow-lg border border-border-color z-[200] pointer-events-none">Projects</span>
                             </NavLink>
-                        )}
-                    </nav>
+                        </nav>
+                    )}
                 </div>
 
                 {/* Content Accelerator Program */}
