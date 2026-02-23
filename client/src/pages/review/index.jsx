@@ -1,123 +1,70 @@
-import { useState } from 'react';
+import useFrameio from '../../hooks/useFrameio';
 import DraftSelector from './components/DraftSelector';
 import VideoPlayer from './components/VideoPlayer';
 import NotesPanel from './components/NotesPanel';
-
-const DRAFTS = [
-    {
-        id: 1,
-        title: 'Brand Campaign — Final Cut',
-        version: 3,
-        status: 'in-review',
-        date: 'Feb 17, 2026',
-        duration: '03:45',
-        durationSec: 225,
-        color: 'purple',
-    },
-    {
-        id: 2,
-        title: 'Product Launch Teaser',
-        version: 2,
-        status: 'draft',
-        date: 'Feb 15, 2026',
-        duration: '01:52',
-        durationSec: 112,
-        color: 'blue',
-    },
-    {
-        id: 3,
-        title: 'Client Testimonial Reel',
-        version: 1,
-        status: 'approved',
-        date: 'Feb 12, 2026',
-        duration: '05:10',
-        durationSec: 310,
-        color: 'green',
-    },
-    {
-        id: 4,
-        title: 'Social Ads — Q1 Batch',
-        version: 4,
-        status: 'in-review',
-        date: 'Feb 18, 2026',
-        duration: '02:28',
-        durationSec: 148,
-        color: 'orange',
-    },
-];
-
-const INITIAL_NOTES = {
-    1: [
-        { id: 101, author: 'Sarah K.', text: 'Logo appears too early — can we push to 0:15?', timestamp: 8, date: 'Feb 17', resolved: false },
-        { id: 102, author: 'Mike D.', text: 'Audio transition here is perfect 🎵', timestamp: 45, date: 'Feb 17', resolved: true },
-        { id: 103, author: 'Sarah K.', text: 'Colour grade feels a bit warm — try cooler tones', timestamp: 124, date: 'Feb 18', resolved: false },
-    ],
-    2: [
-        { id: 201, author: 'Alex R.', text: 'Need a stronger hook in the first 3 seconds', timestamp: 2, date: 'Feb 15', resolved: false },
-    ],
-    3: [
-        { id: 301, author: 'Client', text: 'Approved — ready to publish!', timestamp: 0, date: 'Feb 12', resolved: true },
-    ],
-    4: [],
-};
+import { IoInformationCircleOutline } from 'react-icons/io5';
 
 function Review() {
-    const [selectedDraftId, setSelectedDraftId] = useState(DRAFTS[0].id);
-    const [allNotes, setAllNotes] = useState(INITIAL_NOTES);
-    const [currentTime, setCurrentTime] = useState(84);
-    const [highlightedTimestamp, setHighlightedTimestamp] = useState(null);
+    const {
+        isConfigured,
+        isLoading,
+        drafts,
+        selectedDraftId,
+        selectedDraft,
+        selectDraft,
+        noteCounts,
+        notes,
+        addNote,
+        resolveNote,
+        currentTime,
+        setCurrentTime,
+        highlightedTimestamp,
+        handleMarkerClick,
+    } = useFrameio();
 
-    const selectedDraft = DRAFTS.find((d) => d.id === selectedDraftId);
-    const notes = allNotes[selectedDraftId] || [];
-
-    /* Compute note counts per draft for the badge */
-    const noteCounts = DRAFTS.reduce((acc, d) => {
-        acc[d.id] = (allNotes[d.id] || []).length;
-        return acc;
-    }, {});
-
-    const handleAddNote = (note) => {
-        setAllNotes((prev) => ({
-            ...prev,
-            [selectedDraftId]: [...(prev[selectedDraftId] || []), note],
-        }));
-    };
-
-    const handleResolveNote = (noteId) => {
-        setAllNotes((prev) => ({
-            ...prev,
-            [selectedDraftId]: (prev[selectedDraftId] || []).map((n) =>
-                n.id === noteId ? { ...n, resolved: !n.resolved } : n
-            ),
-        }));
-    };
-
-    const handleSelectDraft = (id) => {
-        setSelectedDraftId(id);
-        setCurrentTime(0);
-        setHighlightedTimestamp(null);
-    };
-
-    const handleMarkerClick = (timestamp) => {
-        setHighlightedTimestamp(timestamp);
-        setCurrentTime(timestamp);
-        /* Clear highlight after a few seconds for UX */
-        setTimeout(() => setHighlightedTimestamp(null), 4000);
-    };
+    if (isLoading && isConfigured !== false) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[400px] animate-pulse">
+                <div className="w-12 h-12 border-4 border-accent border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p className="text-text-secondary font-medium">Connecting to Frame.io...</p>
+            </div>
+        );
+    }
 
     return (
-        <div className="max-w-[1200px] mx-auto animate-fade-in">
-            <div className="mb-5">
-                <h1 className="text-[24px] font-bold text-text-primary mb-1">Review</h1>
-                <p className="text-[14px] text-text-secondary font-normal">
-                    Select a draft and add timestamped notes for your team.
-                </p>
+        <div className="max-w-[1200px] mx-auto animate-fade-in relative">
+            {/* Integration Banner (only if not configured) */}
+            {isConfigured === false && (
+                <div className="mb-6 p-4 bg-accent-light border border-accent/20 rounded-xl flex items-start gap-3 shadow-sm animate-slide-up">
+                    <IoInformationCircleOutline className="text-accent text-xl flex-shrink-0 mt-0.5" />
+                    <div>
+                        <h4 className="text-[14px] font-bold text-accent mb-0.5">Demo Mode Active</h4>
+                        <p className="text-[12px] text-accent/80 font-medium">
+                            Frame.io is not configured. To enable real-time integration, add your <code>FRAMEIO_TOKEN</code> to the server <code>.env</code> and <code>VITE_FRAMEIO_ROOT_ASSET_ID</code> to the client <code>.env</code>.
+                        </p>
+                    </div>
+                </div>
+            )}
+
+            <div className="mb-5 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h1 className="text-[24px] font-bold text-text-primary mb-1">Review</h1>
+                    <p className="text-[14px] text-text-secondary font-normal">
+                        {isConfigured ? 'Real-time Frame.io integration active.' : 'Select a draft and add timestamped notes for your team.'}
+                    </p>
+                </div>
+                {isConfigured && (
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-bg-secondary border border-border-color rounded-lg text-[11px] font-semibold text-text-secondary shadow-sm">
+                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        Frame.io Connected
+                    </div>
+                )}
             </div>
 
             <DraftSelector
-                drafts={DRAFTS}
+                drafts={drafts}
                 selectedId={selectedDraftId}
-                onSelect={handleSelectDraft}
+                onSelect={selectDraft}
                 noteCounts={noteCounts}
             />
 
@@ -129,13 +76,13 @@ function Review() {
                     notes={notes}
                     onMarkerClick={handleMarkerClick}
                 />
-                <div className="lg:h-[calc(56.25vw*0.65+120px)] lg:max-h-[540px] lg:min-h-[420px]">
+                <div className="lg:h-[calc(100%-20px)] lg:max-h-[540px] lg:min-h-[450px]">
                     <NotesPanel
                         notes={notes}
                         currentTime={currentTime}
-                        onAddNote={handleAddNote}
+                        onAddNote={addNote}
                         highlightedTimestamp={highlightedTimestamp}
-                        onResolveNote={handleResolveNote}
+                        onResolveNote={resolveNote}
                     />
                 </div>
             </div>

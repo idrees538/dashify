@@ -14,6 +14,7 @@ const dashboardRoutes = require('../modules/dashboard/dashboard.routes');
 const analyticsRoutes = require('../modules/analytics/analytics.routes');
 const settingsRoutes = require('../modules/settings/settings.routes');
 const adminRoutes = require('../modules/admin/admin.routes');
+const frameioRoutes = require('../modules/frameio/frameio.routes');
 
 // Register routes
 router.use('/auth', authRoutes);
@@ -28,6 +29,7 @@ router.use('/dashboard', dashboardRoutes);
 router.use('/analytics', analyticsRoutes);
 router.use('/settings', settingsRoutes);
 router.use('/admin', adminRoutes);
+router.use('/frameio', frameioRoutes);
 
 // API index
 router.get('/', (_req, res) => {
