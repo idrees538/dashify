@@ -1,4 +1,6 @@
 client/node_modules
 server/node_modules
 dashify-tailwind/
+server/.env.env
+client/.env
 server/.env
