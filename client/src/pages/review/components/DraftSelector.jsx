@@ -16,129 +16,93 @@ const STATUS_CONFIG = {
 };
 
 function DraftSelector({ drafts, selectedId, onSelect, noteCounts = {} }) {
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const dropdownRef = useRef(null);
-
-    const selectedDraft = drafts.find((d) => d.id === selectedId);
-    const cfg = selectedDraft ? STATUS_CONFIG[selectedDraft.status] : null;
-    const StatusIcon = cfg?.icon;
-    const noteCount = noteCounts[selectedId] || 0;
-
-    // Close dropdown on outside click
-    useEffect(() => {
-        const handleOutsideClick = (e) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-                setDropdownOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleOutsideClick);
-        return () => document.removeEventListener('mousedown', handleOutsideClick);
-    }, []);
-
     return (
-        <div className="mb-5 relative" ref={dropdownRef}>
-            {/* Compact selection bar */}
-            <button
-                className="w-full flex items-center gap-3 p-3 px-4 bg-bg-secondary border border-border-color rounded-xl cursor-pointer transition-all duration-200 hover:border-accent group"
-                onClick={() => setDropdownOpen((prev) => !prev)}
-            >
-                {/* Left: draft icon with note badge */}
-                <div className="relative w-9 h-9 rounded-lg bg-accent text-white flex items-center justify-center text-lg flex-shrink-0">
-                    <IoDocumentTextOutline />
-                    {noteCount > 0 && (
-                        <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-[16px] px-1 rounded-full bg-[#FF6037] text-white text-[8px] font-bold flex items-center justify-center leading-none shadow-sm">
-                            {noteCount}
-                        </span>
-                    )}
-                </div>
+        <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                    Select a Draft to Review
+                </h3>
+                <span className="text-[11px] font-medium text-text-secondary bg-bg-secondary px-2 py-0.5 rounded-full border border-border-color">
+                    {drafts.length} Total Drafts
+                </span>
+            </div>
 
-                {/* Center: draft info */}
-                <div className="flex-1 flex flex-col items-start gap-0.5 min-w-0">
-                    <span className="text-[14px] font-semibold text-text-primary truncate w-full text-left">
-                        {selectedDraft?.title}
-                    </span>
-                    <span className="text-[11px] text-text-secondary flex items-center gap-1.5">
-                        v{selectedDraft?.version} · {selectedDraft?.date}
-                        {noteCount > 0 && (
-                            <span className="inline-flex items-center gap-0.5 text-accent text-[10px]">
-                                <IoChatbubbleOutline /> {noteCount} note{noteCount !== 1 ? 's' : ''}
-                            </span>
-                        )}
-                    </span>
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {drafts.map((draft, idx) => {
+                    const isActive = draft.id === selectedId;
+                    const cfg = STATUS_CONFIG[draft.status] || STATUS_CONFIG.draft;
+                    const StatusIcon = cfg.icon;
+                    const noteCount = noteCounts[draft.id] || 0;
 
-                {/* Right: status + chevron */}
-                {cfg && (
-                    <span
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap flex-shrink-0"
-                        style={{ background: cfg.bg, color: cfg.color }}
-                    >
-                        <StatusIcon /> {cfg.label}
-                    </span>
-                )}
-                <IoChevronDownOutline
-                    className={`text-text-secondary text-sm flex-shrink-0 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`}
-                />
-            </button>
-
-            {/* Dropdown list */}
-            {dropdownOpen && (
-                <div className="absolute top-full left-0 right-0 mt-1.5 bg-bg-secondary border border-border-color rounded-xl shadow-xl z-50 overflow-hidden animate-fade-in">
-                    <div className="p-1.5 max-h-[280px] overflow-y-auto scrollbar-thin scrollbar-thumb-border-color">
-                        {drafts.map((draft) => {
-                            const isActive = draft.id === selectedId;
-                            const dCfg = STATUS_CONFIG[draft.status];
-                            const DIcon = dCfg.icon;
-                            const dNoteCount = noteCounts[draft.id] || 0;
-                            return (
-                                <button
-                                    key={draft.id}
-                                    className={`flex items-center gap-3 w-full p-2.5 px-3 rounded-lg cursor-pointer transition-all duration-150 text-left
-                                        ${isActive
-                                            ? 'bg-accent/8 border border-accent/30'
-                                            : 'border border-transparent hover:bg-bg-hover'
-                                        }`}
-                                    onClick={() => {
-                                        onSelect(draft.id);
-                                        setDropdownOpen(false);
-                                    }}
-                                >
-                                    {/* Icon */}
-                                    <div className={`relative w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0 ${isActive ? 'bg-accent text-white' : 'bg-bg-hover text-accent'}`}>
-                                        <IoDocumentTextOutline />
-                                        {dNoteCount > 0 && (
-                                            <span className="absolute -top-1 -right-1 min-w-[14px] h-[14px] px-0.5 rounded-full bg-[#FF6037] text-white text-[7px] font-bold flex items-center justify-center leading-none">
-                                                {dNoteCount}
-                                            </span>
-                                        )}
+                    return (
+                        <button
+                            key={draft.id}
+                            onClick={() => onSelect(draft.id)}
+                            className={`group relative flex flex-col bg-bg-secondary border rounded-xl overflow-hidden transition-all duration-300 text-left
+                                ${isActive
+                                    ? 'border-accent shadow-lg shadow-accent/5 ring-1 ring-accent/20 translate-y-[-2px]'
+                                    : 'border-border-color hover:border-accent/40 hover:shadow-md hover:translate-y-[-1px]'
+                                }`}
+                        >
+                            {/* Card Thumbnail / Preview */}
+                            <div className="relative aspect-video w-full overflow-hidden bg-bg-hover">
+                                {draft.thumbnailUrl ? (
+                                    <img
+                                        src={draft.thumbnailUrl}
+                                        alt={draft.title}
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                    />
+                                ) : (
+                                    <div className={`w-full h-full flex items-center justify-center
+                                        ${draft.color === 'purple' ? 'bg-purple-500/10' :
+                                            draft.color === 'blue' ? 'bg-blue-500/10' :
+                                                draft.color === 'green' ? 'bg-green-500/10' : 'bg-orange-500/10'}`}>
+                                        <IoDocumentTextOutline className="text-2xl text-accent/40" />
                                     </div>
+                                )}
 
-                                    {/* Info */}
-                                    <div className="flex-1 flex flex-col gap-0.5 min-w-0">
-                                        <span className="text-[13px] font-semibold text-text-primary truncate">{draft.title}</span>
-                                        <span className="text-[11px] text-text-secondary">
-                                            v{draft.version} · {draft.date} · {draft.duration}
-                                        </span>
-                                    </div>
-
-                                    {/* Status */}
-                                    <span
-                                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold whitespace-nowrap flex-shrink-0"
-                                        style={{ background: dCfg.bg, color: dCfg.color }}
-                                    >
-                                        <DIcon /> {dCfg.label}
+                                {/* Overlay for status/version */}
+                                <div className="absolute top-2 left-2 flex gap-1.5">
+                                    <span className="px-1.5 py-0.5 rounded bg-black/60 backdrop-blur-md text-white text-[9px] font-bold">
+                                        v{draft.version}
                                     </span>
+                                </div>
 
-                                    {/* Check for active */}
-                                    {isActive && (
-                                        <IoCheckmarkOutline className="text-accent text-base flex-shrink-0" />
-                                    )}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-            )}
+                                {/* Active indicator */}
+                                {isActive && (
+                                    <div className="absolute inset-0 border-2 border-accent rounded-xl z-10 pointer-events-none" />
+                                )}
+
+                                {/* Note Badge */}
+                                {noteCount > 0 && (
+                                    <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded-full bg-accent text-white text-[9px] font-bold flex items-center gap-1 shadow-sm">
+                                        <IoChatbubbleOutline /> {noteCount}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Card Info */}
+                            <div className="p-3 flex flex-col gap-1">
+                                <h4 className={`text-[13px] font-bold truncate transition-colors ${isActive ? 'text-accent' : 'text-text-primary'}`}>
+                                    {draft.title}
+                                </h4>
+                                <div className="flex items-center justify-between mt-1">
+                                    <span className="text-[10px] text-text-secondary font-medium">
+                                        {draft.date} • {draft.duration}
+                                    </span>
+                                    <span
+                                        className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider"
+                                        style={{ background: cfg.bg, color: cfg.color }}
+                                    >
+                                        <StatusIcon size={10} /> {cfg.label}
+                                    </span>
+                                </div>
+                            </div>
+                        </button>
+                    );
+                })}
+            </div>
         </div>
     );
 }

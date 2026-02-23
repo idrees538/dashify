@@ -183,6 +183,85 @@ const deleteComment = asyncHandler(async (req, res) => {
     }
 });
 
+const toggleCommentResolution = asyncHandler(async (req, res) => {
+    try {
+        const { commentId } = req.params;
+        const { completed } = req.body;
+        const comment = await frameioService.toggleCommentResolution(commentId, !!completed);
+        sendSuccess(res, { comment }, 'Comment resolution toggled');
+    } catch (err) {
+        handleFrameioError(err);
+    }
+});
+
+/* ------------------------------------------------------------------ */
+/*  Permissions                                                       */
+/* ------------------------------------------------------------------ */
+
+const getWorkspaceUsers = asyncHandler(async (req, res) => {
+    try {
+        const { workspaceId } = req.params;
+        const users = await frameioService.getWorkspaceUsers(workspaceId);
+        sendSuccess(res, { users }, 'Workspace users retrieved');
+    } catch (err) {
+        handleFrameioError(err);
+    }
+});
+
+const updateWorkspaceUser = asyncHandler(async (req, res) => {
+    try {
+        const { workspaceId, userId } = req.params;
+        const { role } = req.body;
+        if (!role) throw ApiError.badRequest('Role is required');
+        const user = await frameioService.updateWorkspaceUser(workspaceId, userId, role);
+        sendSuccess(res, { user }, 'Workspace user updated');
+    } catch (err) {
+        handleFrameioError(err);
+    }
+});
+
+const removeWorkspaceUser = asyncHandler(async (req, res) => {
+    try {
+        const { workspaceId, userId } = req.params;
+        await frameioService.removeWorkspaceUser(workspaceId, userId);
+        sendSuccess(res, null, 'User removed from workspace');
+    } catch (err) {
+        handleFrameioError(err);
+    }
+});
+
+const getProjectUsers = asyncHandler(async (req, res) => {
+    try {
+        const { projectId } = req.params;
+        const users = await frameioService.getProjectUsers(projectId);
+        sendSuccess(res, { users }, 'Project users retrieved');
+    } catch (err) {
+        handleFrameioError(err);
+    }
+});
+
+const updateProjectUser = asyncHandler(async (req, res) => {
+    try {
+        const { projectId, userId } = req.params;
+        const { role } = req.body;
+        if (!role) throw ApiError.badRequest('Role is required');
+        const user = await frameioService.updateProjectUser(projectId, userId, role);
+        sendSuccess(res, { user }, 'Project user updated');
+    } catch (err) {
+        handleFrameioError(err);
+    }
+});
+
+const removeProjectUser = asyncHandler(async (req, res) => {
+    try {
+        const { projectId, userId } = req.params;
+        await frameioService.removeProjectUser(projectId, userId);
+        sendSuccess(res, null, 'User removed from project');
+    } catch (err) {
+        handleFrameioError(err);
+    }
+});
+
 /* ------------------------------------------------------------------ */
 /*  Exports                                                           */
 /* ------------------------------------------------------------------ */
@@ -199,4 +278,11 @@ module.exports = {
     createComment,
     updateComment,
     deleteComment,
+    toggleCommentResolution,
+    getWorkspaceUsers,
+    updateWorkspaceUser,
+    removeWorkspaceUser,
+    getProjectUsers,
+    updateProjectUser,
+    removeProjectUser,
 };

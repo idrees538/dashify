@@ -192,15 +192,35 @@ export default function useFrameio() {
     /**
      * Toggle resolve state on a note.
      */
-    const resolveNote = useCallback((noteId) => {
+    const resolveNote = useCallback(async (noteId) => {
+        const note = notes.find((n) => n.id === noteId);
+        if (!note) return;
+
+        const newResolved = !note.resolved;
+
+        // Optimistic UI
         setAllNotes((prev) => ({
             ...prev,
             [selectedDraftId]: (prev[selectedDraftId] || []).map((n) =>
-                n.id === noteId ? { ...n, resolved: !n.resolved } : n
+                n.id === noteId ? { ...n, resolved: newResolved } : n
             ),
         }));
-        // TODO: When Frame.io supports completed-status updates, call the API here
-    }, [selectedDraftId]);
+
+        if (isConfigured) {
+            try {
+                await frameioService.toggleCommentResolution(noteId, newResolved);
+            } catch (err) {
+                console.error('[Frame.io] Failed to toggle resolution:', err.message);
+                // Rollback on error
+                setAllNotes((prev) => ({
+                    ...prev,
+                    [selectedDraftId]: (prev[selectedDraftId] || []).map((n) =>
+                        n.id === noteId ? { ...n, resolved: !newResolved } : n
+                    ),
+                }));
+            }
+        }
+    }, [selectedDraftId, isConfigured, notes]);
 
     /* ================================================================ */
     /*  Cleanup                                                         */

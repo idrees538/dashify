@@ -18,6 +18,13 @@ const {
     createComment,
     updateComment,
     deleteComment,
+    toggleCommentResolution,
+    getWorkspaceUsers,
+    updateWorkspaceUser,
+    removeWorkspaceUser,
+    getProjectUsers,
+    updateProjectUser,
+    removeProjectUser,
 } = require('./frameio.controller');
 
 // OAuth (Public)
@@ -40,7 +47,16 @@ if (isDev) {
     router.use(protect);
     router.post('/assets/:assetId/comments', createComment);
     router.put('/comments/:commentId', updateComment);
+    router.patch('/comments/:commentId/toggle', toggleCommentResolution);
     router.delete('/comments/:commentId', deleteComment);
+
+    // Permissions (dev)
+    router.get('/workspaces/:workspaceId/users', getWorkspaceUsers);
+    router.put('/workspaces/:workspaceId/users/:userId', updateWorkspaceUser);
+    router.delete('/workspaces/:workspaceId/users/:userId', removeWorkspaceUser);
+    router.get('/projects/:projectId/users', getProjectUsers);
+    router.put('/projects/:projectId/users/:userId', updateProjectUser);
+    router.delete('/projects/:projectId/users/:userId', removeProjectUser);
 } else {
     // Production: protect everything
     router.use(protect);
@@ -53,7 +69,16 @@ if (isDev) {
     router.get('/assets/:assetId/comments', getComments);
     router.post('/assets/:assetId/comments', createComment);
     router.put('/comments/:commentId', updateComment);
+    router.patch('/comments/:commentId/toggle', toggleCommentResolution);
     router.delete('/comments/:commentId', deleteComment);
+
+    // Permissions (prod)
+    router.get('/workspaces/:workspaceId/users', getWorkspaceUsers);
+    router.put('/workspaces/:workspaceId/users/:userId', updateWorkspaceUser);
+    router.delete('/workspaces/:workspaceId/users/:userId', removeWorkspaceUser);
+    router.get('/projects/:projectId/users', getProjectUsers);
+    router.put('/projects/:projectId/users/:userId', updateProjectUser);
+    router.delete('/projects/:projectId/users/:userId', removeProjectUser);
 }
 
 module.exports = router;

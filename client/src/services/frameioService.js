@@ -65,6 +65,14 @@ const frameioService = {
      */
     deleteComment: (commentId) =>
         api.delete(`/frameio/comments/${commentId}`),
+
+    /**
+     * Toggle comment resolution.
+     * @param {string} commentId
+     * @param {boolean} completed
+     */
+    toggleCommentResolution: (commentId, completed) =>
+        api.patch(`/frameio/comments/${commentId}/toggle`, { completed }),
 };
 
 export default frameioService;

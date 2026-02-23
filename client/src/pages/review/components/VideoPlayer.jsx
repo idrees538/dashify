@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
     IoPlayOutline,
+    IoPauseOutline,
     IoExpandOutline,
     IoVolumeHighOutline,
     IoVideocamOutline,
@@ -8,13 +9,38 @@ import {
 } from 'react-icons/io5';
 
 function VideoPlayer({ draft, currentTime, onTimeChange, notes = [], onMarkerClick }) {
+    const [isPlaying, setIsPlaying] = useState(false);
     const [hoveredMarker, setHoveredMarker] = useState(null);
+    const videoRef = useRef(null);
     const progressPercent = draft ? (currentTime / draft.durationSec) * 100 : 0;
 
     const formatTime = (sec) => {
         const m = Math.floor(sec / 60);
         const s = Math.floor(sec % 60);
         return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    };
+
+    // Sync external currentTime changes to video element
+    useEffect(() => {
+        if (videoRef.current && Math.abs(videoRef.current.currentTime - currentTime) > 0.5) {
+            videoRef.current.currentTime = currentTime;
+        }
+    }, [currentTime]);
+
+    const handlePlayPause = () => {
+        if (videoRef.current.paused) {
+            videoRef.current.play();
+            setIsPlaying(true);
+        } else {
+            videoRef.current.pause();
+            setIsPlaying(false);
+        }
+    };
+
+    const handleTimeUpdate = () => {
+        if (videoRef.current) {
+            onTimeChange(videoRef.current.currentTime);
+        }
     };
 
     /* Group notes that share the same timestamp (±2s) into clusters */
@@ -57,23 +83,37 @@ function VideoPlayer({ draft, currentTime, onTimeChange, notes = [], onMarkerCli
                 </div>
             </div>
 
-            {/* Simulated video area */}
-            <div className={`relative w-full aspect-video flex items-center justify-center overflow-hidden
-                ${draft.color === 'purple' ? 'bg-gradient-to-br from-[#FF6037]/25 via-accent/20 to-black/60' :
-                    draft.color === 'blue' ? 'bg-gradient-to-br from-blue-500/30 via-blue-600/15 to-black/60' :
-                        draft.color === 'green' ? 'bg-gradient-to-br from-[#10B981]/25 via-[#34D399]/15 to-black/60' :
-                            'bg-gradient-to-br from-[#F59E0B]/30 via-[#FBBF24]/15 to-black/60'}`}>
-                <button className="w-[68px] h-[68px] rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center text-[28px] text-white transition-all duration-200 border-2 border-white/20 hover:scale-[1.08] hover:bg-white/25">
-                    <IoPlayOutline />
-                </button>
+            {/* Video area */}
+            <div className="relative w-full aspect-video bg-black flex items-center justify-center overflow-hidden group/video">
+                <video
+                    ref={videoRef}
+                    src={draft.streamUrl}
+                    className="w-full h-full object-contain"
+                    onTimeUpdate={handleTimeUpdate}
+                    onPlay={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
+                    onClick={handlePlayPause}
+                />
+
+                {!isPlaying && (
+                    <button
+                        onClick={handlePlayPause}
+                        className="absolute inset-0 m-auto w-[68px] h-[68px] rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center text-[28px] text-white transition-all duration-200 border-2 border-white/20 hover:scale-[1.08] hover:bg-white/25 z-10"
+                    >
+                        <IoPlayOutline className="ml-1" />
+                    </button>
+                )}
             </div>
 
             {/* Controls bar */}
             <div className="flex items-center gap-3 p-3 px-4 bg-bg-secondary border-t border-border-color">
-                <button className="w-7 h-7 flex items-center justify-center text-text-secondary rounded-md text-base transition-colors hover:text-text-primary">
-                    <IoPlayOutline />
+                <button
+                    onClick={handlePlayPause}
+                    className="w-7 h-7 flex items-center justify-center text-accent bg-accent/10 rounded-lg text-base transition-all hover:bg-accent/20"
+                >
+                    {isPlaying ? <IoPauseOutline /> : <IoPlayOutline className="ml-0.5" />}
                 </button>
-                <span className="text-[11px] font-semibold text-text-secondary font-mono whitespace-nowrap">
+                <span className="text-[11px] font-semibold text-text-secondary font-mono whitespace-nowrap min-w-[85px]">
                     {formatTime(currentTime)} / {draft.duration}
                 </span>
 
@@ -83,7 +123,9 @@ function VideoPlayer({ draft, currentTime, onTimeChange, notes = [], onMarkerCli
                     onClick={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
                         const pct = (e.clientX - rect.left) / rect.width;
-                        onTimeChange(Math.round(pct * draft.durationSec));
+                        const newTime = Math.round(pct * draft.durationSec);
+                        videoRef.current.currentTime = newTime;
+                        onTimeChange(newTime);
                     }}
                 >
                     <div className="relative w-full h-[4px] bg-bg-hover rounded-full">
@@ -94,7 +136,7 @@ function VideoPlayer({ draft, currentTime, onTimeChange, notes = [], onMarkerCli
                         />
                         {/* Playhead */}
                         <div
-                            className="absolute top-1/2 w-3 h-3 bg-accent border-2 border-white rounded-full -translate-x-1/2 -translate-y-1/2 shadow-sm transition-all duration-150 z-[3]"
+                            className="absolute top-1/2 w-3 h-3 bg-white border-2 border-accent rounded-full -translate-x-1/2 -translate-y-1/2 shadow-sm transition-all duration-150 z-[3]"
                             style={{ left: `${progressPercent}%` }}
                         />
                     </div>
@@ -112,6 +154,7 @@ function VideoPlayer({ draft, currentTime, onTimeChange, notes = [], onMarkerCli
                                 onMouseLeave={() => setHoveredMarker(null)}
                                 onClick={(e) => {
                                     e.stopPropagation();
+                                    videoRef.current.currentTime = cluster.timestamp;
                                     onTimeChange(cluster.timestamp);
                                     onMarkerClick?.(cluster.timestamp);
                                 }}
@@ -135,12 +178,17 @@ function VideoPlayer({ draft, currentTime, onTimeChange, notes = [], onMarkerCli
                     })}
                 </div>
 
-                <button className="w-7 h-7 flex items-center justify-center text-text-secondary rounded-md text-base transition-colors hover:text-text-primary">
-                    <IoVolumeHighOutline />
-                </button>
-                <button className="w-7 h-7 flex items-center justify-center text-text-secondary rounded-md text-base transition-colors hover:text-text-primary">
-                    <IoExpandOutline />
-                </button>
+                <div className="flex items-center gap-1">
+                    <button className="w-7 h-7 flex items-center justify-center text-text-secondary rounded-lg text-base transition-colors hover:bg-bg-hover hover:text-text-primary">
+                        <IoVolumeHighOutline />
+                    </button>
+                    <button
+                        onClick={() => videoRef.current.requestFullscreen()}
+                        className="w-7 h-7 flex items-center justify-center text-text-secondary rounded-lg text-base transition-colors hover:bg-bg-hover hover:text-text-primary"
+                    >
+                        <IoExpandOutline />
+                    </button>
+                </div>
             </div>
         </div>
     );

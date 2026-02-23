@@ -182,7 +182,16 @@ async function deleteComment(commentId) {
 }
 
 /**
- * List teams accessible to the user.
+ * Toggle comment resolution (completed status).
+ */
+async function toggleCommentResolution(commentId, completed) {
+    const c = await client();
+    const { data } = await c.put(`/comments/${commentId}`, { completed });
+    return data;
+}
+
+/**
+ * List teams (Workspaces) accessible to the user.
  */
 async function getTeams() {
     const c = await client();
@@ -200,6 +209,64 @@ async function getTeams() {
     return data;
 }
 
+/* ------------------------------------------------------------------ */
+/*  Permissions (Workspaces & Projects)                               */
+/* ------------------------------------------------------------------ */
+
+/**
+ * List user roles for a given Workspace.
+ */
+async function getWorkspaceUsers(workspaceId) {
+    const c = await client();
+    const { data } = await c.get(`/workspaces/${workspaceId}/users`);
+    return data;
+}
+
+/**
+ * Update or add a user role to a Workspace.
+ */
+async function updateWorkspaceUser(workspaceId, userId, role) {
+    const c = await client();
+    const { data } = await c.put(`/workspaces/${workspaceId}/users/${userId}`, { role });
+    return data;
+}
+
+/**
+ * Remove a user from a Workspace.
+ */
+async function removeWorkspaceUser(workspaceId, userId) {
+    const c = await client();
+    const { data } = await c.delete(`/workspaces/${workspaceId}/users/${userId}`);
+    return data;
+}
+
+/**
+ * List user roles for a given Project.
+ */
+async function getProjectUsers(projectId) {
+    const c = await client();
+    const { data } = await c.get(`/projects/${projectId}/users`);
+    return data;
+}
+
+/**
+ * Update or add a user role to a Project.
+ */
+async function updateProjectUser(projectId, userId, role) {
+    const c = await client();
+    const { data } = await c.put(`/projects/${projectId}/users/${userId}`, { role });
+    return data;
+}
+
+/**
+ * Remove a user from a Project.
+ */
+async function removeProjectUser(projectId, userId) {
+    const c = await client();
+    const { data } = await c.delete(`/projects/${projectId}/users/${userId}`);
+    return data;
+}
+
 module.exports = {
     getMe,
     getProjects,
@@ -210,4 +277,11 @@ module.exports = {
     createComment,
     updateComment,
     deleteComment,
+    toggleCommentResolution,
+    getWorkspaceUsers,
+    updateWorkspaceUser,
+    removeWorkspaceUser,
+    getProjectUsers,
+    updateProjectUser,
+    removeProjectUser,
 };
