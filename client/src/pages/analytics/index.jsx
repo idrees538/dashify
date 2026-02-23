@@ -1,126 +1,200 @@
+import React, { useState } from 'react';
 import {
-    IoEyeOutline,
-    IoHeartOutline,
-    IoFlashOutline,
+    IoPeopleOutline,
+    IoImagesOutline,
     IoTrendingUpOutline,
-    IoFunnelOutline,
+    IoChatbubbleOutline,
+    IoHeartOutline,
+    IoShareSocialOutline,
+    IoEyeOutline,
+    IoFlashOutline,
+    IoPulseOutline,
+    IoTimeOutline,
+    IoBookmarkOutline
 } from 'react-icons/io5';
-const ANALYTICS_CARDS = [
-    { label: 'Total Views', value: '24.5K', change: '+12.3%', up: true, icon: IoEyeOutline, color: '--purple' },
-    { label: 'Engagement Rate', value: '8.7%', change: '+2.1%', up: true, icon: IoHeartOutline, color: '--green' },
-    { label: 'Token Consumption', value: '1,200', change: '-5.4%', up: false, icon: IoFlashOutline, color: '--orange' },
-    { label: 'Growth Rate', value: '15.2%', change: '+4.8%', up: true, icon: IoTrendingUpOutline, color: '--blue' },
-];
+import SocialToolbar from './components/SocialToolbar';
+import MetricCard from './components/MetricCard';
+import DemographicsSection from './components/DemographicsSection';
 
-const BAR_DATA = [
-    { label: 'Mon', value: 65 },
-    { label: 'Tue', value: 80 },
-    { label: 'Wed', value: 45 },
-    { label: 'Thu', value: 90 },
-    { label: 'Fri', value: 70 },
-    { label: 'Sat', value: 55 },
-    { label: 'Sun', value: 40 },
+const INSTAGRAM_METRICS = [
+    {
+        label: 'Followers',
+        value: '124.5K',
+        change: '4.2%',
+        up: true,
+        icon: IoPeopleOutline,
+        info: 'Total number of followers on your Instagram account.',
+        colorClass: 'bg-pink-500/10 text-pink-500'
+    },
+    {
+        label: 'All Posts',
+        value: '1,280',
+        change: '12',
+        up: true,
+        icon: IoImagesOutline,
+        info: 'Total number of reels, stories, and feed posts.',
+        colorClass: 'bg-purple-500/10 text-purple-500'
+    },
+    {
+        label: 'Follower Growth',
+        value: '+2,450',
+        change: '1.8%',
+        up: true,
+        icon: IoTrendingUpOutline,
+        info: 'Total number of followers gained in the selected time period.',
+        colorClass: 'bg-green-500/10 text-green-500'
+    },
+    {
+        label: 'Follower Growth %',
+        value: '2.4%',
+        change: '0.5%',
+        up: true,
+        icon: IoTrendingUpOutline,
+        info: 'Total growth percentage of followers in the selected time period.',
+        colorClass: 'bg-green-400/10 text-green-400'
+    },
+    {
+        label: 'Interactions',
+        value: '45.2K',
+        change: '8.4%',
+        up: true,
+        icon: IoHeartOutline,
+        info: 'Total number of likes, comments, saves, and shares.',
+        colorClass: 'bg-red-500/10 text-red-500'
+    },
+    {
+        label: 'Views',
+        value: '842.1K',
+        change: '12.5%',
+        up: true,
+        icon: IoEyeOutline,
+        info: 'How many times your posts were seen on the feed.',
+        colorClass: 'bg-blue-500/10 text-blue-500'
+    },
+    {
+        label: 'Accounts Engaged',
+        value: '38.4K',
+        change: '5.2%',
+        up: true,
+        icon: IoFlashOutline,
+        info: 'Total number of unique accounts that interacted with your content.',
+        colorClass: 'bg-orange-500/10 text-orange-500'
+    },
+    {
+        label: 'Engagement Rate',
+        value: '3.1%',
+        change: '0.4%',
+        up: true,
+        icon: IoTrendingUpOutline,
+        info: 'Derived from (Total Interactions / Followers) * 100.',
+        colorClass: 'bg-indigo-500/10 text-indigo-500'
+    },
+    {
+        label: 'Engagement Growth %',
+        value: '+12.5%',
+        change: '2.1%',
+        up: true,
+        icon: IoTrendingUpOutline,
+        info: 'The % increase from last time periods engagement rate to now.',
+        colorClass: 'bg-indigo-400/10 text-indigo-400'
+    },
+    {
+        label: 'Engagement / Post',
+        value: '425',
+        change: '15',
+        up: true,
+        icon: IoFlashOutline,
+        info: 'The average number of engagement you receive in correlation to your number of posts.',
+        colorClass: 'bg-orange-400/10 text-orange-400'
+    },
+    {
+        label: 'Watch Time',
+        value: '2.4K hrs',
+        change: '15.2%',
+        up: true,
+        icon: IoTimeOutline,
+        info: 'Total hours users spent watching your video content.',
+        colorClass: 'bg-yellow-500/10 text-yellow-500'
+    },
+    {
+        label: 'Likes',
+        value: '32.1K',
+        change: '7.8%',
+        up: true,
+        icon: IoHeartOutline,
+        info: 'Total number of likes across all content.',
+        colorClass: 'bg-red-400/10 text-red-400'
+    },
+    {
+        label: 'Comments',
+        value: '4,210',
+        change: '2.1%',
+        up: false,
+        icon: IoChatbubbleOutline,
+        info: 'Total number of comments on your content.',
+        colorClass: 'bg-cyan-500/10 text-cyan-500'
+    },
+    {
+        label: 'Shares',
+        value: '8,420',
+        change: '14.5%',
+        up: true,
+        icon: IoShareSocialOutline,
+        info: 'Total number of times your content was shared.',
+        colorClass: 'bg-blue-400/10 text-blue-400'
+    },
+    {
+        label: 'Saves',
+        value: '2,840',
+        change: '1.2%',
+        up: true,
+        icon: IoBookmarkOutline,
+        info: 'Total number of times your posts were saved.',
+        colorClass: 'bg-teal-500/10 text-teal-500'
+    },
 ];
-
-const LINE_DATA = [30, 45, 38, 65, 55, 72, 60, 85, 78, 92, 88, 95];
-const LINE_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 function Analytics() {
-    const maxBar = Math.max(...BAR_DATA.map((d) => d.value));
-    const maxLine = Math.max(...LINE_DATA);
-
-    // Build SVG path for line chart
-    const linePoints = LINE_DATA.map((val, i) => {
-        const x = (i / (LINE_DATA.length - 1)) * 100;
-        const y = 100 - (val / maxLine) * 100;
-        return `${x},${y}`;
-    });
-    const linePath = `M${linePoints.join(' L')}`;
-    const areaPath = `${linePath} L100,100 L0,100 Z`;
+    const [activePlatform, setActivePlatform] = useState('instagram');
 
     return (
-        <div className="max-w-[1200px] mx-auto animate-fade-in">
-            <div className="mb-8">
-                <div className="flex items-center justify-between gap-4 flex-wrap">
-                    <div>
-                        <h1 className="text-[26px] font-bold text-text-primary mb-2">Analytics</h1>
-                        <p className="text-[15px] text-text-secondary font-normal">Visualize your usage and performance metrics.</p>
-                    </div>
-                    <div className="flex gap-2">
-                        <button className="px-4 py-2 rounded-lg text-sm font-medium border border-accent bg-accent text-white transition-colors">7 Days</button>
-                        <button className="px-4 py-2 rounded-lg text-sm font-medium border border-border-color bg-bg-secondary text-text-secondary hover:bg-bg-hover transition-colors">30 Days</button>
-                        <button className="px-4 py-2 rounded-lg text-sm font-medium border border-border-color bg-bg-secondary text-text-secondary hover:bg-bg-hover transition-colors">90 Days</button>
-                        <button className="px-4 py-2 rounded-lg text-sm font-medium border border-border-color bg-bg-secondary text-text-secondary hover:bg-bg-hover transition-colors flex items-center gap-2">
-                            <IoFunnelOutline /> Filters
+        <div className="max-w-[1200px] mx-auto px-4 py-4 animate-fade-in space-y-6">
+            <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-base font-semibold text-text-primary">Analytics</h1>
+                    <p className="text-[12px] text-text-secondary">Explore your social media metrics</p>
+                </div>
+                <div className="flex bg-bg-secondary p-1 rounded-lg border border-border-color shadow-sm">
+                    {['7D', '30D', '90D', 'All'].map((period) => (
+                        <button
+                            key={period}
+                            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${period === '30D' ? 'bg-accent text-white shadow-lg' : 'text-text-secondary hover:bg-bg-hover'}`}
+                        >
+                            {period}
                         </button>
-                    </div>
+                    ))}
+                </div>
+            </header>
+
+            <SocialToolbar
+                activePlatform={activePlatform}
+                onSelect={setActivePlatform}
+            />
+
+            <div className="space-y-4">
+                <h2 className="text-base font-semibold text-text-primary flex items-center gap-2">
+                    Key Metrics <span className="text-[12px] text-text-secondary font-normal capitalize">({activePlatform})</span>
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {INSTAGRAM_METRICS.map((metric, i) => (
+                        <MetricCard key={i} {...metric} />
+                    ))}
                 </div>
             </div>
 
-            {/* Analytics Cards */}
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6 mb-8">
-                {ANALYTICS_CARDS.map((item, i) => {
-                    const Icon = item.icon;
-                    const iconColorClass = item.color === '--purple' ? 'bg-accent-light text-accent' :
-                        item.color === '--blue' ? 'bg-blue-500/10 text-blue-500' :
-                            item.color === '--green' ? 'bg-[#10B981]/10 text-[#10B981]' :
-                                item.color === '--orange' ? 'bg-[#F59E0B]/10 text-[#F59E0B]' : 'bg-gray-500/10 text-gray-500';
-                    return (
-                        <div className="bg-bg-secondary rounded-xl p-[18px] shadow-sm border border-border-color hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" key={i}>
-                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-[22px] ${iconColorClass}`}>
-                                <Icon />
-                            </div>
-                            <p className="text-[13px] font-medium text-text-secondary uppercase tracking-wider mb-2">{item.label}</p>
-                            <h2 className="text-[32px] font-bold text-text-primary mb-1">{item.value}</h2>
-                            <span className={`text-[13px] font-medium ${item.up ? 'text-[#10B981]' : 'text-[#EF4444]'}`}>
-                                {item.up ? '↑' : '↓'} {item.change}
-                            </span>
-                        </div>
-                    );
-                })}
-            </div>
-
-            {/* Charts Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                {/* Bar Chart */}
-                <div className="bg-bg-secondary rounded-xl p-[18px] shadow-sm border border-border-color hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200">
-                    <h3 className="text-base font-semibold text-text-primary mb-5">Weekly Activity</h3>
-                    <div className="flex items-end justify-between h-48 gap-4 px-2">
-                        {BAR_DATA.map((d, i) => (
-                            <div className="flex-1 flex flex-col items-center gap-3 h-full" key={i}>
-                                <div className="flex-1 w-3 bg-black/5 dark:bg-white/5 rounded-full overflow-hidden relative">
-                                    <div
-                                        className="absolute bottom-0 left-0 w-full bg-accent rounded-full transition-all duration-500"
-                                        style={{ height: `${(d.value / maxBar) * 100}%` }}
-                                    />
-                                </div>
-                                <span className="text-[11px] text-text-secondary font-medium">{d.label}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Line Chart */}
-                <div className="bg-bg-secondary rounded-xl p-[18px] shadow-sm border border-border-color hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200">
-                    <h3 className="text-base font-semibold text-text-primary mb-5">Monthly Growth</h3>
-                    <div className="relative h-48">
-                        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
-                            <defs>
-                                <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.3" />
-                                    <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.02" />
-                                </linearGradient>
-                            </defs>
-                            <path d={areaPath} fill="url(#lineGrad)" />
-                            <path d={linePath} fill="none" stroke="var(--accent)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-                        </svg>
-                        <div className="flex justify-between mt-3">
-                            {LINE_MONTHS.map((m) => (
-                                <span className="text-[10px] text-text-secondary" key={m}>{m}</span>
-                            ))}
-                        </div>
-                    </div>
-                </div>
+            <div className="space-y-4 pt-4">
+                <h2 className="text-base font-semibold text-text-primary">Audience Demographics</h2>
+                <DemographicsSection />
             </div>
         </div>
     );
