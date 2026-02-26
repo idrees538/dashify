@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
+import { clearToken } from '../../services/api';
 import {
     IoGridOutline,
     IoCalendarOutline,
@@ -42,6 +43,11 @@ function Sidebar() {
     const [mobileOpen, setMobileOpen] = useState(false);
     const { theme, toggleTheme } = useTheme();
     const location = useLocation();
+
+    const handleLogout = () => {
+        clearToken();
+        window.location.href = '/';
+    };
 
     // Auto-collapse on tablet and hide on mobile
     useEffect(() => {
@@ -280,6 +286,18 @@ function Sidebar() {
                         <span className={`font-normal text-[12px] text-text-secondary whitespace-nowrap transition-opacity duration-200 ${collapsed ? 'md:hidden' : 'opacity-100'}`}>
                             {theme === 'dark' ? 'Darkmode' : 'Lightmode'}
                         </span>
+                    </div>
+
+                    {/* Mobile-only Logout Button */}
+                    <div className="md:hidden w-full mt-4 flex flex-col gap-2">
+                        <div className="w-full h-[1px] bg-border-color mb-2" />
+                        <button
+                            onClick={handleLogout}
+                            className="inline-flex items-center gap-3 w-full p-2.5 px-4 rounded-xl bg-accent/10 hover:bg-accent/20 text-accent transition-all border border-accent/20"
+                        >
+                            <IoLogOutOutline className="text-xl" />
+                            <span className="text-[12px] font-semibold">Log out</span>
+                        </button>
                     </div>
 
                     {/* Separator and attribution */}
