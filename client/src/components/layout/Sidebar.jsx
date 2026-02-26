@@ -84,8 +84,8 @@ function Sidebar() {
                 <button className="text-[28px] text-text-secondary flex items-center justify-center h-8 w-8" onClick={() => setMobileOpen(true)}>
                     <IoMenuOutline />
                 </button>
-                <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-accent-light flex items-center justify-center overflow-hidden">
+                <div className="flex items-center gap-1">
+                    <div className="w-6 h-6 rounded-lg flex items-center justify-center overflow-hidden">
                         <img src={currentLogo} alt="Logo" className="w-[44px] h-[44px] object-contain" />
                     </div>
                     <span className="font-semibold text-sm text-text-primary">Client Portal</span>
@@ -108,15 +108,15 @@ function Sidebar() {
             `}>
                 {/* Sidebar Header: Logo + Brand (Hidden on Mobile as it has its own header) */}
                 <div className={`hidden md:flex flex-col items-center px-3 pb-3 gap-3 w-full border-b border-border-color ${collapsed ? 'px-4 py-2' : ''}`}>
-                    <div className="flex items-center gap-3 w-full cursor-pointer">
-                        <div className="w-9 h-9 min-w-9 rounded-lg bg-accent-light flex items-center justify-center overflow-hidden">
+                    <div className="flex items-center gap-1 w-full cursor-pointer">
+                        <div className="w-6 h-6 min-w-6 rounded-lg flex items-center justify-center overflow-hidden">
                             <img
                                 src={currentLogo}
                                 alt="Client Portal Logo"
-                                className="w-[48px] h-[48px] object-contain block"
+                                className="w-[30px] h-[30px] object-contain block"
                             />
                         </div>
-                        <span className={`font-semibold text-sm text-text-primary whitespace-nowrap transition-opacity duration-200 ${collapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'}`}>
+                        <span className={` mt-[1px] font-semibold text-sm text-text-primary whitespace-nowrap transition-opacity duration-200 ${collapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'}`}>
                             Client Portal
                         </span>
                     </div>
@@ -124,8 +124,8 @@ function Sidebar() {
 
                 {/* Mobile Sidebar Brand (Visible only when mobile sidebar is open) */}
                 <div className="md:hidden flex items-center justify-between px-6 pb-6 w-full">
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-accent-light flex items-center justify-center overflow-hidden">
+                    <div className="flex items-center gap-1">
+                        <div className="w-6 h-6 rounded-full flex items-center justify-center overflow-hidden">
                             <img src={currentLogo} alt="Logo" className="w-[44px] h-[44px] object-contain" />
                         </div>
                         <span className="font-semibold text-base text-text-primary">Client Portal</span>
@@ -234,7 +234,7 @@ function Sidebar() {
 
                     {/* Collapse toggle (Desktop only) */}
                     <button
-                        className={`hidden md:inline-flex items-center gap-2 w-full p-1.5 px-2 rounded-md hover:bg-bg-hover transition-colors ${collapsed ? 'justify-center w-8 h-8 rounded-lg' : ''}`}
+                        className={`hidden md:inline-flex items-center gap-2 w-full p-1.5 px-2 rounded-md hover:bg-bg-hover transition-colors ${collapsed ? 'justify-center w-6 h-6 rounded-lg' : ''}`}
                         onClick={() => setCollapsed(!collapsed)}
                         title={collapsed ? 'Expand menu' : 'Collapse menu'}
                     >
