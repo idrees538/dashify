@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
-import { clearToken } from '../../services/api';
+import { api, clearToken } from '../../services/api';
 import {
     IoGridOutline,
     IoCalendarOutline,
@@ -73,15 +73,27 @@ function Sidebar() {
         setMobileOpen(false);
     }, [location.pathname]);
 
+    const [projects, setProjects] = useState([]);
+    const [loadingProjects, setLoadingProjects] = useState(true);
+
+    // Fetch projects from API
+    useEffect(() => {
+        const fetchProjects = async () => {
+            try {
+                const data = await api.get('/projects');
+                // The API might return an array or an object with a data property
+                setProjects(Array.isArray(data) ? data : (data.projects || data.data || []));
+            } catch (error) {
+                console.error('Error fetching projects:', error);
+            } finally {
+                setLoadingProjects(false);
+            }
+        };
+
+        fetchProjects();
+    }, []);
+
     const currentLogo = theme === 'light' ? lightWebLogo : webLogo;
-    const projects = [
-        { id: 1, name: 'Acme Studio' },
-        { id: 2, name: 'Brand Campaign' },
-        { id: 3, name: 'Website Redesign' },
-        { id: 4, name: 'Social Media' },
-        { id: 5, name: 'Mobile App' },
-        { id: 6, name: 'Print Ads' },
-    ];
 
     return (
         <>
@@ -145,13 +157,17 @@ function Sidebar() {
                 <div className={`flex flex-col items-center px-3 md:px-3 pb-3 gap-3 w-full border-b border-border-color ${collapsed ? 'px-4 py-2' : ''}`}>
                     <span className={`font-medium text-[9px] text-text-secondary/60 w-full text-left uppercase tracking-wider ${collapsed ? 'md:hidden' : ''}`}>Projects</span>
                     {!collapsed && (
-                        <div className="w-full h-32 bg-black/[0.03] dark:bg-white/[0.03] border border-border-color rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-border-color scrollbar-track-transparent flex flex-col">
-                            {/* Static project list - replace with real data when available */}
-                            {projects.length > 0 ? (
+                        <div className="w-full h-64 bg-black/[0.03] dark:bg-white/[0.03] border border-border-color rounded-lg overflow-y-auto scrollbar-thin scrollbar-thumb-border-color scrollbar-track-transparent flex flex-col">
+                            {/* Dynamic project list */}
+                            {loadingProjects ? (
+                                <div className="flex-1 flex items-center justify-center p-4">
+                                    <span className="text-[11px] text-text-secondary/50 font-medium">Loading...</span>
+                                </div>
+                            ) : projects.length > 0 ? (
                                 projects.map((proj) => (
                                     <NavLink
-                                        key={proj.id}
-                                        to={`/project/${proj.id}`}
+                                        key={proj._id || proj.id}
+                                        to={`/project/${proj._id || proj.id}`}
                                         className="px-3 py-2 text-[12px] text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-colors border-b last:border-0 border-border-color/40"
                                     >
                                         {proj.name}
