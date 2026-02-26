@@ -37,7 +37,7 @@ const CAP_ITEMS = [
     // Show an alert dot on Review
     { name: 'Review', icon: IoCheckboxOutline, path: '/review', alert: true },
     { name: 'Deliverables', icon: IoDownloadOutline, path: '/deliverables' },
-    { name: 'Billing', icon: IoCardOutline, path: '/billing' },
+    { name: 'Billing', icon: IoCardOutline, path: '/billing', separator: true },
     { name: 'Account', icon: IoPersonOutline, path: '/account' },
     { name: 'Settings', icon: IoSettingsOutline, path: '/settings' },
 ];
@@ -205,47 +205,50 @@ function Sidebar() {
                         >
                             {CAP_ITEMS.map((item) => {
                                 const Icon = item.icon;
-
                                 const active = location.pathname.startsWith(item.path);
 
                                 return (
-                                    <NavLink
-                                        to={item.path}
-                                        key={item.name + item.path}
-                                        className={`
-        group relative flex flex-row justify-between items-center
-        p-1.5 gap-2 w-full rounded-lg
-        transition-all duration-200 cursor-pointer
-        ${collapsed ? "md:w-9 md:h-9 md:px-0 mx-auto justify-center" : "px-2"}
-        ${active
-                                                ? theme === "light"
-                                                    ? "bg-black/6 text-accent"
-                                                    : "bg-white/10 text-accent"
-                                                : "text-text-secondary hover:bg-bg-hover"
-                                            }
-      `}
-                                    >
-                                        <div className={`flex items-center gap-2.5 flex-1 ${collapsed ? "md:justify-center md:gap-0" : ""}`}>
-                                            <span className={`w-5 h-5 min-w-[20px] flex items-center justify-center text-sm transition-colors duration-200 ${active ? "text-accent" : "text-text-secondary"}`}>
-                                                <Icon />
-                                            </span>
-                                            <span className={`font-normal text-[12px] leading-4 whitespace-nowrap transition-all duration-200 ${active ? "text-text-primary font-medium" : "text-text-secondary"} ${collapsed ? "md:opacity-0 md:w-0 overflow-hidden" : "opacity-100"}`}>
-                                                {item.name}
-                                            </span>
-                                        </div>
-
-                                        {item.alert && (
-                                            <span className={`absolute w-1.5 h-1.5 bg-accent rounded-full pointer-events-none ${collapsed ? "top-1.5 right-1.5" : "right-2.5 top-1/2 -translate-y-1/2"}`} />
+                                    <div key={item.name + item.path} className="w-full">
+                                        {item.separator && (
+                                            <div className="w-full h-[1px] bg-border-color my-1.5 opacity-50" />
                                         )}
+                                        <NavLink
+                                            to={item.path}
+                                            className={`
+                                                group relative flex flex-row justify-between items-center
+                                                p-1.5 gap-2 w-full rounded-lg
+                                                transition-all duration-200 cursor-pointer
+                                                ${collapsed ? "md:w-9 md:h-9 md:px-0 mx-auto justify-center" : "px-2"}
+                                                ${active
+                                                    ? theme === "light"
+                                                        ? "bg-black/6 text-accent"
+                                                        : "bg-white/10 text-accent"
+                                                    : "text-text-secondary hover:bg-bg-hover"
+                                                }
+                                            `}
+                                        >
+                                            <div className={`flex items-center gap-2.5 flex-1 ${collapsed ? "md:justify-center md:gap-0" : ""}`}>
+                                                <span className={`w-5 h-5 min-w-[20px] flex items-center justify-center text-sm transition-colors duration-200 ${active ? "text-accent" : "text-text-secondary"}`}>
+                                                    <Icon />
+                                                </span>
+                                                <span className={`font-normal text-[12px] leading-4 whitespace-nowrap transition-all duration-200 ${active ? "text-text-primary font-medium" : "text-text-secondary"} ${collapsed ? "md:opacity-0 md:w-0 overflow-hidden" : "opacity-100"}`}>
+                                                    {item.name}
+                                                </span>
+                                            </div>
 
-                                        {collapsed && (
-                                            <span className="pointer-events-none absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-bg-card text-text-primary px-3 py-1.5 rounded-md text-[12px] font-medium whitespace-nowrap shadow-lg border border-border-color z-[500] opacity-0 invisible group-hover:opacity-100 transition-opacity duration-150">
-                                                {item.name}
-                                            </span>
-                                        )}
+                                            {item.alert && (
+                                                <span className={`absolute w-1.5 h-1.5 bg-accent rounded-full pointer-events-none ${collapsed ? "top-1.5 right-1.5" : "right-2.5 top-1/2 -translate-y-1/2"}`} />
+                                            )}
 
-                                        {!collapsed && active && <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] bg-accent rounded-r-md" />}
-                                    </NavLink>
+                                            {collapsed && (
+                                                <span className="pointer-events-none absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-bg-card text-text-primary px-3 py-1.5 rounded-md text-[12px] font-medium whitespace-nowrap shadow-lg border border-border-color z-[500] opacity-0 invisible group-hover:opacity-100 transition-opacity duration-150">
+                                                    {item.name}
+                                                </span>
+                                            )}
+
+                                            {!collapsed && active && <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] bg-accent rounded-r-md" />}
+                                        </NavLink>
+                                    </div>
                                 );
                             })}
                         </nav>
