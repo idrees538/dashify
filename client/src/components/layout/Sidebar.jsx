@@ -13,6 +13,8 @@ import {
     IoChevronUpOutline,
     IoFolderOutline,
     IoSettingsOutline,
+    IoCardOutline,
+    IoPersonOutline,
     IoHelpCircleOutline,
     IoChatbubbleOutline,
     IoSunnyOutline,
@@ -35,6 +37,9 @@ const CAP_ITEMS = [
     // Show an alert dot on Review
     { name: 'Review', icon: IoCheckboxOutline, path: '/review', alert: true },
     { name: 'Deliverables', icon: IoDownloadOutline, path: '/deliverables' },
+    { name: 'Billing', icon: IoCardOutline, path: '/billing' },
+    { name: 'Account', icon: IoPersonOutline, path: '/account' },
+    { name: 'Settings', icon: IoSettingsOutline, path: '/settings' },
 ];
 
 function Sidebar() {

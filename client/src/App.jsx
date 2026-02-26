@@ -2,6 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import DashboardLayout from './components/layout/DashboardLayout';
 import Dashboard from './pages/dashboard';
 import Analytics from './pages/analytics';
+import Billing from './pages/billing';
+import Account from './pages/account';
 import Video from './pages/video';
 import SocialMedia from './pages/social-media';
 import CalendarPage from './pages/calendar';
@@ -38,6 +40,8 @@ function App() {
                 <Route path="/activity" element={<Activity />} />
                 <Route path="/shared" element={<Shared />} />
                 <Route path="/privacy" element={<Privacy />} />
+                <Route path="/billing" element={<Billing />} />
+                <Route path="/account" element={<Account />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/help" element={<Help />} />
                 <Route path="/chat" element={<Chat />} />
