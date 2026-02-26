@@ -124,10 +124,10 @@ function Sidebar() {
             )}
 
             <aside className={`
-                flex flex-col items-start py-3 h-full bg-bg-sidebar border-r border-border-color transition-all duration-300 z-[200] overflow-y-auto ${collapsed ? 'overflow-visible' : 'overflow-x-hidden'} md:overflow-visible
+                flex flex-col items-start py-3 bg-bg-sidebar border-r border-border-color transition-all duration-300 z-[200] overflow-y-auto ${collapsed ? 'overflow-x-visible' : 'overflow-x-hidden'}
                 ${collapsed ? 'w-16 min-w-16 items-center' : 'w-52 min-w-52'}
                 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-                fixed md:relative top-0 left-0 bottom-0
+                fixed md:sticky top-0 left-0 bottom-0 h-screen
             `}>
                 {/* Sidebar Header: Logo + Brand (Hidden on Mobile as it has its own header) */}
                 <div className={`hidden md:flex flex-col items-center px-3 pb-3 gap-3 w-full border-b border-border-color ${collapsed ? 'px-4 py-2' : ''}`}>
