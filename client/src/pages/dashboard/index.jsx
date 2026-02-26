@@ -34,21 +34,21 @@ function Dashboard() {
                     <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }} />
                 </div>
 
-                <div className="relative p-8 md:p-10 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div className="flex flex-col gap-2 text-center md:text-left">
-                        <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Welcome back, John Doe</h1>
-                        <p className="text-white/80 font-medium text-lg">Your content is reaching new heights today.</p>
+                <div className="relative p-5 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div className="flex flex-col gap-1 text-center md:text-left">
+                        <h1 className="text-2xl md:text-2xl font-bold text-white tracking-tight">Welcome back, John Doe</h1>
+                        <p className="text-white/80 font-medium text-sm">Your content is reaching new heights today.</p>
                     </div>
 
-                    <div className="flex gap-4 md:gap-8 bg-white/10 backdrop-blur-md p-4 md:p-6 rounded-2xl border border-white/20 shadow-inner">
+                    <div className="flex gap-3 md:gap-6 bg-white/10 backdrop-blur-md p-3 md:p-4 rounded-xl border border-white/20 shadow-inner">
                         <div className="flex flex-col items-center md:items-start">
-                            <span className="text-white/60 text-[10px] font-bold uppercase tracking-widest">Active Plan</span>
-                            <span className="text-white font-bold text-xl">Pro Creator</span>
+                            <span className="text-white/60 text-[9px] font-bold uppercase tracking-widest">Active Plan</span>
+                            <span className="text-white font-bold text-lg leading-tight">Pro Creator</span>
                         </div>
                         <div className="w-[1px] bg-white/20 self-stretch" />
                         <div className="flex flex-col items-center md:items-start">
-                            <span className="text-white/60 text-[10px] font-bold uppercase tracking-widest">Credits Available</span>
-                            <span className="text-white font-bold text-xl">14 Units</span>
+                            <span className="text-white/60 text-[9px] font-bold uppercase tracking-widest">Credits Available</span>
+                            <span className="text-white font-bold text-lg leading-tight">14 Units</span>
                         </div>
                     </div>
                 </div>
