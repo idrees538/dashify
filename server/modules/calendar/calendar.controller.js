@@ -47,6 +47,11 @@ const createEvent = asyncHandler(async (req, res) => {
  * @desc    Get events, optionally filtered by date range
  */
 const getEvents = asyncHandler(async (req, res) => {
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) {
+        throw ApiError.internal('Database connection is not ready. Please try again in a few seconds.');
+    }
+
     const { start, end, type } = req.query;
     const filter = {};
 

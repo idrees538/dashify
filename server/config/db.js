@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+// Optimization for serverless: disable buffering
+mongoose.set('bufferCommands', false);
+
 const connectDB = async () => {
     if (mongoose.connection.readyState >= 1) return;
 
@@ -9,13 +12,15 @@ const connectDB = async () => {
     }
 
     try {
-        const conn = await mongoose.connect(process.env.MONGO_URI);
+        const conn = await mongoose.connect(process.env.MONGO_URI, {
+            serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+            bufferCommands: false,         // Disable buffering for this connection
+        });
         console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
         console.error(`❌ MongoDB Connection Error: ${error.message}`);
-        // For serverless functions, we don't want to call process.exit(1)
-        // as it will crash the function. We let the individual requests fail
-        // or handle the error where needed.
+        // Re-throw the error so the entry point knows the connection failed
+        throw error;
     }
 };
 
