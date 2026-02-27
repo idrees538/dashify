@@ -2,7 +2,7 @@ import { useState } from 'react';
 import useCalendar from './hooks/useCalendar';
 import CalendarHeader from './components/CalendarHeader';
 import CalendarGrid from './components/CalendarGrid';
-import EventModal from './components/EventModal';
+import BookingModal from './components/BookingModal';
 
 export default function CalendarPage() {
     const {
@@ -14,16 +14,12 @@ export default function CalendarPage() {
         goToPrev,
         goToNext,
         goToToday,
-        addEvent,
+        bookShootDay,
+        fetchTimeBlocks,
         removeEvent,
     } = useCalendar();
 
     const [modalCell, setModalCell] = useState(null);
-
-    const handleSave = (dateKey, event) => {
-        addEvent(dateKey, event);
-        setModalCell(null);
-    };
 
     return (
         <div className="flex flex-col h-full min-h-0 animate-fade-in">
@@ -44,9 +40,11 @@ export default function CalendarPage() {
             />
 
             {modalCell && (
-                <EventModal
-                    cell={modalCell}
-                    onSave={handleSave}
+                <BookingModal
+                    isOpen={!!modalCell}
+                    initialDate={modalCell.key}
+                    fetchTimeBlocks={fetchTimeBlocks}
+                    onBook={bookShootDay}
                     onClose={() => setModalCell(null)}
                 />
             )}

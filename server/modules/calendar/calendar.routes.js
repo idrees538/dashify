@@ -7,11 +7,17 @@ const {
     getEventById,
     updateEvent,
     deleteEvent,
+    getTimeBlocks,
+    createTimeBlock,
 } = require('./calendar.controller');
 
 // router.use(protect);
 
 router.route('/').get(getEvents).post(createEvent);
+
+router.get('/time-blocks', getTimeBlocks);
+router.post('/time-blocks', createTimeBlock);
+
 router.route('/:id').get(getEventById).put(updateEvent).delete(deleteEvent);
 
 module.exports = router;

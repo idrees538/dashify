@@ -11,9 +11,13 @@ import {
     IoVideocamOutline,
     IoChevronForwardOutline,
 } from 'react-icons/io5';
+import useCalendar from '../calendar/hooks/useCalendar';
+import BookingModal from '../calendar/components/BookingModal';
 
 function Dashboard() {
     const [activeTab, setActiveTab] = useState('updates');
+    const [isBookingOpen, setIsBookingOpen] = useState(false);
+    const { fetchTimeBlocks, bookShootDay } = useCalendar();
 
     // Chart Data
     const charts = [
@@ -235,7 +239,10 @@ function Dashboard() {
                     </div>
 
                     {/* Scheduling Button */}
-                    <button className="w-full bg-accent hover:bg-accent-light text-white p-4 rounded-2xl shadow-lg border border-accent/20 transition-all flex items-center justify-between group overflow-hidden relative">
+                    <button
+                        onClick={() => setIsBookingOpen(true)}
+                        className="w-full bg-accent hover:bg-accent-light text-white p-4 rounded-2xl shadow-lg border border-accent/20 transition-all flex items-center justify-between group overflow-hidden relative"
+                    >
                         <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 pointer-events-none" />
                         <div className="flex items-center gap-4 relative z-10">
                             <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl backdrop-blur-sm">
@@ -250,6 +257,13 @@ function Dashboard() {
                     </button>
                 </div>
             </div>
+
+            <BookingModal
+                isOpen={isBookingOpen}
+                onClose={() => setIsBookingOpen(false)}
+                fetchTimeBlocks={fetchTimeBlocks}
+                onBook={bookShootDay}
+            />
 
             {/* Global Keyframes in JS for animation */}
             <style>

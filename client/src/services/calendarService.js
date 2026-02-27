@@ -33,6 +33,7 @@ const calendarService = {
      */
     deleteEvent: (id) =>
         api.delete(`/calendar/${id}`),
+    getTimeBlocks: () => api.get('/calendar/time-blocks'),
 };
 
 export default calendarService;

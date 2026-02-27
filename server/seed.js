@@ -11,6 +11,7 @@ const Project = require('./modules/project/project.model');
 const Video = require('./modules/video/video.model');
 const { CreditBank, Transaction } = require('./modules/credit/credit.model');
 const Event = require('./modules/calendar/event.model');
+const TimeBlock = require('./modules/calendar/timeBlock.model');
 const Activity = require('./modules/activity/activity.model');
 const Notification = require('./modules/notification/notification.model');
 
@@ -28,6 +29,7 @@ const seed = async () => {
             CreditBank.deleteMany(),
             Transaction.deleteMany(),
             Event.deleteMany(),
+            TimeBlock.deleteMany(),
             Activity.deleteMany(),
             Notification.deleteMany(),
         ]);
@@ -105,6 +107,17 @@ const seed = async () => {
             { title: 'Client Review Meeting', startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 5, 10), endDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 5, 11), type: 'meeting', color: '#3B82F6', user: demoUser._id },
             { title: 'Marketing Deadline', startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7), allDay: true, type: 'deadline', color: '#EF4444', user: demoUser._id, project: projects[1]._id },
             { title: 'Team Standup', startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 9), endDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 9, 30), type: 'meeting', color: '#10B981', user: demoUser._id },
+        ]);
+
+        // ---------- Time Blocks ----------
+        console.log('⏰ Creating time blocks...');
+        await TimeBlock.insertMany([
+            { dayOfWeek: 1, startTime: '09:00', endTime: '12:00', label: 'Morning Shoot', type: 'shoot' },
+            { dayOfWeek: 1, startTime: '13:00', endTime: '16:00', label: 'Afternoon Shoot', type: 'shoot' },
+            { dayOfWeek: 2, startTime: '10:00', endTime: '11:00', label: 'Intro Call', type: 'call' },
+            { dayOfWeek: 3, startTime: '09:00', endTime: '12:00', label: 'Morning Shoot', type: 'shoot' },
+            { dayOfWeek: 4, startTime: '14:00', endTime: '15:00', label: 'Sync Call', type: 'call' },
+            { dayOfWeek: 5, startTime: '09:00', endTime: '12:00', label: 'Morning Shoot', type: 'shoot' },
         ]);
 
         // ---------- Activity ----------

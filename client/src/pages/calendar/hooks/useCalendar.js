@@ -71,33 +71,33 @@ export default function useCalendar() {
     const [isApiMode, setIsApiMode] = useState(false);
 
     /* Fetch events from API when month changes */
-    useEffect(() => {
-        const fetchEvents = async () => {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
+    const fetchEvents = useCallback(async () => {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
 
-            // Fetch 6-week range (to cover leading/trailing days)
-            const start = new Date(year, month, -6).toISOString();
-            const end = new Date(year, month + 1, 7).toISOString();
+        // Fetch 6-week range (to cover leading/trailing days)
+        const start = new Date(year, month, -6).toISOString();
+        const end = new Date(year, month + 1, 7).toISOString();
 
-            setLoading(true);
-            try {
-                const res = await calendarService.getEvents(start, end);
-                setEvents(eventsToMap(res.data.events));
-                setIsApiMode(true);
-            } catch (err) {
-                // If API fails (not logged in, server down), use seed data
-                if (!isApiMode) {
-                    setEvents(getSeedEvents());
-                }
-                console.warn('Calendar API unavailable, using local data:', err.message);
-            } finally {
-                setLoading(false);
+        setLoading(true);
+        try {
+            const res = await calendarService.getEvents(start, end);
+            setEvents(eventsToMap(res.data.events));
+            setIsApiMode(true);
+        } catch (err) {
+            // If API fails (not logged in, server down), use seed data
+            if (!isApiMode) {
+                setEvents(getSeedEvents());
             }
-        };
+            console.warn('Calendar API unavailable, using local data:', err.message);
+        } finally {
+            setLoading(false);
+        }
+    }, [currentDate, isApiMode]);
 
+    useEffect(() => {
         fetchEvents();
-    }, [currentDate]);
+    }, [fetchEvents]);
 
     /* Navigation */
     const goToPrev = useCallback(
@@ -204,6 +204,40 @@ export default function useCalendar() {
         }
     }, []);
 
+    const bookShootDay = useCallback(async (dateKey, time, title, projectId) => {
+        const [y, m, d] = dateKey.split('-').map(Number);
+        const startDate = new Date(y, m - 1, d);
+        if (time) {
+            const [h, min] = time.split(':').map(Number);
+            startDate.setHours(h, min);
+        }
+
+        try {
+            await calendarService.createEvent({
+                title: title || 'Shoot Day',
+                type: 'shoot',
+                time: time || '',
+                startDate: startDate.toISOString(),
+                project: projectId,
+            });
+            // Refresh events to show both the shoot day and the auto-generated deliverable
+            await fetchEvents();
+        } catch (err) {
+            console.error('Failed to book shoot day:', err.message);
+            throw err;
+        }
+    }, [fetchEvents]);
+
+    const fetchTimeBlocks = useCallback(async () => {
+        try {
+            const res = await calendarService.getTimeBlocks();
+            return res.data.blocks;
+        } catch (err) {
+            console.error('Failed to fetch time blocks:', err.message);
+            return [];
+        }
+    }, []);
+
     /* Today key for highlight comparison */
     const todayKey = toKey(new Date());
 
@@ -218,5 +252,8 @@ export default function useCalendar() {
         goToToday,
         addEvent,
         removeEvent,
+        bookShootDay,
+        fetchTimeBlocks,
+        refreshEvents: fetchEvents,
     };
 }

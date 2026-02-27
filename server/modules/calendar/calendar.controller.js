@@ -1,8 +1,10 @@
 const Event = require('./event.model');
+const TimeBlock = require('./timeBlock.model');
 const asyncHandler = require('../../core/asyncHandler');
 const ApiError = require('../../core/ApiError');
 const { sendSuccess } = require('../../core/response');
 const validate = require('../../core/validate');
+const { addBusinessDays } = require('./calendar.utils');
 
 /** Helper: get user ID if authenticated, otherwise null */
 const getUserId = (req) => req.user?._id || null;
@@ -21,6 +23,21 @@ const createEvent = asyncHandler(async (req, res) => {
     if (userId) eventData.user = userId;
 
     const event = await Event.create(eventData);
+
+    // If it's a shoot day, automatically schedule the deliverable (7 business days later)
+    if (event.type === 'shoot') {
+        const deliverableDate = addBusinessDays(new Date(event.startDate), 7);
+        await Event.create({
+            title: `Deliverables: ${event.title}`,
+            startDate: deliverableDate,
+            allDay: true,
+            type: 'deadline',
+            color: '#EF4444', // Red for deadlines
+            user: event.user,
+            project: event.project,
+            description: `Auto-generated deliverables for shoot on ${new Date(event.startDate).toLocaleDateString()}`,
+        });
+    }
 
     sendSuccess(res, { event }, 'Event created', 201);
 });
@@ -102,4 +119,34 @@ const deleteEvent = asyncHandler(async (req, res) => {
     sendSuccess(res, null, 'Event deleted');
 });
 
-module.exports = { createEvent, getEvents, getEventById, updateEvent, deleteEvent };
+/**
+ * @route   GET /api/calendar/time-blocks
+ */
+const getTimeBlocks = asyncHandler(async (req, res) => {
+    const blocks = await TimeBlock.find({ isActive: true }).sort({ dayOfWeek: 1, startTime: 1 });
+    sendSuccess(res, { blocks }, 'Time blocks retrieved');
+});
+
+/**
+ * @route   POST /api/calendar/time-blocks
+ */
+const createTimeBlock = asyncHandler(async (req, res) => {
+    validate(req.body, {
+        dayOfWeek: { required: true, type: 'number' },
+        startTime: { required: true, type: 'string' },
+        endTime: { required: true, type: 'string' },
+    });
+
+    const block = await TimeBlock.create(req.body);
+    sendSuccess(res, { block }, 'Time block created', 201);
+});
+
+module.exports = {
+    createEvent,
+    getEvents,
+    getEventById,
+    updateEvent,
+    deleteEvent,
+    getTimeBlocks,
+    createTimeBlock,
+};
