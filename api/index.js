@@ -6,7 +6,11 @@ module.exports = async (req, res) => {
         await connectDB();
         return app(req, res);
     } catch (error) {
-        console.error('Vercel Function Error:', error);
-        res.status(500).json({ success: false, message: 'Internal Server Error' });
+        console.error('Vercel Function Error (Fatal):', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error (Database Connection Failed)',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 };
