@@ -5,6 +5,8 @@ import {
     FaYoutube,
     FaTiktok,
     FaFacebookF,
+    FaLinkedinIn,
+    FaTwitch,
     FaPlus
 } from 'react-icons/fa';
 
@@ -14,6 +16,8 @@ const SOCIAL_PLATFORMS = [
     { id: 'youtube', icon: FaYoutube, color: '#FF0000', label: 'YouTube' },
     { id: 'tiktok', icon: FaTiktok, color: '#000000', label: 'TikTok' },
     { id: 'facebook', icon: FaFacebookF, color: '#1877F2', label: 'Facebook' },
+    { id: 'linkedin', icon: FaLinkedinIn, color: '#0A66C2', label: 'LinkedIn' },
+    { id: 'twitch', icon: FaTwitch, color: '#9146FF', label: 'Twitch' },
 ];
 
 const SocialToolbar = ({ activePlatform, onSelect }) => {
