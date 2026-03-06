@@ -5,7 +5,6 @@ import {
     IoPersonCircleOutline,
     IoAddOutline,
     IoChatbubbleOutline,
-    IoCheckmarkCircleOutline,
     IoCheckmarkCircle,
     IoFunnelOutline,
     IoBrushOutline,
@@ -18,7 +17,7 @@ const FILTER_TABS = [
     { key: 'resolved', label: 'Resolved' },
 ];
 
-function NoteItem({ note, isHighlighted, noteRef, onResolve }) {
+function NoteItem({ note, isHighlighted, noteRef }) {
     const formatTime = (sec) => {
         const m = Math.floor(sec / 60);
         const s = Math.floor(sec % 60);
@@ -69,25 +68,6 @@ function NoteItem({ note, isHighlighted, noteRef, onResolve }) {
                 </p>
                 <div className="flex items-center justify-between">
                     <span className="text-[11px] text-text-secondary">{note.date}</span>
-                    <div className="flex items-center gap-1 opacity-0 group-hover/note:opacity-100 transition-opacity">
-                        <button className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] text-text-secondary hover:text-accent hover:bg-accent-light transition-colors">
-                            <IoChatbubbleOutline /> Reply
-                        </button>
-                        <button
-                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] transition-colors
-                                ${note.resolved
-                                    ? 'text-[#f59e0b] hover:bg-[#f59e0b]/10'
-                                    : 'text-text-secondary hover:text-[#10b981] hover:bg-[#10b981]/10'
-                                }`}
-                            onClick={() => onResolve?.(note.id)}
-                        >
-                            {note.resolved ? (
-                                <><IoCheckmarkCircle /> Reopen</>
-                            ) : (
-                                <><IoCheckmarkCircleOutline /> Resolve</>
-                            )}
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>

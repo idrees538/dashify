@@ -1,5 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from './contexts/AuthContext';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 import DashboardLayout from './components/layout/DashboardLayout';
+import Login from './pages/login';
 import Dashboard from './pages/dashboard';
 import Analytics from './pages/analytics';
 import Billing from './pages/billing';
@@ -21,9 +24,24 @@ import Review from './pages/review';
 import Deliverables from './pages/deliverables';
 
 function App() {
+    const { user } = useAuth();
+
     return (
         <Routes>
-            <Route element={<DashboardLayout />}>
+            {/* Public route — login */}
+            <Route
+                path="/login"
+                element={user ? <Navigate to="/dashboard" replace /> : <Login />}
+            />
+
+            {/* Protected routes — all dashboard pages */}
+            <Route
+                element={
+                    <ProtectedRoute>
+                        <DashboardLayout />
+                    </ProtectedRoute>
+                }
+            >
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/analytics" element={<Analytics />} />
@@ -46,6 +64,9 @@ function App() {
                 <Route path="/help" element={<Help />} />
                 <Route path="/chat" element={<Chat />} />
             </Route>
+
+            {/* Catch-all */}
+            <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
     );
 }

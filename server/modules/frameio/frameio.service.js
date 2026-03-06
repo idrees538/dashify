@@ -30,13 +30,22 @@ async function client() {
     // Check if token needs refresh (simplified: refresh if > 1 hour old)
     const updatedAt = new Date(tokens.updatedAt).getTime();
     const now = Date.now();
-    if (now - updatedAt > (tokens.expiresIn - 300) * 1000) {
+    const bufferSeconds = 300; // 5 minutes buffer
+    const diff = now - updatedAt;
+    const thresh = (tokens.expiresIn - bufferSeconds) * 1000;
+
+    console.log(`[Frame.io DEBUG] Token check: now=${now}, updatedAt=${updatedAt}, diff=${diff}, thresh=${thresh}`);
+
+    if (diff > thresh) {
+        console.log('[Frame.io] Token expired or nearing expiration. Refreshing...');
         try {
-            const newTokens = await auth.refreshToken(tokens.refreshToken);
+            const newTokens = await auth.refreshAccessToken(tokens.refreshToken);
             tokenStore.saveTokens(newTokens);
+            // Update the locally used token
             tokens.accessToken = newTokens.accessToken;
         } catch (e) {
-            console.error('[Frame.io] Auto-refresh failed');
+            console.error('[Frame.io] Auto-refresh failed:', e.message);
+            // If refresh fails, we still try with the old one, which might lead to 401
         }
     }
 
@@ -44,6 +53,7 @@ async function client() {
         baseURL: FRAMEIO_API_V4,
         headers: {
             Authorization: `Bearer ${tokens.accessToken}`,
+            'x-api-key': process.env.FRAMEIO_CLIENT_ID,
             'Content-Type': 'application/json',
         },
         timeout: 15000,
@@ -55,9 +65,9 @@ async function client() {
  */
 async function getMe() {
     const c = await client();
-    const isV2 = c.defaults.baseURL === FRAMEIO_API_V2;
-    const { data } = await c.get(isV2 ? '/me' : '/users/me');
-    return data;
+    const { data } = await c.get('/me');
+    // V4 wraps in { data: ... }
+    return data.data || data;
 }
 
 /**
@@ -65,47 +75,68 @@ async function getMe() {
  */
 async function getProjects() {
     const c = await client();
-    const isV2 = c.defaults.baseURL === FRAMEIO_API_V2;
 
-    if (isV2) {
-        // V2: List accounts first to get projects
-        const { data: accounts } = await c.get('/accounts');
-        if (!accounts || accounts.length === 0) return [];
-
-        // Return projects from the first account for now (common case)
-        const { data } = await c.get(`/accounts/${accounts[0].id}/projects`);
-        return data;
-    }
-
-    // V4: Fallback to V2 project listing if V4 projects endpoint is not standard
     try {
-        const { data } = await c.get('/projects');
-        return data;
-    } catch (e) {
-        // Try V2 approach if V4 fails (token might be valid for both)
-        const { data: accounts } = await c.get('https://api.frame.io/v2/accounts');
+        // 1. Get accounts
+        const { data: accountsRes } = await c.get('/accounts');
+        const accounts = accountsRes.data;
         if (!accounts || accounts.length === 0) return [];
-        const { data } = await c.get(`https://api.frame.io/v2/accounts/${accounts[0].id}/projects`);
-        return data;
+
+        const accountId = accounts[0].id;
+
+        // 2. Get workspaces for the account
+        const { data: workspacesRes } = await c.get(`/accounts/${accountId}/workspaces`);
+        const workspaces = workspacesRes.data;
+        if (!workspaces || workspaces.length === 0) return [];
+
+        // 3. List projects for the first workspace (experimental)
+        const { data: projectsRes } = await c.get(`/accounts/${accountId}/workspaces/${workspaces[0].id}/projects`, {
+            headers: { 'api-version': 'experimental' }
+        });
+        return projectsRes.data || [];
+    } catch (e) {
+        console.error('[Frame.io DEBUG] getProjects failed:', e.response?.status, e.response?.data?.message || e.message);
+        throw e;
     }
 }
 
 /**
- * List assets in a folder (V4) or project root (V2).
+ * List assets in a folder or project.
  */
 async function getAssets(parentId, opts = {}) {
     const c = await client();
-    const isV2 = c.defaults.baseURL === FRAMEIO_API_V2;
 
-    if (isV2) {
-        const { data } = await c.get(`/assets/${parentId}/children`, { params: opts });
-        return data;
+    // 1. Get account ID
+    const { data: accountsRes } = await c.get('/accounts');
+    const accounts = accountsRes.data;
+    if (!accounts || accounts.length === 0) throw new Error('No Frame.io accounts found');
+    const accountId = accounts[0].id;
+
+    // Strategy 1: Try V4 folder children (Account Scoped)
+    try {
+        console.log('[Frame.io DEBUG] Strategy 1: V4 Account-scoped folder children for', parentId);
+        const { data } = await c.get(`/accounts/${accountId}/folders/${parentId}/children`, { params: opts });
+        return data.data;
+    } catch (e1) {
+        console.log('[Frame.io DEBUG] Strategy 1 FAILED:', e1.response?.status, e1.response?.data?.message || e1.message);
+
+        // Strategy 2: Maybe it's a project ID — get project detail to find root_folder_id
+        try {
+            console.log('[Frame.io DEBUG] Strategy 2: V4 Project lookup for', parentId);
+            const { data: projectRes } = await c.get(`/accounts/${accountId}/projects/${parentId}`);
+            const project = projectRes.data;
+            const rootFolderId = project.root_folder_id;
+
+            if (rootFolderId) {
+                console.log('[Frame.io DEBUG] Strategy 2: Found root folder ID:', rootFolderId);
+                const { data: res } = await c.get(`/accounts/${accountId}/folders/${rootFolderId}/children`, { params: opts });
+                return res.data;
+            }
+        } catch (e2) {
+            console.log('[Frame.io DEBUG] Strategy 2 FAILED:', e2.response?.status, e2.response?.data?.message || e2.message);
+            throw e1; // Throw original error if both fail
+        }
     }
-
-    // V4: Get children of a folder
-    const { data } = await c.get(`/folders/${parentId}/children`, { params: opts });
-    // V4 returns results in a 'data' array or directly depending on endpoint
-    return data;
 }
 
 /**
@@ -113,42 +144,30 @@ async function getAssets(parentId, opts = {}) {
  */
 async function getAsset(assetId) {
     const c = await client();
-    const isV2 = c.defaults.baseURL === FRAMEIO_API_V2;
 
-    if (isV2) {
-        // V2 uses /assets/:id
-        const { data } = await c.get(`/assets/${assetId}`);
-        return data;
-    }
+    const { data: accountsRes } = await c.get('/accounts');
+    const accountId = accountsRes.data[0].id;
 
-    // V4: Distinguishes between files and folders
+    // V4: Try folders, then files
     try {
-        const { data } = await c.get(`/files/${assetId}`);
-        return data;
+        const { data } = await c.get(`/accounts/${accountId}/folders/${assetId}`);
+        return data.data;
     } catch (e) {
-        try {
-            const { data } = await c.get(`/folders/${assetId}`);
-            return data;
-        } catch (e2) {
-            // Last resort: V2 asset lookup (some IDs are legacy)
-            const { data } = await axios.get(`${FRAMEIO_API_V2}/assets/${assetId}`, {
-                headers: { Authorization: c.defaults.headers.Authorization }
-            });
-            return data;
-        }
+        const { data } = await c.get(`/accounts/${accountId}/files/${assetId}`);
+        return data.data;
     }
 }
 
 /**
- * List comments on a file (V4 uses /files/{id}/comments).
+ * List comments on a file.
  */
 async function getComments(assetId) {
     const c = await client();
-    const isV2 = c.defaults.baseURL === FRAMEIO_API_V2;
-    const endpoint = isV2 ? `/assets/${assetId}/comments` : `/files/${assetId}/comments`;
+    const { data: accountsRes } = await c.get('/accounts');
+    const accountId = accountsRes.data[0].id;
 
-    const { data } = await c.get(endpoint);
-    return data;
+    const { data } = await c.get(`/accounts/${accountId}/files/${assetId}/comments`);
+    return data.data;
 }
 
 /**
@@ -156,11 +175,11 @@ async function getComments(assetId) {
  */
 async function createComment(assetId, payload) {
     const c = await client();
-    const isV2 = c.defaults.baseURL === FRAMEIO_API_V2;
-    const endpoint = isV2 ? `/assets/${assetId}/comments` : `/files/${assetId}/comments`;
+    const { data: accountsRes } = await c.get('/accounts');
+    const accountId = accountsRes.data[0].id;
 
-    const { data } = await c.post(endpoint, payload);
-    return data;
+    const { data } = await c.post(`/accounts/${accountId}/files/${assetId}/comments`, payload);
+    return data.data;
 }
 
 /**
@@ -168,8 +187,11 @@ async function createComment(assetId, payload) {
  */
 async function updateComment(commentId, payload) {
     const c = await client();
-    const { data } = await c.put(`/comments/${commentId}`, payload);
-    return data;
+    const { data: accountsRes } = await c.get('/accounts');
+    const accountId = accountsRes.data[0].id;
+
+    const { data } = await c.put(`/accounts/${accountId}/comments/${commentId}`, payload);
+    return data.data;
 }
 
 /**
@@ -177,8 +199,10 @@ async function updateComment(commentId, payload) {
  */
 async function deleteComment(commentId) {
     const c = await client();
-    const { data } = await c.delete(`/comments/${commentId}`);
-    return data;
+    const { data: accountsRes } = await c.get('/accounts');
+    const accountId = accountsRes.data[0].id;
+
+    await c.delete(`/accounts/${accountId}/comments/${commentId}`);
 }
 
 /**
@@ -186,8 +210,11 @@ async function deleteComment(commentId) {
  */
 async function toggleCommentResolution(commentId, completed) {
     const c = await client();
-    const { data } = await c.put(`/comments/${commentId}`, { completed });
-    return data;
+    const { data: accountsRes } = await c.get('/accounts');
+    const accountId = accountsRes.data[0].id;
+
+    const { data } = await c.put(`/accounts/${accountId}/comments/${commentId}`, { completed });
+    return data.data;
 }
 
 /**
@@ -195,18 +222,12 @@ async function toggleCommentResolution(commentId, completed) {
  */
 async function getTeams() {
     const c = await client();
-    const isV2 = c.defaults.baseURL === FRAMEIO_API_V2;
+    const { data: accountsRes } = await c.get('/accounts');
+    const accounts = accountsRes.data;
+    if (!accounts || accounts.length === 0) return [];
 
-    if (isV2) {
-        const { data: accounts } = await c.get('/accounts');
-        if (!accounts || accounts.length === 0) return [];
-        const { data } = await c.get(`/accounts/${accounts[0].id}/teams`);
-        return data;
-    }
-
-    // V4 teams
-    const { data } = await c.get('/teams');
-    return data;
+    const { data: workspacesRes } = await c.get(`/accounts/${accounts[0].id}/workspaces`);
+    return workspacesRes.data;
 }
 
 /* ------------------------------------------------------------------ */
@@ -218,8 +239,12 @@ async function getTeams() {
  */
 async function getWorkspaceUsers(workspaceId) {
     const c = await client();
-    const { data } = await c.get(`/workspaces/${workspaceId}/users`);
-    return data;
+    const { data: accountsRes } = await c.get('/accounts');
+    const accountId = accountsRes.data[0].id;
+
+    // Note: V4 permissions might have different paths, using best guess for now
+    const { data } = await c.get(`/accounts/${accountId}/workspaces/${workspaceId}/users`);
+    return data.data;
 }
 
 /**
@@ -227,8 +252,11 @@ async function getWorkspaceUsers(workspaceId) {
  */
 async function updateWorkspaceUser(workspaceId, userId, role) {
     const c = await client();
-    const { data } = await c.put(`/workspaces/${workspaceId}/users/${userId}`, { role });
-    return data;
+    const { data: accountsRes } = await c.get('/accounts');
+    const accountId = accountsRes.data[0].id;
+
+    const { data } = await c.put(`/accounts/${accountId}/workspaces/${workspaceId}/users/${userId}`, { role });
+    return data.data;
 }
 
 /**
@@ -236,8 +264,10 @@ async function updateWorkspaceUser(workspaceId, userId, role) {
  */
 async function removeWorkspaceUser(workspaceId, userId) {
     const c = await client();
-    const { data } = await c.delete(`/workspaces/${workspaceId}/users/${userId}`);
-    return data;
+    const { data: accountsRes } = await c.get('/accounts');
+    const accountId = accountsRes.data[0].id;
+
+    await c.delete(`/accounts/${accountId}/workspaces/${workspaceId}/users/${userId}`);
 }
 
 /**
@@ -245,8 +275,11 @@ async function removeWorkspaceUser(workspaceId, userId) {
  */
 async function getProjectUsers(projectId) {
     const c = await client();
-    const { data } = await c.get(`/projects/${projectId}/users`);
-    return data;
+    const { data: accountsRes } = await c.get('/accounts');
+    const accountId = accountsRes.data[0].id;
+
+    const { data } = await c.get(`/accounts/${accountId}/projects/${projectId}/users`);
+    return data.data;
 }
 
 /**
@@ -254,8 +287,11 @@ async function getProjectUsers(projectId) {
  */
 async function updateProjectUser(projectId, userId, role) {
     const c = await client();
-    const { data } = await c.put(`/projects/${projectId}/users/${userId}`, { role });
-    return data;
+    const { data: accountsRes } = await c.get('/accounts');
+    const accountId = accountsRes.data[0].id;
+
+    const { data } = await c.put(`/accounts/${accountId}/projects/${projectId}/users/${userId}`, { role });
+    return data.data;
 }
 
 /**
@@ -263,8 +299,10 @@ async function updateProjectUser(projectId, userId, role) {
  */
 async function removeProjectUser(projectId, userId) {
     const c = await client();
-    const { data } = await c.delete(`/projects/${projectId}/users/${userId}`);
-    return data;
+    const { data: accountsRes } = await c.get('/accounts');
+    const accountId = accountsRes.data[0].id;
+
+    await c.delete(`/accounts/${accountId}/projects/${projectId}/users/${userId}`);
 }
 
 module.exports = {

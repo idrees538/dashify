@@ -25,11 +25,14 @@ function handleFrameioError(err) {
     }
     if (err.response) {
         const status = err.response.status;
-        const message = err.response.data?.message || err.response.data?.errors?.[0]?.message || 'Frame.io API error';
+        const body = err.response.data;
+        console.error('[Frame.io DEBUG] API error:', status, JSON.stringify(body, null, 2));
+        const message = body?.message || body?.errors?.[0]?.message || 'Frame.io API error';
         const apiErr = new Error(message);
         apiErr.statusCode = status;
         throw apiErr;
     }
+    console.error('[Frame.io DEBUG] Non-API error:', err.message, err.stack);
     throw err;
 }
 
@@ -56,7 +59,7 @@ const callback = asyncHandler(async (req, res) => {
     tokenStore.saveTokens(tokens);
 
     // Redirect back to the frontend app (Review page)
-    const frontendUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+    const frontendUrl = process.env.CLIENT_URL || 'http://localhost:3000';
     res.send(`
         <html>
             <body style="font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #0f172a; color: white;">
@@ -110,9 +113,12 @@ const getTeams = asyncHandler(async (_req, res) => {
 const getAssets = asyncHandler(async (req, res) => {
     try {
         const { projectId } = req.params;
+        console.log('[Frame.io DEBUG] getAssets called with projectId:', projectId);
         const assets = await frameioService.getAssets(projectId, req.query);
+        console.log('[Frame.io DEBUG] getAssets success, type:', typeof assets, Array.isArray(assets) ? `array(${assets.length})` : '');
         sendSuccess(res, { assets }, 'Assets retrieved');
     } catch (err) {
+        console.error('[Frame.io DEBUG] getAssets FAILED:', err.message);
         handleFrameioError(err);
     }
 });
@@ -148,7 +154,12 @@ const createComment = asyncHandler(async (req, res) => {
         if (!text || typeof text !== 'string' || !text.trim()) {
             throw ApiError.badRequest('Comment text is required');
         }
-        const payload = { text: text.trim() };
+
+        // Prefix with Dashify user's name for attribution in Frame.io
+        const userName = req.user?.name || 'Unknown';
+        const attributedText = `[${userName}] ${text.trim()}`;
+
+        const payload = { text: attributedText };
         if (timestamp !== undefined && timestamp !== null) {
             payload.timestamp = Number(timestamp);
         }

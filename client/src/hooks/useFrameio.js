@@ -11,20 +11,10 @@ import {
  * useFrameio Hook
  * ===============
  * Encapsulates all Frame.io state, fetching, and mutations.
- * Components just consume its return value via props.
  *
- * When Frame.io is not configured (no token), falls back to demo data
- * so the UI always works.
- *
- * Usage:
- *   const {
- *       isConfigured, isLoading, error,
- *       drafts, selectedDraftId, selectDraft,
- *       notes, noteCounts,
- *       currentTime, setCurrentTime,
- *       highlightedTimestamp, handleMarkerClick,
- *       addNote, resolveNote,
- *   } = useFrameio();
+ * The admin connects Frame.io once via OAuth. Regular users never
+ * see OAuth prompts — they simply see videos and can comment.
+ * If Frame.io is not yet configured, falls back to demo data.
  */
 export default function useFrameio() {
     /* ---- Connection state ---- */
@@ -50,7 +40,7 @@ export default function useFrameio() {
     }, {});
 
     /* ================================================================ */
-    /*  Init: check if Frame.io is configured, then load data           */
+    /*  Init: try loading assets directly (no /me check needed)         */
     /* ================================================================ */
     useEffect(() => {
         let cancelled = false;
@@ -60,30 +50,46 @@ export default function useFrameio() {
             setError(null);
 
             try {
-                // 1. Verify connection
-                await frameioService.verifyConnection();
-                if (cancelled) return;
-                setIsConfigured(true);
-
-                // 2. Load assets
-                // Use root asset ID from a meta tag, env, or default
+                // Use root asset ID from env
                 const rootId = document.querySelector('meta[name="frameio-root-asset"]')?.content
                     || import.meta.env.VITE_FRAMEIO_ROOT_ASSET_ID
                     || '';
 
                 if (!rootId) {
-                    // Token valid but no project configured — fall back to demo
+                    // No project configured — fall back to demo
                     console.warn('[Frame.io] No root asset ID configured, using demo data.');
+                    setIsConfigured(false);
                     loadDemoData();
                     return;
                 }
 
+                // Try loading assets directly — the backend uses admin tokens
                 const assetsRes = await frameioService.getAssets(rootId);
                 if (cancelled) return;
 
-                const rawAssets = assetsRes.data?.assets || [];
-                // Only include video assets
-                const videoAssets = rawAssets.filter((a) => a.type === 'file' && a.filetype === 'video');
+                setIsConfigured(true);
+
+                // Handle different response formats from V2/V4
+                const resData = assetsRes.data || assetsRes;
+                let rawAssets = [];
+                if (Array.isArray(resData)) {
+                    rawAssets = resData;
+                } else if (Array.isArray(resData.assets)) {
+                    rawAssets = resData.assets;
+                } else if (Array.isArray(resData.data)) {
+                    rawAssets = resData.data;
+                }
+
+                console.log('[Frame.io] Raw assets loaded:', rawAssets.length, rawAssets.map(a => ({
+                    name: a.name, type: a.type || a._type, filetype: a.filetype
+                })));
+
+                // Include video assets (V2 uses _type, V4 uses type)
+                const videoAssets = rawAssets.filter((a) => {
+                    const assetType = a.type || a._type || '';
+                    const fileType = a.filetype || a.file_type || '';
+                    return assetType === 'file' && (fileType.startsWith('video') || a.is_hls_required || a.original);
+                });
                 const mappedDrafts = videoAssets.map((a, i) => mapAssetToDraft(a, i));
 
                 setDrafts(mappedDrafts);
@@ -91,7 +97,7 @@ export default function useFrameio() {
                     setSelectedDraftId(mappedDrafts[0].id);
                 }
 
-                // 3. Load comments for each asset
+                // Load comments for each asset
                 const notesMap = {};
                 for (const draft of mappedDrafts) {
                     try {
@@ -106,7 +112,6 @@ export default function useFrameio() {
                 setAllNotes(notesMap);
             } catch (err) {
                 if (cancelled) return;
-                // If 400 (not configured) or network error, fall back gracefully
                 console.warn('[Frame.io] Not configured or error, using demo data:', err.message);
                 setIsConfigured(false);
                 loadDemoData();
@@ -146,7 +151,7 @@ export default function useFrameio() {
     }, []);
 
     /**
-     * Add a note. If Frame.io is configured, post to API first.
+     * Add a note. Posts to Frame.io API (attribution is handled server-side).
      */
     const addNote = useCallback(async (noteData) => {
         // Optimistic UI: add immediately
@@ -164,7 +169,7 @@ export default function useFrameio() {
             [selectedDraftId]: [...(prev[selectedDraftId] || []), tempNote],
         }));
 
-        // If configured, also post to Frame.io
+        // Post to Frame.io via backend (server adds [userName] prefix)
         if (isConfigured) {
             try {
                 const res = await frameioService.createComment(selectedDraftId, {
@@ -190,7 +195,8 @@ export default function useFrameio() {
     }, [selectedDraftId, isConfigured]);
 
     /**
-     * Toggle resolve state on a note.
+     * Toggle resolve state on a note (admin-only action on the backend,
+     * but we keep the optimistic UI for consistency).
      */
     const resolveNote = useCallback(async (noteId) => {
         const note = notes.find((n) => n.id === noteId);
