@@ -87,8 +87,9 @@ export default function useFrameio() {
                 // Include video assets (V2 uses _type, V4 uses type)
                 const videoAssets = rawAssets.filter((a) => {
                     const assetType = a.type || a._type || '';
-                    const fileType = a.filetype || a.file_type || '';
-                    return assetType === 'file' && (fileType.startsWith('video') || a.is_hls_required || a.original);
+                    const fileType = a.filetype || a.file_type || a.media_type || '';
+                    return (assetType === 'file' || assetType === 'version_stack') &&
+                        (fileType.startsWith('video') || a.is_hls_required || a.original || a.stream_url);
                 });
                 const mappedDrafts = videoAssets.map((a, i) => mapAssetToDraft(a, i));
 
@@ -102,7 +103,8 @@ export default function useFrameio() {
                 for (const draft of mappedDrafts) {
                     try {
                         const commentsRes = await frameioService.getComments(draft.id);
-                        const rawComments = commentsRes.data?.comments || [];
+                        // V4 returns comments in .data array, legacy might be elsewhere
+                        const rawComments = commentsRes.data || commentsRes.comments || [];
                         notesMap[draft.id] = rawComments.map(mapCommentToNote);
                     } catch {
                         notesMap[draft.id] = [];
@@ -176,7 +178,8 @@ export default function useFrameio() {
                     text: noteData.text,
                     timestamp: noteData.timestamp,
                 });
-                const created = res.data?.comment;
+                // The backend returns { success: true, data: commentObject }
+                const created = res.data;
                 if (created) {
                     // Replace temp note with real one
                     const realNote = mapCommentToNote(created);

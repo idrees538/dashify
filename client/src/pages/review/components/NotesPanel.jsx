@@ -17,7 +17,7 @@ const FILTER_TABS = [
     { key: 'resolved', label: 'Resolved' },
 ];
 
-function NoteItem({ note, isHighlighted, noteRef }) {
+function NoteItem({ note, isHighlighted, noteRef, onResolve }) {
     const formatTime = (sec) => {
         const m = Math.floor(sec / 60);
         const s = Math.floor(sec % 60);
@@ -68,6 +68,18 @@ function NoteItem({ note, isHighlighted, noteRef }) {
                 </p>
                 <div className="flex items-center justify-between">
                     <span className="text-[11px] text-text-secondary">{note.date}</span>
+                    <div className="opacity-0 group-hover/note:opacity-100 transition-opacity">
+                        <button
+                            onClick={() => onResolve(note.id)}
+                            className={`text-[10px] font-bold px-2 py-1 rounded-md transition-colors
+                                ${note.resolved
+                                    ? 'bg-[#10b981]/10 text-[#10b981] hover:bg-[#10b981]/20'
+                                    : 'bg-accent/10 text-accent hover:bg-accent hover:text-white'
+                                }`}
+                        >
+                            {note.resolved ? 'Unresolve' : 'Resolve'}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

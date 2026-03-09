@@ -38,7 +38,13 @@ export const DRAFT_COLORS = ['purple', 'blue', 'green', 'orange', 'purple', 'blu
  * @returns {object} - { id, title, version, status, date, duration, durationSec, color, streamUrl }
  */
 export function mapAssetToDraft(asset, index = 0) {
-    const durationSec = asset.duration ? Math.round(asset.duration) : 0;
+    // V4 stores duration in metadata array
+    let durationSec = asset.duration ? Math.round(asset.duration) : 0;
+    if (!durationSec && asset.metadata) {
+        const durationProp = asset.metadata.find(p => p.field_definition_name === 'Duration');
+        if (durationProp) durationSec = Math.round(durationProp.value);
+    }
+
     const m = Math.floor(durationSec / 60);
     const s = Math.floor(durationSec % 60);
 
@@ -56,8 +62,8 @@ export function mapAssetToDraft(asset, index = 0) {
         duration: type === 'folder' ? '--:--' : `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`,
         durationSec,
         color: DRAFT_COLORS[index % DRAFT_COLORS.length],
-        // V4: stream_url, V2: original/h264
-        streamUrl: asset.stream_url || asset.original || asset.h264_1080_best || null,
+        // V4: media_links.original.inline_url, V2: original/h264
+        streamUrl: asset.media_links?.original?.inline_url || asset.stream_url || asset.original || asset.h264_1080_best || null,
         // V4: thumbnails.high, V2: thumb/thumb_scrub
         thumbnailUrl: asset.thumbnails?.high || asset.thumb || asset.thumb_scrub || null,
         isFolder: type === 'folder',

@@ -161,7 +161,8 @@ const createComment = asyncHandler(async (req, res) => {
 
         const payload = { text: attributedText };
         if (timestamp !== undefined && timestamp !== null) {
-            payload.timestamp = Number(timestamp);
+            payload.timestamp = Math.round(Number(timestamp));
+            console.log(`[Frame.io DEBUG] Creating comment with timestamp: ${payload.timestamp} (rounded from ${timestamp})`);
         }
         const comment = await frameioService.createComment(assetId, payload);
         sendSuccess(res, { comment }, 'Comment created', 201);

@@ -115,7 +115,9 @@ async function getAssets(parentId, opts = {}) {
     // Strategy 1: Try V4 folder children (Account Scoped)
     try {
         console.log('[Frame.io DEBUG] Strategy 1: V4 Account-scoped folder children for', parentId);
-        const { data } = await c.get(`/accounts/${accountId}/folders/${parentId}/children`, { params: opts });
+        const { data } = await c.get(`/accounts/${accountId}/folders/${parentId}/children`, {
+            params: { include: 'media_links.original,metadata', ...opts }
+        });
         return data.data;
     } catch (e1) {
         console.log('[Frame.io DEBUG] Strategy 1 FAILED:', e1.response?.status, e1.response?.data?.message || e1.message);
@@ -129,7 +131,9 @@ async function getAssets(parentId, opts = {}) {
 
             if (rootFolderId) {
                 console.log('[Frame.io DEBUG] Strategy 2: Found root folder ID:', rootFolderId);
-                const { data: res } = await c.get(`/accounts/${accountId}/folders/${rootFolderId}/children`, { params: opts });
+                const { data: res } = await c.get(`/accounts/${accountId}/folders/${rootFolderId}/children`, {
+                    params: { include: 'media_links.original,metadata', ...opts }
+                });
                 return res.data;
             }
         } catch (e2) {
@@ -148,12 +152,15 @@ async function getAsset(assetId) {
     const { data: accountsRes } = await c.get('/accounts');
     const accountId = accountsRes.data[0].id;
 
-    // V4: Try folders, then files
     try {
-        const { data } = await c.get(`/accounts/${accountId}/folders/${assetId}`);
+        const { data } = await c.get(`/accounts/${accountId}/folders/${assetId}`, {
+            params: { include: 'media_links.original,metadata' }
+        });
         return data.data;
     } catch (e) {
-        const { data } = await c.get(`/accounts/${accountId}/files/${assetId}`);
+        const { data } = await c.get(`/accounts/${accountId}/files/${assetId}`, {
+            params: { include: 'media_links.original,metadata' }
+        });
         return data.data;
     }
 }
@@ -178,7 +185,7 @@ async function createComment(assetId, payload) {
     const { data: accountsRes } = await c.get('/accounts');
     const accountId = accountsRes.data[0].id;
 
-    const { data } = await c.post(`/accounts/${accountId}/files/${assetId}/comments`, payload);
+    const { data } = await c.post(`/accounts/${accountId}/files/${assetId}/comments`, { data: payload });
     return data.data;
 }
 
@@ -190,7 +197,7 @@ async function updateComment(commentId, payload) {
     const { data: accountsRes } = await c.get('/accounts');
     const accountId = accountsRes.data[0].id;
 
-    const { data } = await c.put(`/accounts/${accountId}/comments/${commentId}`, payload);
+    const { data } = await c.patch(`/accounts/${accountId}/comments/${commentId}`, { data: payload });
     return data.data;
 }
 
@@ -213,7 +220,9 @@ async function toggleCommentResolution(commentId, completed) {
     const { data: accountsRes } = await c.get('/accounts');
     const accountId = accountsRes.data[0].id;
 
-    const { data } = await c.put(`/accounts/${accountId}/comments/${commentId}`, { completed });
+    const { data } = await c.patch(`/accounts/${accountId}/comments/${commentId}`, {
+        data: { completed }
+    });
     return data.data;
 }
 
