@@ -1,6 +1,6 @@
 /**
  * Lightweight API client for Dashify Admin.
- * All requests go through the Vite proxy (/api → localhost:5000/api).
+ * All requests go through the Vite proxy (/api → backend).
  */
 
 const API_BASE = '/api';
@@ -32,7 +32,27 @@ async function request(endpoint, { method = 'GET', body = null, params = {} } = 
     }
 
     const res = await fetch(url.pathname + url.search, config);
-    const data = await res.json();
+
+    // Handle non-JSON responses (e.g. HTML error pages, empty responses)
+    const contentType = res.headers.get('content-type') || '';
+    let data;
+    if (contentType.includes('application/json')) {
+        const text = await res.text();
+        data = text ? JSON.parse(text) : {};
+    } else {
+        const text = await res.text();
+        if (!res.ok) {
+            const error = new Error(text || `Request failed with status ${res.status}`);
+            error.status = res.status;
+            throw error;
+        }
+        // Try parsing as JSON anyway (some servers don't set content-type)
+        try {
+            data = text ? JSON.parse(text) : {};
+        } catch {
+            data = { message: text };
+        }
+    }
 
     if (!res.ok) {
         const error = new Error(data.message || 'Request failed');

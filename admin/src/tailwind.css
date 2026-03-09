@@ -1,4 +1,6 @@
-@import "tailwindcss";
+/* Import Tailwind without preflight to avoid layout interference */
+@import "tailwindcss/theme";
+@import "tailwindcss/utilities";
 
 @theme {
     --color-bg-primary: #0a0a0f;
@@ -27,6 +29,8 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+html, body, #root { height: 100%; }
 
 @keyframes fade-in {
     from { opacity: 0; transform: translateY(8px); }
