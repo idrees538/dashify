@@ -23,7 +23,7 @@ const transactionSchema = new mongoose.Schema(
         },
         category: {
             type: String,
-            enum: ['Performance Video', 'Day in the Life', 'Visualizer', 'Report', 'Photography', 'Purchase', 'Rollover', 'Other'],
+            enum: ['Performance Video', 'Day in the Life', 'Visualizer', 'Report', 'Photography', 'Purchase', 'Rollover', 'Subscription', 'Other'],
             default: 'Other',
         },
         reference: {
@@ -61,6 +61,14 @@ const creditBankSchema = new mongoose.Schema(
         rolloverCredits: {
             type: Number,
             default: 0,
+        },
+        lastCycleDate: {
+            type: Date,
+            default: null,
+        },
+        cycleCredits: {
+            type: Number,
+            default: 10,
         },
         expiresAt: {
             type: Date,

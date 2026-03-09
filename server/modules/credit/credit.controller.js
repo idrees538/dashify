@@ -1,12 +1,16 @@
 const { CreditBank, Transaction } = require('./credit.model');
+const BookingRequest = require('./booking.model');
+const Subscription = require('./subscription.model');
 const asyncHandler = require('../../core/asyncHandler');
 const ApiError = require('../../core/ApiError');
 const { sendSuccess, sendPaginated } = require('../../core/response');
 const validate = require('../../core/validate');
 
+const MIN_CREDITS_FOR_SHOOT = 10;
+
 /**
  * @route   GET /api/credits/summary
- * @desc    Get credit bank summary for current user
+ * @desc    Get credit bank summary for current user (includes subscription + eligibility)
  */
 const getSummary = asyncHandler(async (req, res) => {
     let bank = await CreditBank.findOne({ user: req.user._id });
@@ -16,7 +20,39 @@ const getSummary = asyncHandler(async (req, res) => {
         bank = await CreditBank.create({ user: req.user._id });
     }
 
-    sendSuccess(res, { bank }, 'Credit summary retrieved');
+    // Get subscription info
+    const subscription = await Subscription.findOne({ user: req.user._id });
+
+    // Check shoot eligibility
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentYear = now.getFullYear();
+
+    const approvedThisMonth = await BookingRequest.findOne({
+        user: req.user._id,
+        status: 'approved',
+        shootMonth: currentMonth,
+        shootYear: currentYear,
+    });
+
+    const canRequestShoot = bank.remainingCredits >= MIN_CREDITS_FOR_SHOOT && !approvedThisMonth;
+
+    // Get latest booking request
+    const latestBooking = await BookingRequest.findOne({ user: req.user._id })
+        .sort({ createdAt: -1 })
+        .populate('approvedBy', 'name');
+
+    sendSuccess(res, {
+        bank,
+        subscription: subscription || null,
+        canRequestShoot,
+        shootEligibility: {
+            hasMinCredits: bank.remainingCredits >= MIN_CREDITS_FOR_SHOOT,
+            noShootThisMonth: !approvedThisMonth,
+            creditsNeeded: Math.max(0, MIN_CREDITS_FOR_SHOOT - bank.remainingCredits),
+        },
+        latestBooking: latestBooking || null,
+    }, 'Credit summary retrieved');
 });
 
 /**
@@ -49,7 +85,7 @@ const redeemCredits = asyncHandler(async (req, res) => {
     validate(req.body, {
         amount: { required: true, type: 'number' },
         description: { type: 'string' },
-        category: { enum: ['Performance Video', 'Day in the Life', 'Visualizer', 'Report', 'Photography', 'Other'] },
+        category: { enum: ['Performance Video', 'Day in the Life', 'Visualizer', 'Report', 'Photography', 'Subscription', 'Other'] },
     });
 
     const { amount, description, category } = req.body;

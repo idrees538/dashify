@@ -62,12 +62,27 @@ router.get('/', (_req, res) => {
                 'DELETE /api/videos/:id': 'Delete video',
             },
             credits: {
-                'GET  /api/credits/summary': 'Credit bank summary',
+                'GET  /api/credits/summary': 'Credit bank summary + eligibility',
                 'GET  /api/credits/transactions': 'Transaction history',
                 'GET  /api/credits/breakdown': 'Category breakdown',
                 'GET  /api/credits/stats': 'Credit statistics',
                 'POST /api/credits/redeem': 'Redeem credits',
                 'POST /api/credits/add': 'Add credits',
+            },
+            bookings: {
+                'POST   /api/credits/booking': 'Create booking request',
+                'GET    /api/credits/booking': 'My booking requests',
+                'DELETE /api/credits/booking/:id': 'Cancel booking request',
+                'GET    /api/credits/booking/all': 'All bookings (admin)',
+                'PUT    /api/credits/booking/:id/approve': 'Approve booking (admin)',
+                'PUT    /api/credits/booking/:id/reject': 'Reject booking (admin)',
+            },
+            subscriptions: {
+                'GET  /api/credits/subscription': 'My subscription',
+                'GET  /api/credits/subscription/all': 'All subscriptions (admin)',
+                'POST /api/credits/subscription/activate': 'Activate subscription (admin)',
+                'POST /api/credits/subscription/renew': 'Renew subscription (admin)',
+                'POST /api/credits/subscription/lapse': 'Lapse subscription (admin)',
             },
             calendar: {
                 'POST   /api/calendar': 'Create event',
@@ -99,8 +114,12 @@ router.get('/', (_req, res) => {
                 'PUT /api/settings/password': 'Change password',
             },
             admin: {
-                'GET /api/admin/stats': 'Platform stats (admin)',
-                'PUT /api/admin/users/:id/role': 'Update user role (admin)',
+                'GET  /api/admin/stats': 'Platform stats (admin)',
+                'GET  /api/admin/users': 'List all users (admin)',
+                'PUT  /api/admin/users/:id/role': 'Update user role (admin)',
+                'GET  /api/admin/credits': 'All credit banks (admin)',
+                'POST /api/admin/credits/grant': 'Grant credits (admin)',
+                'POST /api/admin/credits/deduct': 'Deduct credits (admin)',
             },
         },
     });

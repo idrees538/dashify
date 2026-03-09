@@ -4,3 +4,7 @@ dashify-tailwind/
 server/.env.env
 client/.env
 server/.env
+client/dist
+admin/dist
+admin/node_modules
+admin/.env
