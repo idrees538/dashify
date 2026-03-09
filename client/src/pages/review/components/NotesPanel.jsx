@@ -9,6 +9,11 @@ import {
     IoFunnelOutline,
     IoBrushOutline,
     IoAtOutline,
+    IoPencilOutline,
+    IoTrashOutline,
+    IoCloseOutline,
+    IoCheckmarkOutline,
+    IoRefreshOutline,
 } from 'react-icons/io5';
 
 const FILTER_TABS = [
@@ -17,11 +22,26 @@ const FILTER_TABS = [
     { key: 'resolved', label: 'Resolved' },
 ];
 
-function NoteItem({ note, isHighlighted, noteRef, onResolve }) {
+function NoteItem({ note, isHighlighted, noteRef, onResolve, onUpdate, onDelete }) {
+    const [isEditing, setIsEditing] = useState(false);
+    const [editText, setEditText] = useState(note.text);
+
     const formatTime = (sec) => {
         const m = Math.floor(sec / 60);
         const s = Math.floor(sec % 60);
         return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    };
+
+    const handleUpdate = () => {
+        if (editText.trim() && editText !== note.text) {
+            onUpdate(note.id, editText.trim());
+        }
+        setIsEditing(false);
+    };
+
+    const handleCancel = () => {
+        setEditText(note.text);
+        setIsEditing(false);
     };
 
     return (
@@ -63,12 +83,59 @@ function NoteItem({ note, isHighlighted, noteRef, onResolve }) {
                         </span>
                     )}
                 </div>
-                <p className={`text-[13px] leading-relaxed mb-1.5 ${note.resolved ? 'text-text-secondary line-through' : 'text-text-primary'}`}>
-                    {note.text}
-                </p>
+
+                {isEditing ? (
+                    <div className="flex flex-col gap-2 mb-2">
+                        <textarea
+                            className="w-full px-2 py-1.5 rounded-lg border border-border-color bg-bg-primary text-text-primary text-[13px] focus:outline-none focus:border-accent min-h-[60px] resize-none"
+                            value={editText}
+                            onChange={(e) => setEditText(e.target.value)}
+                            autoFocus
+                        />
+                        <div className="flex justify-end gap-2">
+                            <button
+                                onClick={handleCancel}
+                                className="p-1.5 rounded-md bg-bg-hover text-text-secondary hover:text-text-primary transition-colors"
+                                title="Cancel"
+                            >
+                                <IoCloseOutline />
+                            </button>
+                            <button
+                                onClick={handleUpdate}
+                                className="p-1.5 rounded-md bg-accent text-white hover:bg-accent/90 transition-colors"
+                                title="Save"
+                            >
+                                <IoCheckmarkOutline />
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    <p className={`text-[13px] leading-relaxed mb-1.5 ${note.resolved ? 'text-text-secondary line-through' : 'text-text-primary'}`}>
+                        {note.text}
+                    </p>
+                )}
+
                 <div className="flex items-center justify-between">
                     <span className="text-[11px] text-text-secondary">{note.date}</span>
-                    <div className="opacity-0 group-hover/note:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-1 opacity-0 group-hover/note:opacity-100 transition-opacity">
+                        {!note.resolved && !isEditing && (
+                            <>
+                                <button
+                                    onClick={() => setIsEditing(true)}
+                                    className="p-1.5 rounded-md text-text-secondary hover:text-accent hover:bg-accent/10 transition-colors"
+                                    title="Edit note"
+                                >
+                                    <IoPencilOutline size={14} />
+                                </button>
+                                <button
+                                    onClick={() => onDelete(note.id)}
+                                    className="p-1.5 rounded-md text-text-secondary hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                                    title="Delete note"
+                                >
+                                    <IoTrashOutline size={14} />
+                                </button>
+                            </>
+                        )}
                         <button
                             onClick={() => onResolve(note.id)}
                             className={`text-[10px] font-bold px-2 py-1 rounded-md transition-colors
@@ -86,7 +153,7 @@ function NoteItem({ note, isHighlighted, noteRef, onResolve }) {
     );
 }
 
-function NotesPanel({ notes, currentTime, onAddNote, highlightedTimestamp, onResolveNote }) {
+function NotesPanel({ notes, currentTime, onAddNote, highlightedTimestamp, onResolveNote, onUpdateNote, onDeleteNote, onRefresh }) {
     const [newNote, setNewNote] = useState('');
     const [activeFilter, setActiveFilter] = useState('all');
     const noteRefs = useRef({});
@@ -145,6 +212,13 @@ function NotesPanel({ notes, currentTime, onAddNote, highlightedTimestamp, onRes
                     </span>
                 </h3>
                 <div className="flex items-center gap-2">
+                    <button
+                        onClick={onRefresh}
+                        className="w-7 h-7 rounded-lg flex items-center justify-center text-text-secondary hover:text-accent hover:bg-accent-light transition-colors text-sm"
+                        title="Refresh notes from Frame.io"
+                    >
+                        <IoRefreshOutline />
+                    </button>
                     <button className="w-7 h-7 rounded-lg flex items-center justify-center text-text-secondary hover:text-accent hover:bg-accent-light transition-colors text-sm" title="Drawing annotations (coming soon)">
                         <IoBrushOutline />
                     </button>
@@ -232,6 +306,8 @@ function NotesPanel({ notes, currentTime, onAddNote, highlightedTimestamp, onRes
                             isHighlighted={highlightedTimestamp != null && Math.abs(note.timestamp - highlightedTimestamp) <= 2}
                             noteRef={(el) => { noteRefs.current[note.id] = el; }}
                             onResolve={onResolveNote}
+                            onUpdate={onUpdateNote}
+                            onDelete={onDeleteNote}
                         />
                     ))
                 )}

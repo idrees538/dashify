@@ -15,6 +15,9 @@ function Review() {
         notes,
         addNote,
         resolveNote,
+        updateNote,
+        deleteNote,
+        refreshNotes,
         currentTime,
         setCurrentTime,
         highlightedTimestamp,
@@ -72,6 +75,9 @@ function Review() {
                         onAddNote={addNote}
                         highlightedTimestamp={highlightedTimestamp}
                         onResolveNote={resolveNote}
+                        onUpdateNote={updateNote}
+                        onDeleteNote={deleteNote}
+                        onRefresh={refreshNotes}
                     />
                 </div>
             </div>

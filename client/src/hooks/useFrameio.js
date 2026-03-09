@@ -103,10 +103,13 @@ export default function useFrameio() {
                 for (const draft of mappedDrafts) {
                     try {
                         const commentsRes = await frameioService.getComments(draft.id);
-                        // V4 returns comments in .data array, legacy might be elsewhere
-                        const rawComments = commentsRes.data || commentsRes.comments || [];
+                        // Handle Dashify API format: { success: true, data: { comments: [...] } }
+                        const resData = commentsRes.data || commentsRes;
+                        const rawComments = Array.isArray(resData) ? resData : (resData.comments || resData.data || []);
+
                         notesMap[draft.id] = rawComments.map(mapCommentToNote);
-                    } catch {
+                    } catch (err) {
+                        console.warn(`[Frame.io] Failed to load comments for ${draft.id}:`, err.message);
                         notesMap[draft.id] = [];
                     }
                 }
@@ -198,8 +201,29 @@ export default function useFrameio() {
     }, [selectedDraftId, isConfigured]);
 
     /**
-     * Toggle resolve state on a note (admin-only action on the backend,
-     * but we keep the optimistic UI for consistency).
+     * Refresh notes for the currently selected draft.
+     */
+    const refreshNotes = useCallback(async () => {
+        if (!selectedDraftId || !isConfigured) return;
+
+        try {
+            const commentsRes = await frameioService.getComments(selectedDraftId);
+            const resData = commentsRes.data || commentsRes;
+            const rawComments = Array.isArray(resData) ? resData : (resData.comments || resData.data || []);
+            const mappedNotes = rawComments.map(mapCommentToNote);
+
+            setAllNotes((prev) => ({
+                ...prev,
+                [selectedDraftId]: mappedNotes,
+            }));
+        } catch (err) {
+            console.error('[Frame.io] Failed to refresh notes:', err.message);
+        }
+    }, [selectedDraftId, isConfigured]);
+
+    /**
+     * Toggle resolve state on a note.
+     * (Admin-only action on the backend, but we keep the optimistic UI for consistency).
      */
     const resolveNote = useCallback(async (noteId) => {
         const note = notes.find((n) => n.id === noteId);
@@ -231,6 +255,75 @@ export default function useFrameio() {
         }
     }, [selectedDraftId, isConfigured, notes]);
 
+    /**
+     * Update an existing note.
+     */
+    const updateNote = useCallback(async (noteId, newText) => {
+        const note = notes.find((n) => n.id === noteId);
+        if (!note) return;
+
+        const oldText = note.text;
+
+        // Optimistic UI update
+        setAllNotes((prev) => ({
+            ...prev,
+            [selectedDraftId]: (prev[selectedDraftId] || []).map((n) =>
+                n.id === noteId ? { ...n, text: newText } : n
+            ),
+        }));
+
+        if (isConfigured) {
+            try {
+                await frameioService.updateComment(noteId, { text: newText });
+            } catch (err) {
+                console.error('[Frame.io] Failed to update comment:', err.message);
+                // Rollback on error
+                setAllNotes((prev) => ({
+                    ...prev,
+                    [selectedDraftId]: (prev[selectedDraftId] || []).map((n) =>
+                        n.id === noteId ? { ...n, text: oldText } : n
+                    ),
+                }));
+            }
+        }
+    }, [selectedDraftId, isConfigured, notes]);
+
+    /**
+     * Delete a note.
+     */
+    const deleteNote = useCallback(async (noteId) => {
+        const note = notes.find((n) => n.id === noteId);
+        if (!note) return;
+
+        // Optimistic UI removal
+        const deletedNoteIndex = notes.findIndex((n) => n.id === noteId);
+        const deletedNote = notes[deletedNoteIndex];
+
+        setAllNotes((prev) => ({
+            ...prev,
+            [selectedDraftId]: (prev[selectedDraftId] || []).filter((n) => n.id !== noteId),
+        }));
+
+        if (isConfigured) {
+            try {
+                await frameioService.deleteComment(noteId);
+            } catch (err) {
+                console.error('[Frame.io] Failed to delete comment:', err.message);
+                // Rollback on error: re-insert the note at its original position
+                setAllNotes((prev) => {
+                    const currentNotes = [...(prev[selectedDraftId] || [])];
+                    if (deletedNoteIndex !== -1) {
+                        currentNotes.splice(deletedNoteIndex, 0, deletedNote);
+                    }
+                    return {
+                        ...prev,
+                        [selectedDraftId]: currentNotes,
+                    };
+                });
+            }
+        }
+    }, [selectedDraftId, isConfigured, notes]);
+
     /* ================================================================ */
     /*  Cleanup                                                         */
     /* ================================================================ */
@@ -257,6 +350,9 @@ export default function useFrameio() {
         notes,
         addNote,
         resolveNote,
+        updateNote,
+        deleteNote,
+        refreshNotes,
 
         // Player
         currentTime,
