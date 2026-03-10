@@ -8,3 +8,4 @@ client/dist
 admin/dist
 admin/node_modules
 admin/.env
+server/data/frameio-tokens.json
