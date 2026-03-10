@@ -9,3 +9,8 @@ admin/dist
 admin/node_modules
 admin/.env
 server/data/frameio-tokens.json
+server/data/frameio-tokens.json
+
+.env
+*.env
+tokens.json
