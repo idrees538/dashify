@@ -4,6 +4,9 @@ const asyncHandler = require('../../core/asyncHandler');
 const ApiError = require('../../core/ApiError');
 const { sendSuccess, sendPaginated } = require('../../core/response');
 const validate = require('../../core/validate');
+const { sendSMS, TEMPLATES } = require('../sms/sms.service');
+const { createCalendarEvent } = require('../google-calendar/calendar.service');
+const User = require('../user/user.model');
 
 const MIN_CREDITS_FOR_SHOOT = 10;
 
@@ -211,6 +214,17 @@ const approveBookingRequest = asyncHandler(async (req, res) => {
     booking.approvedAt = new Date();
     booking.adminNotes = adminNotes || booking.adminNotes;
     await booking.save();
+
+    // SMS & Calendar Notifications
+    const user = await User.findById(booking.user);
+    if (user && user.phone) {
+        await sendSMS(user.phone, TEMPLATES.BOOKING_CONFIRMED(user.name, shoot.toLocaleDateString()));
+    }
+    await createCalendarEvent({
+        summary: `Dashify Shoot: ${user?.name || 'Client'}`,
+        start: shoot,
+        description: `Shoot for ${user?.name} (${user?.email})`,
+    });
 
     sendSuccess(res, { booking, bank, transactions }, 'Booking request approved');
 });

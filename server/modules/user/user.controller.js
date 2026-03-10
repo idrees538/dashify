@@ -13,7 +13,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
     const skip = (page - 1) * limit;
 
     const [users, total] = await Promise.all([
-        User.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
+        User.find().sort({ createdAt: -1 }).skip(skip).limit(limit).populate('onboarding'),
         User.countDocuments(),
     ]);
 

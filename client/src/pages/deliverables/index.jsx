@@ -1,103 +1,57 @@
-import { useState } from 'react';
-import { IoSearchOutline } from 'react-icons/io5';
+import { useState, useEffect } from 'react';
+import { IoSearchOutline, IoGridOutline, IoListOutline } from 'react-icons/io5';
 import ProjectFolder from './components/ProjectFolder';
 import FileList from './components/FileList';
-const PROJECTS = [
-    {
-        id: 1,
-        name: 'Brand Campaign 2026',
-        client: 'Acme Corp',
-        date: 'Feb 18, 2026',
-        color: 'purple',
-        fileCount: 6,
-        files: [
-            { id: 11, name: 'Final_Edit_v3.mp4', type: 'video', size: '248 MB', modified: 'Feb 18' },
-            { id: 12, name: 'Campaign_Brief.pdf', type: 'document', size: '1.2 MB', modified: 'Feb 16' },
-            { id: 13, name: 'Hero_Banner.png', type: 'image', size: '4.8 MB', modified: 'Feb 17' },
-            { id: 14, name: 'BTS_Reel.mp4', type: 'video', size: '180 MB', modified: 'Feb 17' },
-            { id: 15, name: 'Voiceover_Final.wav', type: 'audio', size: '32 MB', modified: 'Feb 15' },
-            { id: 16, name: 'Social_Assets.zip', type: 'document', size: '56 MB', modified: 'Feb 18' },
-        ],
-    },
-    {
-        id: 2,
-        name: 'Product Launch Video',
-        client: 'TechStart Inc',
-        date: 'Feb 15, 2026',
-        color: 'blue',
-        fileCount: 4,
-        files: [
-            { id: 21, name: 'Launch_Teaser_v2.mp4', type: 'video', size: '312 MB', modified: 'Feb 15' },
-            { id: 22, name: 'Storyboard.pdf', type: 'document', size: '8.4 MB', modified: 'Feb 10' },
-            { id: 23, name: 'Product_Shots.zip', type: 'image', size: '124 MB', modified: 'Feb 14' },
-            { id: 24, name: 'Soundtrack.mp3', type: 'audio', size: '6.2 MB', modified: 'Feb 13' },
-        ],
-    },
-    {
-        id: 3,
-        name: 'Client Testimonials',
-        client: 'GreenLeaf Co',
-        date: 'Feb 12, 2026',
-        color: 'green',
-        fileCount: 5,
-        files: [
-            { id: 31, name: 'Testimonial_Reel.mp4', type: 'video', size: '420 MB', modified: 'Feb 12' },
-            { id: 32, name: 'Interview_Sarah.mp4', type: 'video', size: '180 MB', modified: 'Feb 11' },
-            { id: 33, name: 'Interview_Mark.mp4', type: 'video', size: '195 MB', modified: 'Feb 11' },
-            { id: 34, name: 'Subtitles.srt', type: 'code', size: '24 KB', modified: 'Feb 12' },
-            { id: 35, name: 'Thumbnail.jpg', type: 'image', size: '2.1 MB', modified: 'Feb 12' },
-        ],
-    },
-    {
-        id: 4,
-        name: 'Social Media Q1',
-        client: 'BrightWave',
-        date: 'Feb 8, 2026',
-        color: 'orange',
-        fileCount: 7,
-        files: [
-            { id: 41, name: 'IG_Story_Pack.zip', type: 'image', size: '45 MB', modified: 'Feb 8' },
-            { id: 42, name: 'TikTok_Batch_01.mp4', type: 'video', size: '520 MB', modified: 'Feb 7' },
-            { id: 43, name: 'TikTok_Batch_02.mp4', type: 'video', size: '480 MB', modified: 'Feb 7' },
-            { id: 44, name: 'Content_Calendar.xlsx', type: 'document', size: '340 KB', modified: 'Feb 5' },
-            { id: 45, name: 'Captions.docx', type: 'document', size: '128 KB', modified: 'Feb 6' },
-            { id: 46, name: 'Brand_Guidelines.pdf', type: 'document', size: '3.6 MB', modified: 'Feb 3' },
-            { id: 47, name: 'Audio_Logo.wav', type: 'audio', size: '1.4 MB', modified: 'Feb 4' },
-        ],
-    },
-    {
-        id: 5,
-        name: 'Corporate Overview',
-        client: 'Nexus Global',
-        date: 'Jan 28, 2026',
-        color: 'cyan',
-        fileCount: 3,
-        files: [
-            { id: 51, name: 'Overview_Final.mp4', type: 'video', size: '680 MB', modified: 'Jan 28' },
-            { id: 52, name: 'Script.pdf', type: 'document', size: '450 KB', modified: 'Jan 25' },
-            { id: 53, name: 'Logo_Animation.mov', type: 'video', size: '28 MB', modified: 'Jan 27' },
-        ],
-    },
-];
+import api from '../../services/api';
+
 
 function Deliverables() {
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [viewMode, setViewMode] = useState('folder'); // 'folder' or 'list'
     const [openProjectId, setOpenProjectId] = useState(null);
     const [search, setSearch] = useState('');
 
-    const openProject = PROJECTS.find((p) => p.id === openProjectId);
+    useEffect(() => {
+        setLoading(true);
+        api.get('/projects')
+            .then((res) => setProjects(res.data || []))
+            .catch(console.error)
+            .finally(() => setLoading(false));
+    }, []);
 
-    const filteredProjects = PROJECTS.filter((p) =>
+    const openProject = projects.find((p) => p._id === openProjectId);
+
+    const filteredProjects = projects.filter((p) =>
         p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.client.toLowerCase().includes(search.toLowerCase())
+        (p.client && p.client.toLowerCase().includes(search.toLowerCase()))
     );
 
     return (
         <div className="max-w-[1200px] mx-auto animate-fade-in px-4 py-4">
-            <div className="mb-6">
-                <h1 className="text-base font-semibold text-text-primary">Deliverables</h1>
-                <p className="text-[12px] text-text-secondary">
-                    Browse project folders and access all your delivered files.
-                </p>
+            <div className="flex items-center justify-between mb-6">
+                <div>
+                    <h1 className="text-base font-semibold text-text-primary">Deliverables</h1>
+                    <p className="text-[12px] text-text-secondary">
+                        Browse project folders and access all your delivered files.
+                    </p>
+                </div>
+                {!openProject && (
+                    <div className="flex items-center bg-bg-secondary border border-border-color rounded-lg p-1">
+                        <button
+                            onClick={() => setViewMode('folder')}
+                            className={`p-1.5 rounded-md transition-all ${viewMode === 'folder' ? 'bg-accent text-white' : 'text-text-secondary hover:text-text-primary'}`}
+                        >
+                            <IoGridOutline className="text-sm" />
+                        </button>
+                        <button
+                            onClick={() => setViewMode('list')}
+                            className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-accent text-white' : 'text-text-secondary hover:text-text-primary'}`}
+                        >
+                            <IoListOutline className="text-sm" />
+                        </button>
+                    </div>
+                )}
             </div>
 
             {/* Search bar */}
@@ -114,20 +68,56 @@ function Deliverables() {
                 </div>
             )}
 
-            {/* File list view or folder grid */}
-            {openProject ? (
+            {loading ? (
+                <div className="flex items-center justify-center h-64">
+                    <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+                </div>
+            ) : openProject ? (
                 <FileList
                     project={openProject}
                     onBack={() => setOpenProjectId(null)}
                 />
+            ) : viewMode === 'list' ? (
+                <div className="bg-bg-secondary rounded-xl border border-border-color overflow-hidden">
+                    <table className="w-full text-left">
+                        <thead>
+                            <tr className="border-b border-border-color bg-black/[0.02]">
+                                <th className="px-5 py-3 text-[10px] font-bold text-text-secondary uppercase tracking-wider">Project</th>
+                                <th className="px-5 py-3 text-[10px] font-bold text-text-secondary uppercase tracking-wider">Files</th>
+                                <th className="px-5 py-3 text-[10px] font-bold text-text-secondary uppercase tracking-wider">Last Modified</th>
+                                <th className="px-5 py-3"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredProjects.map((p) => (
+                                <tr key={p._id} className="border-b border-border-color last:border-0 hover:bg-bg-hover transition-colors">
+                                    <td className="px-5 py-4">
+                                        <p className="text-sm font-semibold text-text-primary">{p.name}</p>
+                                        <p className="text-[10px] text-text-secondary">{p.client || 'Acme Corp'}</p>
+                                    </td>
+                                    <td className="px-5 py-4 text-sm text-text-secondary">{p.files?.length || 0} files</td>
+                                    <td className="px-5 py-4 text-sm text-text-secondary">{new Date(p.updatedAt).toLocaleDateString()}</td>
+                                    <td className="px-5 py-4 text-right">
+                                        <button
+                                            onClick={() => setOpenProjectId(p._id)}
+                                            className="text-[11px] font-bold uppercase tracking-wider text-accent hover:underline"
+                                        >
+                                            Open folder
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredProjects.map((project) => (
                         <ProjectFolder
-                            key={project.id}
+                            key={project._id}
                             project={project}
                             isActive={false}
-                            onClick={() => setOpenProjectId(project.id)}
+                            onClick={() => setOpenProjectId(project._id)}
                         />
                     ))}
                     {filteredProjects.length === 0 && (

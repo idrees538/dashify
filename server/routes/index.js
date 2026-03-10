@@ -15,6 +15,8 @@ const analyticsRoutes = require('../modules/analytics/analytics.routes');
 const settingsRoutes = require('../modules/settings/settings.routes');
 const adminRoutes = require('../modules/admin/admin.routes');
 const frameioRoutes = require('../modules/frameio/frameio.routes');
+const onboardingRoutes = require('../modules/onboarding/onboarding.routes');
+const smsRoutes = require('../modules/sms/sms.routes');
 
 // Register routes
 router.use('/auth', authRoutes);
@@ -30,6 +32,8 @@ router.use('/analytics', analyticsRoutes);
 router.use('/settings', settingsRoutes);
 router.use('/admin', adminRoutes);
 router.use('/frameio', frameioRoutes);
+router.use('/', onboardingRoutes);
+router.use('/', smsRoutes);
 
 // API index
 router.get('/', (_req, res) => {
@@ -120,6 +124,17 @@ router.get('/', (_req, res) => {
                 'GET  /api/admin/credits': 'All credit banks (admin)',
                 'POST /api/admin/credits/grant': 'Grant credits (admin)',
                 'POST /api/admin/credits/deduct': 'Deduct credits (admin)',
+                'POST /api/admin/sms/send': 'Send manual SMS (admin)',
+                'POST /api/admin/sms/trigger-reminders': 'Trigger shoot reminders (admin)',
+            },
+            onboarding: {
+                'GET  /api/onboarding/status': 'My onboarding status',
+                'GET  /api/onboarding/all': 'All records (admin)',
+                'PUT  /api/onboarding/:userId/step': 'Advance step (admin)',
+            },
+            webhooks: {
+                'POST /api/webhooks/typeform': 'Typeform intake',
+                'POST /api/webhooks/stripe': 'Stripe payment',
             },
         },
     });

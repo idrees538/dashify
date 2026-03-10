@@ -3,6 +3,8 @@ const { CreditBank, Transaction } = require('./credit.model');
 const asyncHandler = require('../../core/asyncHandler');
 const ApiError = require('../../core/ApiError');
 const { sendSuccess, sendPaginated } = require('../../core/response');
+const { sendSMS, TEMPLATES } = require('../sms/sms.service');
+const User = require('../user/user.model');
 
 const CREDITS_PER_CYCLE = 10;
 const MAX_CREDITS = 20;
@@ -155,6 +157,12 @@ const activateSubscription = asyncHandler(async (req, res) => {
     // Grant initial credits
     const bank = await grantCycleCredits(userId);
 
+    // SMS Notification
+    const user = await User.findById(userId);
+    if (user && user.phone) {
+        await sendSMS(user.phone, `Hi ${user.name}, your Dashify subscription is now active! 10 credits have been added.`);
+    }
+
     sendSuccess(res, { subscription, bank }, 'Subscription activated', 201);
 });
 
@@ -189,6 +197,12 @@ const renewSubscription = asyncHandler(async (req, res) => {
 
     // Grant cycle credits with rollover
     const bank = await grantCycleCredits(userId);
+
+    // SMS Notification
+    const user = await User.findById(userId);
+    if (user && user.phone) {
+        await sendSMS(user.phone, TEMPLATES.RENEWAL_REMINDER(user.name, subscription.priceThisCycle));
+    }
 
     sendSuccess(res, { subscription, bank }, 'Subscription renewed');
 });

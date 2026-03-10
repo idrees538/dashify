@@ -15,9 +15,12 @@
 6. [API Reference — All Endpoints](#6-api-reference)
 7. [Admin Dashboard (React App)](#7-admin-dashboard)
 8. [Client Credits Page](#8-client-credits-page)
-9. [Authentication & Authorization](#9-authentication--authorization)
-10. [File Structure](#10-file-structure)
-11. [How to Run](#11-how-to-run)
+10. [Onboarding Pipeline](#10-onboarding-pipeline)
+11. [SMS & Notifications](#11-sms--notifications)
+12. [Webhook Integrations](#12-webhook-integrations)
+13. [Authentication & Authorization](#13-authentication--authorization)
+14. [File Structure](#14-file-structure)
+15. [How to Run](#15-how-to-run)
 
 ---
 
@@ -605,6 +608,57 @@ The client-facing credits page fetches all data from the API on mount.
 
 ---
 
+## 10. Onboarding Pipeline
+
+The onboarding pipeline tracks every user's journey from initial contact to their first shoot.
+
+### 10.1 Pipeline Stages
+
+| Stage | Trigger | Description |
+|-------|---------|-------------|
+| `form_pending` | User Creation | Initial state. Waiting for Typeform intake. |
+| `payment_pending` | Typeform Webhook | Intake form received. Waiting for Stripe payment ($375). |
+| `call_pending` | Stripe Webhook | Payment received. Waiting for Strategy Call booking. |
+| `shoot_pending` | Admin Manual | Strategy Call booked. Waiting for Shoot Day scheduling. |
+| `completed` | Admin Manual | Shoot Day scheduled. User is now a recurring client. |
+| `stalled` | Admin Manual | User has stopped responding or cancelled. |
+
+### 10.2 Admin Pipeline Management
+Admins can manually advance steps or "Skip to Complete" for existing users via the **Onboarding** page.
+
+---
+
+## 11. SMS & Notifications
+
+Dashify uses SMS to keep users engaged and informed throughout their journey.
+
+### 11.1 Automated Triggers
+
+| Event | Notification | Recipients |
+|-------|--------------|------------|
+| Subscription Activated | Welcome + 10 credits added | User |
+| Booking Approved | Confirmation + Shoot Date | User |
+| Monthly Renewal | Reminder (24h before charge) | User |
+| Shoot Day | Reminder (24h before shoot) | User |
+| Onboarding Advance | Next Step Link (e.g., Calendly) | User |
+
+### 11.2 Reminder Service
+The `reminders.service.js` scans the database daily for shoots happening tomorrow and sends an automated reminder SMS. This can also be triggered manually from the Onboarding page.
+
+---
+
+## 12. Webhook Integrations
+
+### 12.1 Typeform Webhook
+- **Endpoint:** `POST /api/webhooks/typeform`
+- **Action:** Creates user (if needed), marks `typeformCompleted`, sets status to `payment_pending`.
+
+### 12.2 Stripe Webhook
+- **Endpoint:** `POST /api/webhooks/stripe`
+- **Action:** Marks `paymentCompleted`, activates subscription, grants initial 10 credits, sets status to `call_pending`.
+
+---
+
 ## 9. Authentication & Authorization
 
 ### Middleware Stack
@@ -672,7 +726,8 @@ admin/
     └── pages/
         ├── Login.jsx                # Admin login form
         ├── Dashboard.jsx            # KPI stats overview
-        ├── Users.jsx                # User management table
+        ├── Users.jsx                # User management table (with SMS modal)
+        ├── Onboarding.jsx           # Pipeline tracking UI
         ├── BookingRequests.jsx      # Booking approve/reject UI
         ├── Credits.jsx              # Credit bank management
         └── Subscriptions.jsx        # Subscription lifecycle controls

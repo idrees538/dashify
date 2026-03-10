@@ -58,8 +58,18 @@ const userSchema = new mongoose.Schema(
     },
     {
         timestamps: true,
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true },
     }
 );
+
+// Virtual for onboarding
+userSchema.virtual('onboarding', {
+    ref: 'Onboarding',
+    localField: '_id',
+    foreignField: 'user',
+    justOne: true,
+});
 
 // Hash password before saving
 userSchema.pre('save', async function (next) {
