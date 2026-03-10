@@ -2,6 +2,9 @@
     "name": "dashify-monorepo",
     "version": "1.0.0",
     "private": true,
+    "scripts": {
+        "build": "cd client && npm install && npm run build && cd ../admin && npm install && npm run build && cd .. && rm -rf dist && mkdir dist && cp -r client/dist/* dist/ && mkdir -p dist/admin && cp -r admin/dist/* dist/admin/"
+    },
     "dependencies": {
         "axios": "^1.13.5",
         "bcryptjs": "^2.4.3",
